@@ -1,0 +1,82 @@
+schema_version: 1
+as_of_date: 2026-07-12
+status: small_public_evidence_sample_not_a_comparable_sales_model
+
+evidence:
+  - id: tacoma_new_townhouse_listing_2845_68th_unit_103
+    geography: Tacoma
+    property_type: new_construction_townhouse
+    observation_type: active_listing
+    price: 419000
+    building_area_sqft: 1180
+    price_per_sqft: 355.08
+    source: Realtor.com Tacoma townhomes search result
+    url: https://www.realtor.com/realestateandhomes-search/Tacoma_WA/type-townhome
+    accessed_date: 2026-07-12
+    confidence: low
+    notes: Asking price, not a closed sale; one observation only.
+
+  - id: new_tacoma_recent_median_sale_price
+    geography: New Tacoma
+    property_type: all_homes
+    observation_type: rolling_three_month_median_sale_price
+    price: 453000
+    source: Redfin New Tacoma housing market page
+    url: https://www.redfin.com/neighborhood/92372/WA/Tacoma/New-Tacoma/housing-market
+    accessed_date: 2026-07-12
+    confidence: low
+    notes: Closed-sale median but not limited to new townhouses.
+
+  - id: pierce_2025_residential_revaluation
+    geography: Pierce County
+    property_type: residential
+    observation_type: assessor_methodology
+    source: Pierce County 2025 Residential Revaluation Report
+    url: https://www.piercecountywa.gov/DocumentCenter/View/148250/2025_Residential_Revaluation_Report_Narrative
+    accessed_date: 2026-07-12
+    confidence: high
+    notes: The report analyzes 2024 valid sales, defines townhouse abstracts 1401-1404, and cautions that assessed values are prepared for taxation.
+
+  - id: hud_fy2026_tacoma_two_bedroom_fmr
+    geography: Tacoma_WA_HMFA
+    property_type: rental_two_bedroom
+    observation_type: fair_market_rent
+    monthly_rent: 1971
+    source: HUD FY2026 Fair Market Rent schedule
+    url: https://www.huduser.gov/portal/datasets/fmr/fmr2026/FY2026_FMR_Schedule.pdf
+    accessed_date: 2026-07-12
+    confidence: medium
+    notes: Sourced area proxy; not a new-construction asking-rent comparable.
+
+  - id: napoleon_tacoma_two_bedroom_asking_rent
+    geography: Downtown_Tacoma
+    property_type: conventional_apartment_two_bedroom
+    observation_type: active_asking_rent_range
+    monthly_rent_low: 2485
+    monthly_rent_high: 2610
+    unit_area_sqft: 1057
+    source: Napoleon Apartment Homes official floor-plan availability
+    url: https://www.napoleontacoma.com/floorplans
+    accessed_date: 2026-07-12
+    confidence: low
+    notes: Current asking rent in a downtown amenitized building; not a signed lease or a duplex/rowhouse comparable. Used only as an upper-market reasonableness check.
+
+  - id: puget_sound_q1_2026_multifamily_market
+    geography: Puget_Sound
+    property_type: multifamily
+    observation_type: regional_market_report
+    asking_rent_per_unit: 2073
+    cap_rate: 0.057
+    source: Lee & Associates Pacific Northwest Q1 2026 Multifamily Market Report
+    url: https://www.lee-associates.com/northwest/2026/04/29/q1-2026-multifamily-market-report/
+    accessed_date: 2026-07-12
+    confidence: low
+    notes: Regional transaction and asking-rent context; not a Tacoma small-project comparable.
+
+recommended_screening_range:
+  sale_price_per_unit:
+    conservative: 405000
+    baseline: 450000
+    favorable: 495000
+    confidence: low
+    rationale: Rounded citywide screening range anchored by a small public listing and market-median sample; replace with market-area comps if time permits.

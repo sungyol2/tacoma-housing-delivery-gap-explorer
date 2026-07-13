@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Planning-level Tacoma parcel capacity and housing delivery screening." />
+    <title>Tacoma Housing Delivery Gap Explorer</title>
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link href="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+    <link href="./css/app.css?v=20260712-18" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand-mark" aria-hidden="true">T</div>
+      <div class="title-block">
+        <h1>Tacoma Housing Delivery Gap Explorer</h1>
+        <p>From zoning capacity to a transparent, planning-level delivery screen</p>
+      </div>
+      <nav aria-label="Project information">
+        <button id="methodology-button" type="button">Methodology</button>
+        <button id="limitations-button" type="button">Limitations</button>
+        <button id="about-button" type="button">About</button>
+      </nav>
+    </header>
+
+    <main class="workspace">
+      <aside class="left-panel" aria-label="Map controls">
+        <section>
+          <h2>Map modes</h2>
+          <div class="mode-list" role="radiogroup" aria-label="Map mode">
+            <button class="mode-button active" data-mode="capacity" role="radio" aria-checked="true">
+              <span>1</span><strong>Legal capacity</strong><small>Baseline units allowed</small>
+            </button>
+            <button class="mode-button" data-mode="readiness" role="radio" aria-checked="false">
+              <span>2</span><strong>Site constraints</strong><small>Critical areas before prototype fit</small>
+            </button>
+            <button class="mode-button" data-mode="feasibility" role="radio" aria-checked="false">
+              <span>3</span><strong>Prototype feasibility</strong><small>For-sale and rental test cases</small>
+            </button>
+            <button class="mode-button" data-mode="permits" role="radio" aria-checked="false">
+              <span>4</span><strong>Housing applications</strong><small>Residential development · 2021–2026</small>
+            </button>
+          </div>
+        </section>
+
+        <section class="filters">
+          <h2>Filters</h2>
+          <label>Base zone
+            <select id="zone-filter"><option value="all">All UR zones</option><option>UR1</option><option>UR2</option><option>UR3</option></select>
+          </label>
+          <label>Financial test
+            <select id="scenario-filter"><option value="baseline" selected>Baseline</option><option value="favorable">Upside stress test</option></select>
+          </label>
+          <label>Prototype
+            <select id="prototype-filter">
+              <option value="duplex_for_sale">Duplex houseplex — for sale</option>
+              <option value="duplex_rental">Duplex houseplex — rental</option>
+              <option value="four_unit_rowhouse_rental">4-unit rowhouse cluster — rental</option>
+            </select>
+          </label>
+          <label class="check-row"><input id="fit-filter" type="checkbox" /> Basic physical fit only</label>
+          <p id="scenario-explanation" class="scenario-explanation" aria-live="polite"></p>
+          <button id="reset-filters" class="secondary-button" type="button">Reset filters</button>
+        </section>
+
+        <section>
+          <h2>Legend</h2>
+          <div id="legend" class="legend"></div>
+          <p class="note">Map classes are screening estimates. Parcel-specific evidence and review flags appear after selection.</p>
+        </section>
+      </aside>
+
+      <section class="map-region" aria-label="Tacoma parcel map">
+        <div class="loading" id="loading"><strong id="loading-title">Loading parcel map…</strong><span id="loading-status">56,484 candidate parcels · optimized map transfer</span></div>
+        <div id="map"></div>
+        <div id="map-status" class="map-status" role="status" aria-live="polite">Loading parcel layers…</div>
+        <div class="map-search"><input id="parcel-search" type="search" placeholder="Search address or parcel ID" aria-label="Search address or parcel ID" /><button id="search-button" type="button">Search</button></div>
+      </section>
+
+      <aside class="right-panel" aria-label="Selected parcel details">
+        <div class="panel-heading"><div><span class="eyebrow">Selected parcel</span><h2 id="parcel-title">Select a parcel</h2><p id="parcel-address">Click the map to inspect the evidence.</p></div></div>
+        <div id="parcel-details" class="parcel-details empty-state" aria-live="polite">
+          Capacity, site conditions, feasibility, provenance, and permit activity will appear here.
+        </div>
+      </aside>
+
+      <section class="bottom-panel" aria-label="Development screening funnel">
+        <div class="summary-title"><span class="eyebrow">Development screening funnel</span><strong>Where candidates fall away</strong><small><span id="funnel-scenario">Baseline</span> · parcel counts</small></div>
+        <div class="funnel-step"><span class="step-number">1</span><div><small>UR-zoned inventory</small><strong id="metric-zoned">58,319</strong><em>Starting inventory</em></div></div>
+        <div class="funnel-step"><span class="step-number">2</span><div><small>Existing-use candidates</small><strong id="metric-parcels">56,484</strong><em id="share-candidates">96.9% of inventory</em></div></div>
+        <div class="funnel-step"><span class="step-number">3</span><div><small>Mapped-constraint screen</small><strong id="metric-constraint-pass">52,931</strong><em id="share-constraint-pass">93.7% retain ≥5,000 sq ft</em></div></div>
+        <div class="funnel-step"><span class="step-number">4</span><div><small>Prototype physical fit</small><strong id="metric-fit">50,672</strong><em id="share-fit">89.7% of candidates</em></div></div>
+        <div class="funnel-step financial"><span class="step-number">5</span><div><small><span id="financial-scenario">Baseline</span> near/above break-even</small><strong id="metric-promising">43</strong><em id="share-promising">0.1% of physical-fit parcels</em></div></div>
+        <div class="disclaimer">Independent portfolio case study · not an official City or County product, capacity estimate, entitlement determination, appraisal, or investment tool.</div>
+      </section>
+    </main>
+
+    <dialog id="about-dialog">
+      <button class="dialog-close" aria-label="Close">×</button>
+      <h2>About this explorer</h2>
+      <p>This self-directed portfolio project connects current zoning, parcel conditions, three for-sale and rental test prototypes, assessed-value acquisition benchmarks, and observed permit activity.</p>
+      <p>Financial values remain illustrative pending market validation. The interface deliberately exposes split zoning, overlays, confidence, and known limitations.</p>
+      <p><a href="../DATA_SOURCES_AND_TERMS.md">Data sources, attribution, and terms</a> · <a href="../LICENSE">MIT code license</a></p>
+    </dialog>
+
+    <dialog id="methodology-dialog" class="info-dialog">
+      <button class="dialog-close" aria-label="Close">×</button>
+      <span class="eyebrow">Methods</span>
+      <h2>How the screen works</h2>
+      <h3>1. Parcel and zoning base</h3>
+      <p>Pierce County parcel parts are dissolved to a normalized parcel ID. Every parcel–zoning intersection is measured; the dominant zone is displayed while material split zones remain in the capacity calculation.</p>
+      <h3>2. Candidate scope</h3>
+      <p>The model starts with UR1, UR2, and UR3 base parcels. Existing residential and clearly developable vacant uses are retained. Parks, open space, schools, cemeteries, rights-of-way, utilities, drainage facilities, and golf courses are excluded. Ambiguous nonresidential uses require manual review.</p>
+      <h3>3. Capacity and physical fit</h3>
+      <p>Baseline density uses 1,500 sq ft/unit in UR1, 1,000 in UR2, and 750 in UR3, with area-weighted treatment of split zones. Before prototype fit, mapped 40%+ slopes, wetlands, biodiversity areas, special flood hazard areas, and protected-water buffers are removed. Each prototype then applies its own unit count, gross area, residual site-area, FAR, and parcel-width proxy.</p>
+      <h3>4. Illustrative feasibility</h3>
+      <p>The pilot compares a for-sale duplex houseplex, rental duplex houseplex, and four-unit rental rowhouse cluster—all permitted housing types in UR1, UR2, and UR3. For-sale RLV includes sales and closing costs. Rental RLV capitalizes stabilized NOI before deducting development cost and required profit. Demolition is charged only where a mapped building footprint exists. Assessed land plus improvement value is a low-confidence acquisition benchmark, not an appraisal.</p>
+      <h3>5. Permit activity</h3>
+      <p>Permit records are matched by normalized parcel number to show where observed applications overlap—or fail to overlap—with modeled capacity and feasibility. The layer is a delivery-gap diagnostic. It does not measure completed homes, and many records lack reliable housing-unit counts.</p>
+    </dialog>
+
+    <dialog id="limitations-dialog" class="info-dialog">
+      <button class="dialog-close" aria-label="Close">×</button>
+      <span class="eyebrow">Limitations</span>
+      <h2>Read before interpreting results</h2>
+      <ul>
+        <li>This is an independent portfolio case study, not an official Tacoma capacity estimate or entitlement determination.</li>
+        <li>Existing-use eligibility relies on assessor descriptions; 1,229 ambiguous nonresidential parcels are held for manual review.</li>
+        <li>The partially vacant category is a current-data proxy, not Pierce County's official 2020 Buildable Lands classification.</li>
+        <li>Capacity omits bonuses and some site-specific code exceptions.</li>
+        <li>Critical-area GIS is a generalized screening source, not a field delineation. Unmapped resources and site-specific buffers may change the result.</li>
+        <li>Public parcel-level utility-easement geometry was not available, so easements require title and utility review and are not inferred.</li>
+        <li>Physical fit does not establish frontage, fire access, utility capacity, parking, tree compliance, title, or environmental feasibility.</li>
+        <li>Assessed value is a low-confidence acquisition benchmark, not market value.</li>
+        <li>Sale prices use a small public evidence sample; construction, financing, and fee assumptions remain illustrative.</li>
+        <li>Permit unit counts are incomplete and completion dates are unavailable.</li>
+        <li>Housing applications are independent historical context, not validation or the next stage of a selected prototype financial screen.</li>
+      </ul>
+    </dialog>
+
+    <script src="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.js"></script>
+    <script type="module" src="./js/app.js?v=20260712-27"></script>
+  </body>
+</html>

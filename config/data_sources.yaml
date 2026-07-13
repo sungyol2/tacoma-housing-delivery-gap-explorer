@@ -1,0 +1,293 @@
+schema_version: 1
+audit_date: 2026-07-11
+status: initial_audit_complete
+
+fields_required_for_each_source:
+  - id
+  - title
+  - publisher
+  - category
+  - url
+  - access_method
+  - service_type
+  - update_date
+  - key_fields
+  - join_key
+  - license
+  - download_test
+  - limitations
+
+sources:
+  - id: pierce_tax_parcels
+    title: Tax Parcels
+    publisher: Pierce County Assessor-Treasurer
+    category: parcel_assessor
+    url: https://services2.arcgis.com/1UvBaQ5y1ubjUPmd/arcgis/rest/services/Tax_Parcels/FeatureServer/0
+    access_method: ArcGIS REST query with pagination; GeoJSON, JSON, and PBF advertised
+    service_type: ArcGIS FeatureServer polygon layer
+    update_date: "2026-07-10"
+    key_fields:
+      - TaxParcelNumber
+      - Site_Address
+      - Land_Acres
+      - Land_Value
+      - Improvement_Value
+      - Taxable_Value
+      - Use_Code
+      - Landuse_Description
+      - EditDate
+    join_key: TaxParcelNumber (10-character parcel number)
+    license: Pierce County GIS Data Terms of Use; acceptance required on use/download
+    download_test: success_count_query_339876_records
+    query:
+      where: 1=1
+      out_fields: TaxParcelNumber,TaxParcelType,EffectiveDate,RetiredDate,EditDate,Site_Address,Land_Acres,Land_Value,Improvement_Value,Taxable_Value,Use_Code,Landuse_Description
+      page_size: 2000
+      geometry: 1127087.91410397,674580.589604482,1181474.1773784757,736880.376750052
+      geometry_type: esriGeometryEnvelope
+      in_sr: 2927
+    limitations:
+      - Tax parcels are cadastral reference geometry, not survey boundaries.
+      - Layer does not expose building year, existing unit count, or sales history.
+      - Condominium and non-base parcel types require explicit handling.
+      - Service maximum record count is 2000, so pagination is required.
+
+  - id: tacoma_zoning
+    title: Zoning Districts (Tacoma) - new
+    publisher: City of Tacoma Planning and Development Services / IT-GIS
+    category: zoning
+    url: https://services3.arcgis.com/SCwJH1pD8WSn5T5y/arcgis/rest/services/Zoning_Districts/FeatureServer/0
+    access_method: ArcGIS REST query with pagination
+    service_type: ArcGIS FeatureServer polygon layer
+    update_date: "2026-06-10"
+    key_fields:
+      - Zoning
+      - BaseZone
+      - ACD
+      - CONS
+      - HIST
+      - PRD
+      - PTD
+      - STGPD
+      - VSD
+      - ShorelineEnviroDesignation
+      - AdoptionDate
+      - RegulatoryOrdinance
+    join_key: spatial_overlay_to_parcels
+    license: Tacoma Open Data permits use and reuse without legal restrictions; attribution retained
+    download_test: success_count_query_8202_records
+    query:
+      where: 1=1
+      out_fields: Zoning,BaseZone,ACD,CONS,HIST,PRD,PTD,STGPD,STM_IC,VSD,ShorelineEnviroDesignation,ShorelineZoningName,AdoptionDate,RegulatoryOrdinance,SH
+      page_size: 2000
+    limitations:
+      - Current Home in Tacoma zoning took effect 2025-02-01; vintage must be confirmed.
+      - Capacity standards must come from adopted code, not GIS labels alone.
+
+  - id: tacoma_building_footprints_2024
+    title: Building Footprints 2024 (Tacoma)
+    publisher: City of Tacoma
+    category: building_footprints
+    url: https://services3.arcgis.com/SCwJH1pD8WSn5T5y/arcgis/rest/services/Tacoma_2024_BuildingFootprints/FeatureServer/0
+    access_method: ArcGIS REST query with pagination
+    service_type: ArcGIS FeatureServer polygon layer
+    update_date: "2024"
+    key_fields:
+      - area_sqft
+      - average_z
+      - geometry
+    join_key: spatial_intersection_to_parcels
+    license: Tacoma Open Data permits use and reuse without legal restrictions; attribution retained
+    download_test: success_count_query_96881_records
+    query:
+      where: 1=1
+      out_fields: area_sqft,average_z,lag
+      page_size: 1000
+    limitations:
+      - Footprints are spatial-only and do not contain parcel IDs or building-use attributes.
+      - Source production method, completeness, and treatment of accessory structures require review.
+      - Multiple footprints may intersect one parcel and must be clipped/aggregated carefully.
+
+  - id: tacoma_accela_permits
+    title: Accela Permit Data
+    publisher: City of Tacoma
+    category: permits
+    url: https://services3.arcgis.com/SCwJH1pD8WSn5T5y/ArcGIS/rest/services/accela_permit_data/FeatureServer/0
+    access_method: ArcGIS REST query with pagination; GeoJSON, JSON, and PBF advertised
+    service_type: ArcGIS FeatureServer point layer
+    update_date: "2026-07-10"
+    key_fields:
+      - permit_number
+      - permit_type
+      - permit_subtype
+      - permit_category
+      - current_status
+      - application_date
+      - issued_date
+      - address_line_1
+      - description
+      - parcel_number
+      - valuation
+      - housing_units
+      - pull_date
+    join_key: parcel_number, with spatial and normalized-address fallbacks
+    license: Tacoma Open Data permits use and reuse without legal restrictions; attribution retained
+    download_test: success_count_query_109614_records
+    query:
+      where: 1=1
+      out_fields: permit_number,last_action,permit_group,permit_type,permit_subtype,permit_category,current_status,application_date,issued_date,address_line_1,address_line_2,description,fees_paid,latitude,longitude,parcel_number,zip,valuation,housing_units,link,pull_date,council_district_number
+      page_size: 1000
+    limitations:
+      - Service maximum record count is 1000, so pagination is required.
+      - Completion/final date is not exposed in the current schema.
+      - Existing-unit and demolition-unit fields are not exposed.
+      - Parcel-number completeness and multi-parcel formatting require profiling.
+
+  - id: pierce_assessor_bulk_tables
+    title: Pierce County Assessor-Treasurer data downloads
+    publisher: Pierce County Assessor-Treasurer
+    category: assessor
+    url: https://www.piercecountywa.gov/736/Data-Downloads
+    access_method: bulk files or linked tables; inventory and download test pending
+    service_type: public download page
+    update_date: null
+    key_fields: []
+    join_key: parcel_number_expected_but_unverified
+    license: Pierce County terms of use; file-specific terms pending
+    download_test: blocked_dynamic_download_links_cloudflare_2026-07-11
+    limitations:
+      - Weekly zipped pipe-delimited files and the relationship diagram are publicly documented.
+      - Automated discovery of the embedded file links was blocked by Cloudflare during this audit.
+      - Relationship diagram confirms Appraisal Account, Improvement, Improvement Built-As, Improvement Detail, and Sale tables keyed by parcel number.
+
+  - id: tacoma_flood_insurance_study_2017
+    title: 2017 Pierce County Flood Insurance Study (Tacoma)
+    publisher: City of Tacoma
+    category: environmental_overlay
+    url: https://services3.arcgis.com/SCwJH1pD8WSn5T5y/arcgis/rest/services/2017_Pierce_County_Flood_Insurance_Study/FeatureServer/0
+    access_method: ArcGIS REST query
+    service_type: ArcGIS FeatureServer polygon layer
+    update_date: "2017"
+    key_fields:
+      - geometry
+    join_key: spatial_overlay_to_parcels
+    license: City of Tacoma Open Data disclaimer
+    download_test: success_count_query_269_records
+    query:
+      where: 1=1
+      out_fields: "*"
+      page_size: 1000
+    limitations:
+      - Confirm whether a newer effective FEMA dataset supersedes this layer before modeling.
+
+  - id: tacoma_protected_waters_buffer
+    title: Protected Waters 200ft Buffer (Tacoma)
+    publisher: City of Tacoma
+    category: environmental_overlay
+    url: https://services3.arcgis.com/SCwJH1pD8WSn5T5y/arcgis/rest/services/ProtectedWaters_200FT_Buffers/FeatureServer/1
+    access_method: ArcGIS REST query
+    service_type: ArcGIS FeatureServer polygon layer
+    update_date: "2026-06-03"
+    key_fields:
+      - geometry
+    join_key: spatial_overlay_to_parcels
+    license: City of Tacoma Open Data disclaimer
+    download_test: success_count_query_36_records
+    query:
+      where: 1=1
+      out_fields: "*"
+      page_size: 1000
+    limitations:
+      - A screening flag only; underlying regulatory applicability must be checked against adopted code.
+
+  - id: tacoma_steep_slopes
+    title: Steep Slopes (Tacoma)
+    publisher: City of Tacoma
+    category: critical_area
+    url: https://services3.arcgis.com/SCwJH1pD8WSn5T5y/arcgis/rest/services/Steep_Slopes_(Tacoma)/FeatureServer/0
+    access_method: ArcGIS REST query
+    service_type: ArcGIS FeatureServer polygon layer
+    update_date: "2026-07-12"
+    key_fields:
+      - percentslope
+      - slopecategory
+      - geometry
+    join_key: spatial_overlay_to_parcels
+    license: City of Tacoma open-data terms
+    download_test: target_parcel_intersection_confirmed_2026-07-12
+    query:
+      where: 1=1
+      out_fields: percentslope,slopecategory,notes,last_edited_date
+      page_size: 1000
+    limitations:
+      - Generalized screening geometry does not replace parcel-specific geotechnical review.
+      - TMC applicability and buffers can extend beyond the mapped steep-slope polygon.
+
+  - id: tacoma_wetland_inventory
+    title: Wetland Inventory (Tacoma)
+    publisher: City of Tacoma
+    category: critical_area
+    url: https://services3.arcgis.com/SCwJH1pD8WSn5T5y/arcgis/rest/services/Wetland_Inventory/FeatureServer/0
+    access_method: ArcGIS REST query
+    service_type: ArcGIS FeatureServer polygon layer
+    update_date: "2026-07-08"
+    key_fields:
+      - Status
+      - Category
+      - DelineationDate
+      - geometry
+    join_key: spatial_overlay_to_parcels
+    license: City of Tacoma open-data terms
+    download_test: service_and_target_query_success_2026-07-12
+    query:
+      where: 1=1
+      out_fields: CommonName,Status,StatusSource,Category,DelineationDate,SizeSqFt,last_edited_date
+      page_size: 1000
+    limitations:
+      - Inventory mapping is not a field delineation and may omit unmapped wetlands.
+      - Regulatory buffers are site- and category-dependent and are not represented here.
+
+  - id: tacoma_biodiversity_areas
+    title: Biodiversity Areas (Tacoma)
+    publisher: City of Tacoma
+    category: critical_area
+    url: https://services3.arcgis.com/SCwJH1pD8WSn5T5y/arcgis/rest/services/Biodiversity_Areas_(Tacoma)/FeatureServer/0
+    access_method: ArcGIS REST query
+    service_type: ArcGIS FeatureServer polygon layer
+    update_date: "2026-07-12"
+    key_fields:
+      - habitat_type
+      - priority_species
+      - general_description
+      - geometry
+    join_key: spatial_overlay_to_parcels
+    license: City of Tacoma open-data terms
+    download_test: target_parcel_intersection_confirmed_2026-07-12
+    query:
+      where: 1=1
+      out_fields: sitename,comname,sciname,crit_dscrp,status,habitat_type,dominant_vegetation,priority_species,habitat_elements,general_description,last_edited_date
+      page_size: 1000
+    limitations:
+      - Mapping is a screening indicator; habitat classification can require site-specific review.
+
+  - id: tacoma_streams
+    title: Streams (Tacoma)
+    publisher: City of Tacoma
+    category: critical_area
+    url: https://services3.arcgis.com/SCwJH1pD8WSn5T5y/arcgis/rest/services/Streams_(Tacoma)/FeatureServer/0
+    access_method: ArcGIS REST query
+    service_type: ArcGIS FeatureServer polyline layer
+    update_date: "2026-07-12"
+    key_fields:
+      - name
+      - type
+      - geometry
+    join_key: spatial_overlay_to_parcels
+    license: City of Tacoma open-data terms
+    download_test: service_and_target_query_success_2026-07-12
+    query:
+      where: 1=1
+      out_fields: name,type,comments,prm_wtr_ty,int_wtr_ty,last_edited_date
+      page_size: 1000
+    limitations:
+      - Use the City's protected-water buffer layer for screening proximity; mapped centerlines alone do not represent regulatory buffers.

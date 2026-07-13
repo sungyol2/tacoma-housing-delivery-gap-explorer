@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Local environments and secrets
+.env
+.env.*
+!.env.example
+
+# Downloaded and generated data
+data_raw/*
+!data_raw/README.md
+data_interim/
+data_processed/
+outputs/
+
+# Frontend build artifacts
+app/node_modules/
+app/dist/
+app/public/data/*.geojson
+app/public/data/*.geojson.gz
+app/public/data/parcels_map_*.json.gz
+# The browser loads the compressed detail dictionary; the 100+ MB expansion is local only.
+app/public/data/parcel_details.json
+app/public/data/parcel_details.json.gz
+app/public/data/parcel_details_*.json
+app/public/data/parcel_search_index.json
+
+# GIS and database sidecars
+*.gpkg-shm
+*.gpkg-wal
+*.duckdb.wal
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.server.pid

@@ -1,0 +1,846 @@
+{
+  "generated_at": "2026-07-13T03:52:09.053300+00:00",
+  "status": "illustrative_financial_results_pending_market_validation",
+  "parcel_count": 56484,
+  "ur_zoning_count": 58319,
+  "ur_existing_use_status": {
+    "candidate": 56484,
+    "manual_review": 1229,
+    "excluded_existing_use": 606
+  },
+  "basic_fit_count": 50672,
+  "scenario_funnel": {
+    "conservative": {
+      "near_or_above_break_even_count": 0,
+      "margin_bands": {
+        "very_weak": 50610,
+        "weak": 62
+      }
+    },
+    "baseline": {
+      "near_or_above_break_even_count": 43,
+      "margin_bands": {
+        "very_weak": 49857,
+        "weak": 772,
+        "marginal": 43
+      }
+    },
+    "favorable": {
+      "near_or_above_break_even_count": 744,
+      "margin_bands": {
+        "very_weak": 41532,
+        "weak": 8396,
+        "marginal": 472,
+        "moderate": 246,
+        "strong": 26
+      }
+    }
+  },
+  "scenario_pro_forma": {
+    "conservative": {
+      "gross_revenue": 810000.0,
+      "hard_cost": 594000.0000000001,
+      "sales_and_closing_cost": 48600.0,
+      "soft_cost": 106920.00000000001,
+      "fee_allowance": 27500.0,
+      "financing_allowance": 55199.99999999999,
+      "demolition_allowance": 40000.0,
+      "contingency": 29700.000000000007,
+      "non_land_cost": 901920.0000000001,
+      "required_profit": 148816.80000000002,
+      "residual_land_value": -240736.80000000013
+    },
+    "baseline": {
+      "gross_revenue": 900000.0,
+      "hard_cost": 540000.0,
+      "sales_and_closing_cost": 54000.0,
+      "soft_cost": 97200.0,
+      "fee_allowance": 27500.0,
+      "financing_allowance": 48000.0,
+      "demolition_allowance": 40000.0,
+      "contingency": 27000.0,
+      "non_land_cost": 833700.0,
+      "required_profit": 125055.0,
+      "residual_land_value": -58755.0
+    },
+    "favorable": {
+      "gross_revenue": 990000.0000000001,
+      "hard_cost": 486000.0,
+      "sales_and_closing_cost": 59400.00000000001,
+      "soft_cost": 87480.0,
+      "fee_allowance": 27500.0,
+      "financing_allowance": 40800.0,
+      "demolition_allowance": 40000.0,
+      "contingency": 24300.0,
+      "non_land_cost": 765480.0,
+      "required_profit": 103339.8,
+      "residual_land_value": 121180.20000000011
+    }
+  },
+  "one_factor_sensitivity": {
+    "sales_down_5": {
+      "gross_revenue": 855000.0,
+      "hard_cost": 540000.0,
+      "sales_and_closing_cost": 51300.0,
+      "soft_cost": 97200.0,
+      "fee_allowance": 27500.0,
+      "financing_allowance": 48000.0,
+      "demolition_allowance": 40000.0,
+      "contingency": 27000.0,
+      "non_land_cost": 831000.0,
+      "required_profit": 124650.0,
+      "residual_land_value": -100650.0,
+      "near_or_above_break_even_count": 0
+    },
+    "sales_up_5": {
+      "gross_revenue": 945000.0,
+      "hard_cost": 540000.0,
+      "sales_and_closing_cost": 56700.0,
+      "soft_cost": 97200.0,
+      "fee_allowance": 27500.0,
+      "financing_allowance": 48000.0,
+      "demolition_allowance": 40000.0,
+      "contingency": 27000.0,
+      "non_land_cost": 836400.0,
+      "required_profit": 125460.0,
+      "residual_land_value": -16860.0,
+      "near_or_above_break_even_count": 141
+    },
+    "hard_cost_up_5": {
+      "gross_revenue": 900000.0,
+      "hard_cost": 567000.0,
+      "sales_and_closing_cost": 54000.0,
+      "soft_cost": 102060.0,
+      "fee_allowance": 27500.0,
+      "financing_allowance": 48000.0,
+      "demolition_allowance": 40000.0,
+      "contingency": 28350.0,
+      "non_land_cost": 866910.0,
+      "required_profit": 130036.5,
+      "residual_land_value": -96946.5,
+      "near_or_above_break_even_count": 0
+    },
+    "hard_cost_down_5": {
+      "gross_revenue": 900000.0,
+      "hard_cost": 513000.0,
+      "sales_and_closing_cost": 54000.0,
+      "soft_cost": 92340.0,
+      "fee_allowance": 27500.0,
+      "financing_allowance": 48000.0,
+      "demolition_allowance": 40000.0,
+      "contingency": 25650.0,
+      "non_land_cost": 800490.0,
+      "required_profit": 120073.5,
+      "residual_land_value": -20563.5,
+      "near_or_above_break_even_count": 129
+    }
+  },
+  "site_condition_classes": {
+    "developed": 42938,
+    "partially_vacant_proxy": 11884,
+    "vacant": 1662
+  },
+  "critical_area_status": {
+    "no_mapped_constraint": 44056,
+    "mapped_constraint_review": 7517,
+    "constrained_out": 3553,
+    "moderate_slope_review": 1358
+  },
+  "mapped_constraint_pass_count": 52931,
+  "split_zoned_count": 1757,
+  "meaningful_split_zoned_count": 155,
+  "housing_pipeline_records_matched": 1446,
+  "zones": {
+    "UR2": 26880,
+    "UR1": 22316,
+    "UR3": 7288
+  },
+  "baseline_feasibility_classes": {
+    "very_weak": 49857,
+    "weak": 772,
+    "marginal": 43
+  },
+  "prototypes": {
+    "duplex_for_sale": {
+      "tenure": "for_sale",
+      "screened_parcels": 50672,
+      "scenario_pro_forma": {
+        "conservative": {
+          "gross_revenue": 810000.0,
+          "hard_cost": 594000.0000000001,
+          "sales_and_closing_cost": 48600.0,
+          "soft_cost": 106920.00000000001,
+          "fee_allowance": 27500.0,
+          "financing_allowance": 55199.99999999999,
+          "demolition_allowance": 40000.0,
+          "contingency": 29700.000000000007,
+          "non_land_cost": 901920.0000000001,
+          "required_profit": 148816.80000000002,
+          "residual_land_value": -240736.80000000013
+        },
+        "baseline": {
+          "gross_revenue": 900000.0,
+          "hard_cost": 540000.0,
+          "sales_and_closing_cost": 54000.0,
+          "soft_cost": 97200.0,
+          "fee_allowance": 27500.0,
+          "financing_allowance": 48000.0,
+          "demolition_allowance": 40000.0,
+          "contingency": 27000.0,
+          "non_land_cost": 833700.0,
+          "required_profit": 125055.0,
+          "residual_land_value": -58755.0
+        },
+        "favorable": {
+          "gross_revenue": 990000.0000000001,
+          "hard_cost": 486000.0,
+          "sales_and_closing_cost": 59400.00000000001,
+          "soft_cost": 87480.0,
+          "fee_allowance": 27500.0,
+          "financing_allowance": 40800.0,
+          "demolition_allowance": 40000.0,
+          "contingency": 24300.0,
+          "non_land_cost": 765480.0,
+          "required_profit": 103339.8,
+          "residual_land_value": 121180.20000000011
+        }
+      },
+      "baseline_classes": {
+        "very_weak": 49857,
+        "weak": 772,
+        "marginal": 43
+      },
+      "basic_fit_count": 50672,
+      "scenario_funnel": {
+        "conservative": {
+          "near_or_above_break_even_count": 0,
+          "margin_bands": {
+            "very_weak": 50610,
+            "weak": 62
+          }
+        },
+        "baseline": {
+          "near_or_above_break_even_count": 43,
+          "margin_bands": {
+            "very_weak": 49857,
+            "weak": 772,
+            "marginal": 43
+          }
+        },
+        "favorable": {
+          "near_or_above_break_even_count": 744,
+          "margin_bands": {
+            "very_weak": 41532,
+            "weak": 8396,
+            "marginal": 472,
+            "moderate": 246,
+            "strong": 26
+          }
+        }
+      }
+    },
+    "duplex_rental": {
+      "tenure": "rental",
+      "screened_parcels": 50672,
+      "scenario_pro_forma": {
+        "conservative": {
+          "potential_gross_income": 44938.799999999996,
+          "effective_gross_income": 42242.471999999994,
+          "operating_expenses": 13517.59104,
+          "net_operating_income": 28724.880959999995,
+          "cap_rate": 0.0627,
+          "stabilized_value": 458132.0727272726,
+          "gross_revenue": 458132.0727272726,
+          "hard_cost": 554400.0,
+          "soft_cost": 99792.0,
+          "fee_allowance": 27500.0,
+          "financing_allowance": 55199.99999999999,
+          "demolition_allowance": 40000.0,
+          "contingency": 27720.0,
+          "non_land_cost": 804612.0,
+          "required_profit": 132760.98,
+          "residual_land_value": -479240.90727272746
+        },
+        "baseline": {
+          "potential_gross_income": 47304.0,
+          "effective_gross_income": 44938.799999999996,
+          "operating_expenses": 14380.416,
+          "net_operating_income": 30558.384,
+          "cap_rate": 0.057,
+          "stabilized_value": 536112.0,
+          "gross_revenue": 536112.0,
+          "hard_cost": 504000.0,
+          "soft_cost": 90720.0,
+          "fee_allowance": 27500.0,
+          "financing_allowance": 48000.0,
+          "demolition_allowance": 40000.0,
+          "contingency": 25200.0,
+          "non_land_cost": 735420.0,
+          "required_profit": 110313.0,
+          "residual_land_value": -309621.0
+        },
+        "favorable": {
+          "potential_gross_income": 49669.200000000004,
+          "effective_gross_income": 47682.432,
+          "operating_expenses": 15258.37824,
+          "net_operating_income": 32424.053760000003,
+          "cap_rate": 0.051300000000000005,
+          "stabilized_value": 632047.8315789474,
+          "gross_revenue": 632047.8315789474,
+          "hard_cost": 453600.0,
+          "soft_cost": 81648.0,
+          "fee_allowance": 27500.0,
+          "financing_allowance": 40800.0,
+          "demolition_allowance": 40000.0,
+          "contingency": 22680.0,
+          "non_land_cost": 666228.0,
+          "required_profit": 89940.78,
+          "residual_land_value": -124120.94842105263
+        }
+      },
+      "baseline_classes": {
+        "very_weak": 50672
+      },
+      "basic_fit_count": 50672,
+      "scenario_funnel": {
+        "conservative": {
+          "near_or_above_break_even_count": 0,
+          "margin_bands": {
+            "very_weak": 50672
+          }
+        },
+        "baseline": {
+          "near_or_above_break_even_count": 0,
+          "margin_bands": {
+            "very_weak": 50672
+          }
+        },
+        "favorable": {
+          "near_or_above_break_even_count": 0,
+          "margin_bands": {
+            "very_weak": 50113,
+            "weak": 559
+          }
+        }
+      }
+    },
+    "four_unit_rowhouse_rental": {
+      "tenure": "rental",
+      "screened_parcels": 42331,
+      "scenario_pro_forma": {
+        "conservative": {
+          "potential_gross_income": 89877.59999999999,
+          "effective_gross_income": 84484.94399999999,
+          "operating_expenses": 27035.18208,
+          "net_operating_income": 57449.76191999999,
+          "cap_rate": 0.0627,
+          "stabilized_value": 916264.1454545452,
+          "gross_revenue": 916264.1454545452,
+          "hard_cost": 1240800.0,
+          "soft_cost": 223344.0,
+          "fee_allowance": 55000.0,
+          "financing_allowance": 110399.99999999999,
+          "demolition_allowance": 40000.0,
+          "contingency": 62040.0,
+          "non_land_cost": 1731584.0,
+          "required_profit": 285711.36,
+          "residual_land_value": -1101031.2145454548
+        },
+        "baseline": {
+          "potential_gross_income": 94608.0,
+          "effective_gross_income": 89877.59999999999,
+          "operating_expenses": 28760.832,
+          "net_operating_income": 61116.768,
+          "cap_rate": 0.057,
+          "stabilized_value": 1072224.0,
+          "gross_revenue": 1072224.0,
+          "hard_cost": 1128000.0,
+          "soft_cost": 203040.0,
+          "fee_allowance": 55000.0,
+          "financing_allowance": 96000.0,
+          "demolition_allowance": 40000.0,
+          "contingency": 56400.0,
+          "non_land_cost": 1578440.0,
+          "required_profit": 236766.0,
+          "residual_land_value": -742982.0
+        },
+        "favorable": {
+          "potential_gross_income": 99338.40000000001,
+          "effective_gross_income": 95364.864,
+          "operating_expenses": 30516.75648,
+          "net_operating_income": 64848.107520000005,
+          "cap_rate": 0.051300000000000005,
+          "stabilized_value": 1264095.6631578947,
+          "gross_revenue": 1264095.6631578947,
+          "hard_cost": 1015200.0,
+          "soft_cost": 182736.0,
+          "fee_allowance": 55000.0,
+          "financing_allowance": 81600.0,
+          "demolition_allowance": 40000.0,
+          "contingency": 50760.0,
+          "non_land_cost": 1425296.0,
+          "required_profit": 192414.96000000002,
+          "residual_land_value": -353615.2968421053
+        }
+      },
+      "baseline_classes": {
+        "very_weak": 42331
+      },
+      "basic_fit_count": 42331,
+      "scenario_funnel": {
+        "conservative": {
+          "near_or_above_break_even_count": 0,
+          "margin_bands": {
+            "very_weak": 42331
+          }
+        },
+        "baseline": {
+          "near_or_above_break_even_count": 0,
+          "margin_bands": {
+            "very_weak": 42331
+          }
+        },
+        "favorable": {
+          "near_or_above_break_even_count": 0,
+          "margin_bands": {
+            "very_weak": 42331
+          }
+        }
+      }
+    }
+  },
+  "map_chunks": [
+    {
+      "id": 0,
+      "file": "parcels_map_00.json",
+      "gzip_file": "parcels_map_00.json.gz",
+      "detail_file": "parcel_details_00.json",
+      "detail_gzip_file": "parcel_details_00.json.gz",
+      "features": 1308,
+      "bytes": 1410315,
+      "gzip_bytes": 85216,
+      "detail_bytes": 7776399,
+      "detail_gzip_bytes": 417864,
+      "bounds": [
+        -122.50854997814514,
+        47.18471097069078,
+        -122.49085277850416,
+        47.20437017096898
+      ]
+    },
+    {
+      "id": 1,
+      "file": "parcels_map_01.json",
+      "gzip_file": "parcels_map_01.json.gz",
+      "detail_file": "parcel_details_01.json",
+      "detail_gzip_file": "parcel_details_01.json.gz",
+      "features": 737,
+      "bytes": 801595,
+      "gzip_bytes": 53389,
+      "detail_bytes": 4395910,
+      "detail_gzip_bytes": 254456,
+      "bounds": [
+        -122.56134777358717,
+        47.20367625200777,
+        -122.49176367924719,
+        47.24160407976067
+      ]
+    },
+    {
+      "id": 2,
+      "file": "parcels_map_02.json",
+      "gzip_file": "parcels_map_02.json.gz",
+      "detail_file": "parcel_details_02.json",
+      "detail_gzip_file": "parcel_details_02.json.gz",
+      "features": 6148,
+      "bytes": 6662707,
+      "gzip_bytes": 408650,
+      "detail_bytes": 36394527,
+      "detail_gzip_bytes": 1960052,
+      "bounds": [
+        -122.55601992483415,
+        47.24118813680367,
+        -122.49304331999517,
+        47.26892352916907
+      ]
+    },
+    {
+      "id": 3,
+      "file": "parcels_map_03.json",
+      "gzip_file": "parcels_map_03.json.gz",
+      "detail_file": "parcel_details_03.json",
+      "detail_gzip_file": "parcel_details_03.json.gz",
+      "features": 5928,
+      "bytes": 6422234,
+      "gzip_bytes": 395846,
+      "detail_bytes": 35095554,
+      "detail_gzip_bytes": 1908077,
+      "bounds": [
+        -122.54151483299016,
+        47.26650829896957,
+        -122.49386293821716,
+        47.30179326816626
+      ]
+    },
+    {
+      "id": 4,
+      "file": "parcels_map_04.json",
+      "gzip_file": "parcels_map_04.json.gz",
+      "detail_file": "parcel_details_04.json",
+      "detail_gzip_file": "parcel_details_04.json.gz",
+      "features": 2879,
+      "bytes": 3102152,
+      "gzip_bytes": 186578,
+      "detail_bytes": 17109113,
+      "detail_gzip_bytes": 907178,
+      "bounds": [
+        -122.49144157263414,
+        47.167686990159694,
+        -122.45621888830918,
+        47.20621986361028
+      ]
+    },
+    {
+      "id": 5,
+      "file": "parcels_map_05.json",
+      "gzip_file": "parcels_map_05.json.gz",
+      "detail_file": "parcel_details_05.json",
+      "detail_gzip_file": "parcel_details_05.json.gz",
+      "features": 2284,
+      "bytes": 2458684,
+      "gzip_bytes": 148895,
+      "detail_bytes": 13580318,
+      "detail_gzip_bytes": 737874,
+      "bounds": [
+        -122.49294159671616,
+        47.203858894164675,
+        -122.45770430525518,
+        47.24301835092717
+      ]
+    },
+    {
+      "id": 6,
+      "file": "parcels_map_06.json",
+      "gzip_file": "parcels_map_06.json.gz",
+      "detail_file": "parcel_details_06.json",
+      "detail_gzip_file": "parcel_details_06.json.gz",
+      "features": 6631,
+      "bytes": 7153573,
+      "gzip_bytes": 437704,
+      "detail_bytes": 39169723,
+      "detail_gzip_bytes": 2126076,
+      "bounds": [
+        -122.49383719318017,
+        47.24232115103128,
+        -122.45912126506214,
+        47.26962458632878
+      ]
+    },
+    {
+      "id": 7,
+      "file": "parcels_map_07.json",
+      "gzip_file": "parcels_map_07.json.gz",
+      "detail_file": "parcel_details_07.json",
+      "detail_gzip_file": "parcel_details_07.json.gz",
+      "features": 2327,
+      "bytes": 2519511,
+      "gzip_bytes": 161358,
+      "detail_bytes": 13822942,
+      "detail_gzip_bytes": 791383,
+      "bounds": [
+        -122.49447866960216,
+        47.268761826845676,
+        -122.45996241001716,
+        47.290648978251376
+      ]
+    },
+    {
+      "id": 8,
+      "file": "parcels_map_08.json",
+      "gzip_file": "parcels_map_08.json.gz",
+      "detail_file": "parcel_details_08.json",
+      "detail_gzip_file": "parcel_details_08.json.gz",
+      "features": 6472,
+      "bytes": 6978822,
+      "gzip_bytes": 430087,
+      "detail_bytes": 38253755,
+      "detail_gzip_bytes": 2057296,
+      "bounds": [
+        -122.45772103176614,
+        47.17010569651758,
+        -122.42637191367018,
+        47.20509804347827
+      ]
+    },
+    {
+      "id": 9,
+      "file": "parcels_map_09.json",
+      "gzip_file": "parcels_map_09.json.gz",
+      "detail_file": "parcel_details_09.json",
+      "detail_gzip_file": "parcel_details_09.json.gz",
+      "features": 6219,
+      "bytes": 6693266,
+      "gzip_bytes": 398672,
+      "detail_bytes": 36723763,
+      "detail_gzip_bytes": 1980418,
+      "bounds": [
+        -122.45898823293918,
+        47.20455855190039,
+        -122.42856871884717,
+        47.243187628795766
+      ]
+    },
+    {
+      "id": 10,
+      "file": "parcels_map_10.json",
+      "gzip_file": "parcels_map_10.json.gz",
+      "detail_file": "parcel_details_10.json",
+      "detail_gzip_file": "parcel_details_10.json.gz",
+      "features": 1323,
+      "bytes": 1426572,
+      "gzip_bytes": 89218,
+      "detail_bytes": 7829290,
+      "detail_gzip_bytes": 435597,
+      "bounds": [
+        -122.46032966813118,
+        47.24301755636279,
+        -122.45016616924414,
+        47.2698338630198
+      ]
+    },
+    {
+      "id": 11,
+      "file": "parcels_map_11.json",
+      "gzip_file": "parcels_map_11.json.gz",
+      "detail_file": "parcel_details_11.json",
+      "detail_gzip_file": "parcel_details_11.json.gz",
+      "features": 107,
+      "bytes": 116637,
+      "gzip_bytes": 8336,
+      "detail_bytes": 636967,
+      "detail_gzip_bytes": 38056,
+      "bounds": [
+        -122.46090268940814,
+        47.26935881167206,
+        -122.43188382876116,
+        47.3020642175175
+      ]
+    },
+    {
+      "id": 12,
+      "file": "parcels_map_12.json",
+      "gzip_file": "parcels_map_12.json.gz",
+      "detail_file": "parcel_details_12.json",
+      "detail_gzip_file": "parcel_details_12.json.gz",
+      "features": 3462,
+      "bytes": 3733544,
+      "gzip_bytes": 230106,
+      "detail_bytes": 20398791,
+      "detail_gzip_bytes": 1090353,
+      "bounds": [
+        -122.42925824607917,
+        47.170100530689005,
+        -122.39434972325617,
+        47.205671186025484
+      ]
+    },
+    {
+      "id": 13,
+      "file": "parcels_map_13.json",
+      "gzip_file": "parcels_map_13.json.gz",
+      "detail_file": "parcel_details_13.json",
+      "detail_gzip_file": "parcel_details_13.json.gz",
+      "features": 4881,
+      "bytes": 5261493,
+      "gzip_bytes": 324982,
+      "detail_bytes": 28812680,
+      "detail_gzip_bytes": 1576960,
+      "bounds": [
+        -122.42958596293518,
+        47.20488012185288,
+        -122.39426516339516,
+        47.23796829112419
+      ]
+    },
+    {
+      "id": 14,
+      "file": "parcels_map_14.json",
+      "gzip_file": "parcels_map_14.json.gz",
+      "detail_file": "parcel_details_14.json",
+      "detail_gzip_file": "parcel_details_14.json.gz",
+      "features": 19,
+      "bytes": 20804,
+      "gzip_bytes": 2008,
+      "detail_bytes": 113514,
+      "detail_gzip_bytes": 8472,
+      "bounds": [
+        -122.36629430860818,
+        47.266362330462385,
+        -122.35152587127718,
+        47.27342752280725
+      ]
+    },
+    {
+      "id": 15,
+      "file": "parcels_map_15.json",
+      "gzip_file": "parcels_map_15.json.gz",
+      "detail_file": "parcel_details_15.json",
+      "detail_gzip_file": "parcel_details_15.json.gz",
+      "features": 5759,
+      "bytes": 6281958,
+      "gzip_bytes": 391976,
+      "detail_bytes": 34229691,
+      "detail_gzip_bytes": 1873728,
+      "bounds": [
+        -122.43238658124818,
+        47.27097336973556,
+        -122.35565067634818,
+        47.31565131387797
+      ]
+    }
+  ],
+  "map_chunk_count": 16,
+  "map_geojson_bytes": 61043867,
+  "map_geojson_gzip_bytes": 3753021,
+  "details_json_bytes": 334342922,
+  "details_json_gzip_bytes": 18146294,
+  "detail_chunk_gzip_bytes": 18163840,
+  "search_index_bytes": 8056224,
+  "search_index_gzip_bytes": 1286733,
+  "geometry_simplification_feet": 8.0,
+  "map_fields": [
+    "parcel_id",
+    "BaseZone",
+    "modeled_base_capacity_units",
+    "improvement_value_ratio",
+    "critical_area_screen_status",
+    "meaningful_split_zoned",
+    "housing_pipeline_record_count",
+    "duplex_for_sale__prototype_basic_fit",
+    "duplex_for_sale__baseline_feasibility_class",
+    "duplex_for_sale__favorable_feasibility_class",
+    "duplex_rental__prototype_basic_fit",
+    "duplex_rental__baseline_feasibility_class",
+    "duplex_rental__favorable_feasibility_class",
+    "four_unit_rowhouse_rental__prototype_basic_fit",
+    "four_unit_rowhouse_rental__baseline_feasibility_class",
+    "four_unit_rowhouse_rental__favorable_feasibility_class"
+  ],
+  "published_fields": [
+    "parcel_id",
+    "Site_Address",
+    "TaxParcelType",
+    "parcel_area_sqft",
+    "Land_Value",
+    "Improvement_Value",
+    "improvement_value_ratio",
+    "site_condition_class",
+    "critical_area_screen_status",
+    "mapped_constraint_overlap_sqft",
+    "mapped_constraint_share",
+    "largest_unconstrained_area_sqft",
+    "constraint_steep_slope_40pct",
+    "constraint_wetland",
+    "constraint_biodiversity",
+    "constraint_sfha_flood",
+    "constraint_protected_water_buffer",
+    "constraint_moderate_slope_review",
+    "utility_easement_geometry_available",
+    "Landuse_Description",
+    "BaseZone",
+    "base_zone_composition",
+    "split_zoned",
+    "meaningful_split_zoned",
+    "partial_zoning_coverage",
+    "zoning_overlap_review",
+    "building_footprint_sqft",
+    "building_coverage_ratio",
+    "modeled_base_capacity_units",
+    "modeled_max_floor_area_sqft",
+    "capacity_overlay_review",
+    "capacity_unmodeled_zone_share",
+    "prototype_basic_fit",
+    "prototype_fit_status",
+    "parcel_demolition_allowance",
+    "acquisition_benchmark",
+    "acquisition_source",
+    "acquisition_confidence",
+    "conservative_feasibility_margin",
+    "conservative_required_profit",
+    "conservative_residual_land_value",
+    "conservative_normalized_margin",
+    "conservative_feasibility_class",
+    "baseline_feasibility_margin",
+    "baseline_required_profit",
+    "baseline_residual_land_value",
+    "baseline_normalized_margin",
+    "baseline_feasibility_class",
+    "favorable_feasibility_margin",
+    "favorable_required_profit",
+    "favorable_residual_land_value",
+    "favorable_normalized_margin",
+    "favorable_feasibility_class",
+    "financial_screen_status",
+    "housing_pipeline_record_count",
+    "housing_pipeline_issued_count",
+    "housing_pipeline_reported_units",
+    "housing_pipeline_first_application",
+    "housing_pipeline_latest_application",
+    "map_center_lon",
+    "map_center_lat",
+    "duplex_for_sale__prototype_basic_fit",
+    "duplex_for_sale__prototype_fit_status",
+    "duplex_for_sale__financial_screen_status",
+    "duplex_for_sale__conservative_required_profit",
+    "duplex_for_sale__conservative_residual_land_value",
+    "duplex_for_sale__conservative_feasibility_margin",
+    "duplex_for_sale__conservative_normalized_margin",
+    "duplex_for_sale__conservative_feasibility_class",
+    "duplex_for_sale__baseline_required_profit",
+    "duplex_for_sale__baseline_residual_land_value",
+    "duplex_for_sale__baseline_feasibility_margin",
+    "duplex_for_sale__baseline_normalized_margin",
+    "duplex_for_sale__baseline_feasibility_class",
+    "duplex_for_sale__favorable_required_profit",
+    "duplex_for_sale__favorable_residual_land_value",
+    "duplex_for_sale__favorable_feasibility_margin",
+    "duplex_for_sale__favorable_normalized_margin",
+    "duplex_for_sale__favorable_feasibility_class",
+    "duplex_rental__prototype_basic_fit",
+    "duplex_rental__prototype_fit_status",
+    "duplex_rental__financial_screen_status",
+    "duplex_rental__conservative_required_profit",
+    "duplex_rental__conservative_residual_land_value",
+    "duplex_rental__conservative_feasibility_margin",
+    "duplex_rental__conservative_normalized_margin",
+    "duplex_rental__conservative_feasibility_class",
+    "duplex_rental__baseline_required_profit",
+    "duplex_rental__baseline_residual_land_value",
+    "duplex_rental__baseline_feasibility_margin",
+    "duplex_rental__baseline_normalized_margin",
+    "duplex_rental__baseline_feasibility_class",
+    "duplex_rental__favorable_required_profit",
+    "duplex_rental__favorable_residual_land_value",
+    "duplex_rental__favorable_feasibility_margin",
+    "duplex_rental__favorable_normalized_margin",
+    "duplex_rental__favorable_feasibility_class",
+    "four_unit_rowhouse_rental__prototype_basic_fit",
+    "four_unit_rowhouse_rental__prototype_fit_status",
+    "four_unit_rowhouse_rental__financial_screen_status",
+    "four_unit_rowhouse_rental__conservative_required_profit",
+    "four_unit_rowhouse_rental__conservative_residual_land_value",
+    "four_unit_rowhouse_rental__conservative_feasibility_margin",
+    "four_unit_rowhouse_rental__conservative_normalized_margin",
+    "four_unit_rowhouse_rental__conservative_feasibility_class",
+    "four_unit_rowhouse_rental__baseline_required_profit",
+    "four_unit_rowhouse_rental__baseline_residual_land_value",
+    "four_unit_rowhouse_rental__baseline_feasibility_margin",
+    "four_unit_rowhouse_rental__baseline_normalized_margin",
+    "four_unit_rowhouse_rental__baseline_feasibility_class",
+    "four_unit_rowhouse_rental__favorable_required_profit",
+    "four_unit_rowhouse_rental__favorable_residual_land_value",
+    "four_unit_rowhouse_rental__favorable_feasibility_margin",
+    "four_unit_rowhouse_rental__favorable_normalized_margin",
+    "four_unit_rowhouse_rental__favorable_feasibility_class"
+  ]
+}

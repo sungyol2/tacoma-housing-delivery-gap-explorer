@@ -1,0 +1,61 @@
+schema_version: 1
+effective_date: 2025-02-01
+model_status: simplified_baseline_screening
+source:
+  title: Urban Residential Districts Development and Design Standards
+  publisher: City of Tacoma
+  publication_date: 2024-11
+  url: https://cms.tacoma.gov/Planning/Affordable%20Housing/AHAS%20Planning%20Actions/UR%20Zones_Development%20and%20Design%20Standards_November%202024.pdf
+  code_reference: TMC 13.06.020.F.1
+
+shared:
+  minimum_lot_area_sqft: 2500
+  minimum_lot_width_ft: 25
+  minimum_lot_frontage_ft: 25
+  legal_lot_minimum_baseline_units: 4
+  notes:
+    - Legal lots of record as of 2025-02-01 are allowed at least four dwellings even when nonconforming for area, setbacks, or frontage.
+    - Lot width and frontage are not modeled in the first pass because no authoritative frontage measurement has been derived.
+    - Alley area credits, bonuses, critical-area flexibility, PRDs, and site-specific exceptions are excluded from baseline capacity.
+
+zones:
+  UR1:
+    baseline_sqft_per_unit: 1500
+    baseline_far_1_to_2_units: 0.6
+    baseline_far_3_plus_units: 0.8
+    maximum_height_ft: 35
+    front_setback_ft: 15
+    side_setback_ft: 5
+    rear_setback_ft: 15
+    permitted_housing_types:
+      - houseplex
+      - backyard_building
+      - rowhouse
+      - courtyard_detached
+  UR2:
+    baseline_sqft_per_unit: 1000
+    baseline_far_1_to_2_units: 0.8
+    baseline_far_3_plus_units: 1.0
+    maximum_height_ft: 35
+    front_setback_ft: 15
+    side_setback_ft: 5
+    rear_setback_ft: 15
+    permitted_housing_types:
+      - houseplex
+      - backyard_building
+      - rowhouse
+      - courtyard
+  UR3:
+    baseline_sqft_per_unit: 750
+    baseline_far_1_to_2_units: 1.0
+    baseline_far_3_plus_units: 1.2
+    maximum_height_ft: 35
+    front_setback_ft: 10
+    side_setback_ft: 5
+    rear_setback_ft: 10
+    permitted_housing_types:
+      - houseplex
+      - backyard_building
+      - rowhouse
+      - courtyard
+      - multiplex

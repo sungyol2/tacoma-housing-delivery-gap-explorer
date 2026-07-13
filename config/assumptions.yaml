@@ -1,0 +1,228 @@
+schema_version: 1
+project_currency: USD
+project_price_year: 2025
+status: illustrative_financial_architecture_pending_market_validation
+
+required_fields:
+  - id
+  - label
+  - value
+  - unit
+  - scope
+  - scenario
+  - source
+  - source_date
+  - accessed_date
+  - confidence
+  - notes
+
+allowed_values:
+  scope:
+    - parcel
+    - market_area
+    - prototype
+    - scenario
+  scenario:
+    - conservative
+    - baseline
+    - favorable
+    - all
+  confidence:
+    - high
+    - medium
+    - low
+
+assumptions:
+  - id: townhouse_sale_price_per_unit
+    label: For-sale missing-middle price per unit proxy
+    value: 450000
+    unit: USD_per_unit
+    scope: market_area
+    scenario: baseline
+    source: config/market_evidence.yaml
+    source_date: 2026-07-12
+    accessed_date: 2026-07-12
+    confidence: low
+    notes: Low-confidence citywide screening baseline; anchored by a small public evidence sample, not a comparable-sales model.
+
+  - id: townhouse_hard_cost_per_gross_sqft
+    label: For-sale missing-middle hard construction cost
+    value: 200
+    unit: USD_per_gross_sqft
+    scope: prototype
+    scenario: baseline
+    source: Tacoma Accela 2024-2026 new-building valuation cross-check
+    source_date: 2024-2026
+    accessed_date: 2026-07-12
+    confidence: low
+    notes: Low-confidence proxy. Recent described projects imply roughly $171-$214 per gross square foot, but permit valuation is not total development cost or a contractor bid.
+
+  - id: soft_cost_pct_of_hard_cost
+    label: Soft costs
+    value: 0.18
+    unit: proportion_of_hard_cost
+    scope: prototype
+    scenario: all
+    source: Tacoma Accela valuation cross-check plus independent screening allowance
+    source_date: 2026-07-11
+    accessed_date: 2026-07-11
+    confidence: low
+    notes: Transparent screening assumption, not a contractor or consultant estimate.
+
+  - id: fee_allowance
+    label: Permit and impact fee allowance
+    value: 55000
+    unit: USD_total
+    scope: prototype
+    scenario: baseline
+    source: project_concept_mockup_illustrative_value
+    source_date: null
+    accessed_date: 2026-07-11
+    confidence: low
+    notes: Placeholder until Tacoma and utility fee schedules are validated.
+
+  - id: financing_allowance
+    label: Financing carry and fees
+    value: 96000
+    unit: USD_total
+    scope: prototype
+    scenario: baseline
+    source: project_concept_mockup_illustrative_value
+    source_date: null
+    accessed_date: 2026-07-11
+    confidence: low
+    notes: Simplified allowance; not a loan model.
+
+  - id: demolition_allowance
+    label: Demolition and site work
+    value: 40000
+    unit: USD_total
+    scope: prototype
+    scenario: baseline
+    source: project_concept_mockup_illustrative_value
+    source_date: null
+    accessed_date: 2026-07-11
+    confidence: low
+    notes: Parcel-independent placeholder.
+
+  - id: contingency_pct_of_hard_cost
+    label: Construction contingency
+    value: 0.05
+    unit: proportion_of_hard_cost
+    scope: prototype
+    scenario: all
+    source: independent_screening_assumption
+    source_date: 2026-07-11
+    accessed_date: 2026-07-11
+    confidence: low
+    notes: Applied to hard cost.
+
+  - id: required_developer_profit_pct
+    label: Required developer profit
+    value: 0.15
+    unit: proportion_of_non_land_cost
+    scope: scenario
+    scenario: baseline
+    source: project_concept_mockup_illustrative_value
+    source_date: null
+    accessed_date: 2026-07-11
+    confidence: low
+    notes: Simplified screening return requirement.
+
+  - id: sales_and_closing_cost_pct
+    label: Sales, marketing, and closing costs
+    value: 0.06
+    unit: proportion_of_gross_sales
+    scope: prototype
+    scenario: all
+    source: independent_screening_assumption
+    source_date: 2026-07-12
+    accessed_date: 2026-07-12
+    confidence: low
+    notes: Newly explicit allowance; replaces the prior omission but is not validated to a project budget.
+
+  - id: rental_monthly_rent_per_unit
+    label: Two-bedroom monthly rent proxy
+    value: 1971
+    unit: USD_per_unit_month
+    scope: market_area
+    scenario: baseline
+    source: HUD FY2026 Tacoma WA HMFA Fair Market Rent schedule
+    source_date: 2026
+    accessed_date: 2026-07-12
+    confidence: medium
+    notes: Sourced proxy, not a new-construction asking-rent comp; Tacoma HMFA two-bedroom FMR.
+
+  - id: rental_vacancy_pct
+    label: Rental vacancy and collection loss
+    value: 0.05
+    unit: proportion_of_potential_income
+    scope: prototype
+    scenario: baseline
+    source: independent_screening_assumption
+    source_date: 2026-07-12
+    accessed_date: 2026-07-12
+    confidence: low
+    notes: Illustrative stabilized allowance.
+
+  - id: rental_operating_expense_pct
+    label: Rental operating expenses
+    value: 0.32
+    unit: proportion_of_effective_income
+    scope: prototype
+    scenario: baseline
+    source: independent_screening_assumption
+    source_date: 2026-07-12
+    accessed_date: 2026-07-12
+    confidence: low
+    notes: Includes management, maintenance, insurance, taxes, and reserves only as a screening ratio.
+
+  - id: rental_cap_rate
+    label: Stabilized multifamily capitalization rate proxy
+    value: 0.057
+    unit: proportion
+    scope: market_area
+    scenario: baseline
+    source: Lee & Associates Pacific Northwest Q1 2026 Multifamily Market Report
+    source_date: 2026-Q1
+    accessed_date: 2026-07-12
+    confidence: low
+    notes: Puget Sound transaction proxy, not a Tacoma small-project comp.
+
+  - id: rental_hard_cost_per_gross_sqft
+    label: Rental missing-middle hard construction cost
+    value: 240
+    unit: USD_per_gross_sqft
+    scope: prototype
+    scenario: baseline
+    source: independent_screening_assumption
+    source_date: 2026-07-12
+    accessed_date: 2026-07-12
+    confidence: low
+    notes: Conservative low-confidence allowance above recent described permit valuations; permit valuation is not total development cost or a contractor bid.
+
+scenario_adjustments:
+  conservative:
+    sale_price_multiplier: 0.90
+    hard_cost_multiplier: 1.10
+    financing_multiplier: 1.15
+    required_profit_multiplier: 1.10
+    rent_multiplier: 0.95
+    vacancy_multiplier: 1.20
+    cap_rate_multiplier: 1.10
+  baseline:
+    sale_price_multiplier: 1.00
+    hard_cost_multiplier: 1.00
+    financing_multiplier: 1.00
+    required_profit_multiplier: 1.00
+    rent_multiplier: 1.00
+    vacancy_multiplier: 1.00
+    cap_rate_multiplier: 1.00
+  favorable:
+    sale_price_multiplier: 1.10
+    hard_cost_multiplier: 0.90
+    financing_multiplier: 0.85
+    required_profit_multiplier: 0.90
+    rent_multiplier: 1.05
+    vacancy_multiplier: 0.80
+    cap_rate_multiplier: 0.90

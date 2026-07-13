@@ -1,0 +1,17 @@
+name: tacoma-housing-gap
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - duckdb
+  - geopandas
+  - numpy
+  - pandas
+  - pyarrow
+  - pydantic
+  - pyogrio
+  - pyyaml
+  - requests
+  - shapely
+  - pytest
+  - ruff
