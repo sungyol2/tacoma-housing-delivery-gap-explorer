@@ -2,18 +2,19 @@
 
 Self-directed parcel-level housing policy and development-feasibility case study for Tacoma, Washington.
 
-[Open the static explorer](app/) · [Methodology](docs/methodology.md) · [Case study](docs/portfolio_case_study.md) · [Exhibit handoff](docs/portfolio_exhibits.md) · [Data terms](DATA_SOURCES_AND_TERMS.md)
+[Open the live explorer](https://sungyol2.github.io/tacoma-housing-delivery-gap-explorer/app/) · [Methodology](docs/methodology.md) · [Case study](docs/portfolio_case_study.md) · [Exhibit handoff](docs/portfolio_exhibits.md) · [Data terms](DATA_SOURCES_AND_TERMS.md)
 
-The project examines the gap between housing that is legally allowed, physically plausible, financially supportable under transparent scenarios, and visible in the permit pipeline. Results are planning-level screening outputs, not official capacity estimates, entitlement determinations, appraisals, or investment advice.
+The project examines Tacoma's transition from citywide zoning reform to early housing-application activity, then uses parcel constraints and transparent prototype scenarios to explore why legal capacity does not automatically become housing delivery. Results are planning-level screening outputs, not official capacity estimates, causal policy estimates, entitlement determinations, appraisals, or investment advice.
 
 ## 60-second review path
 
-1. Open the app and read the bottom funnel from zoning through mapped constraints, prototype fit, and financial screening.
-2. Switch to **Site constraints** and search `6245000035` to inspect a wooded vacant parcel screened out by steep-slope and biodiversity mapping.
-3. Switch to **Prototype feasibility**, select a parcel, and use the three-model comparison to inspect physical fit, development value, margin, and classification. The selected model's pro forma also states how much of non-land cost plus target profit its modeled value covers; gray parcels did not pass the physical screen.
-4. Open **Methodology** and **Limitations** in the app, then review the concise [case study](docs/portfolio_case_study.md) for findings and design decisions.
+1. Open **Housing applications** and compare the five-year pre-policy annual average with Home in Tacoma Year One; use the right panel to see which housing types changed.
+2. Change the UR zone filter and note that the policy comparison and type table update together.
+3. Switch to **Site constraints** and search `6245000035` to inspect a wooded vacant parcel screened out by steep-slope and biodiversity mapping.
+4. Open **Illustrative prototypes** only as a secondary sensitivity demonstration; the financial outputs are not presented as market findings.
+5. Open **Methodology** and **Limitations**, then review the concise [case study](docs/portfolio_case_study.md).
 
-Key result: of 56,484 existing-use candidates, 3,553 are screened out by mapped constraints. Physical fit varies across the three pilot models: 50,672 for-sale duplex, 50,672 rental duplex, and 42,331 four-unit rental rowhouse parcels. At baseline, 43 for-sale duplex parcels are within $50,000 of break-even or above; both rental models are entirely very weak under current sourced proxies and illustrative costs.
+Key result: within current UR parcel geography, active housing applications increased from a pre-policy annual average of 177 to 231 in Home in Tacoma Year One, while reported proposed units increased from 226.8 to 416. Tacoma's official review reports 213 applications and 385 units; the independent ETL is shown separately rather than tuned to reproduce the City result. Of 56,484 existing-use candidates, 3,553 are also screened out by mapped constraints. Financial prototype outputs remain an input-sensitive secondary demonstration.
 
 ## Current status
 
@@ -24,7 +25,8 @@ The public app registers parcel geometry in 16 map sections. Detailed evidence i
 Current processed outputs (kept out of Git by default):
 
 - `data_processed/parcels_base.parquet`: 73,326 unique Tacoma parcels; 58,319 in the UR1/UR2/UR3 zoning inventory, 56,484 existing-use candidates, and parcel-level mapped critical-area screening
-- `data_processed/permits.parquet`: 109,614 Accela permit records
+- `data_processed/permits.parquet`: 109,415 canonical permit numbers from 109,614 raw Accela rows
+- `data_processed/housing_applications.parquet`: canonical, text-classified housing applications from Residential and Commercial workflows, including new buildings and alterations that explicitly create or legalize dwelling units, with Home in Tacoma policy cohorts and likely-project keys
 - `outputs/qa/parcels_base_qa.json`: machine-readable geometry, join, and missingness checks
 - `data_processed/parcels_capacity.parquet`: simplified UR1/UR2/UR3 baseline capacity
 - `data_processed/parcels_physical_fit.parquet`: three prototype-specific physical screens
@@ -60,7 +62,7 @@ uv run python -m http.server 4173 --bind 127.0.0.1
 
 Then open `http://127.0.0.1:4173/app/`.
 
-The web export divides the parcel map into 16 spatial chunks totaling about 3.6 MB compressed; the largest chunk is under 0.43 MB. A separate approximately 8.4 MB compressed detail dictionary loads in the background for address search and the evidence panel.
+The web export divides the parcel map into 16 spatial chunks totaling about 3.8 MB compressed. Parcel details are split into 16 on-demand compressed sections totaling about 18.3 MB; address search uses a separate approximately 1.3 MB compressed index.
 
 ## Working principles
 
@@ -73,3 +75,5 @@ The web export divides the parcel map into 16 spatial chunks totaling about 3.6 
 See [PROJECT_BRIEF.md](PROJECT_BRIEF.md) for the complete scope and [docs/data_audit.md](docs/data_audit.md) for current data-readiness findings.
 
 Key interpretation documents: [portfolio case study](docs/portfolio_case_study.md), [methodology](docs/methodology.md), [limitations](docs/limitations.md), [findings](docs/findings.md), [financial model audit](docs/financial_model_audit.md), and [validation audit](docs/validation_audit.md).
+
+Permit classification and the HB 1110/Home in Tacoma timeline are documented in [housing application ETL](docs/permit_etl.md), with difficult examples preserved in the [permit classification gold-set audit](docs/permit_sample_audit.md). Desktop and mobile behavior is recorded in the [interface QA](docs/interface_qa.md).

@@ -9,8 +9,8 @@ BASE = {
     "sale_price_per_unit": 590000,
     "hard_cost_per_sqft": 200,
     "soft_cost_pct": 0.18,
-    "fee_allowance": 55000,
-    "financing_allowance": 96000,
+    "fee_pct_of_hard_cost": 0.05,
+    "financing_pct_of_financeable_cost": 0.04,
     "demolition_allowance": 40000,
     "contingency_pct": 0.05,
     "required_profit_pct": 0.15,
@@ -22,6 +22,9 @@ def test_rlv_arithmetic_identity() -> None:
     assert result["residual_land_value"] == (
         result["gross_revenue"] - result["non_land_cost"] - result["required_profit"]
     )
+    assert result["gross_revenue"] == (
+        result["non_land_cost"] + result["residual_land_value"]
+    ) * (1 + BASE["required_profit_pct"])
 
 
 def test_lower_price_reduces_rlv() -> None:
@@ -57,8 +60,8 @@ def test_rental_value_identity_and_cap_rate_direction() -> None:
     inputs = {
         "units": 4, "gross_building_area_sqft": 4000, "monthly_rent_per_unit": 1971,
         "vacancy_pct": 0.05, "operating_expense_pct": 0.32, "cap_rate": 0.057,
-        "hard_cost_per_sqft": 240, "soft_cost_pct": 0.18, "fee_allowance": 55000,
-        "financing_allowance": 96000, "demolition_allowance": 40000,
+        "hard_cost_per_sqft": 220, "soft_cost_pct": 0.18, "fee_pct_of_hard_cost": 0.05,
+        "financing_pct_of_financeable_cost": 0.04, "demolition_allowance": 40000,
         "contingency_pct": 0.05, "required_profit_pct": 0.15,
     }
     result = calculate_rental_rlv(**inputs)
@@ -66,3 +69,17 @@ def test_rental_value_identity_and_cap_rate_direction() -> None:
     assert result["residual_land_value"] == result["stabilized_value"] - result["non_land_cost"] - result["required_profit"]
     higher_cap = calculate_rental_rlv(**{**inputs, "cap_rate": 0.065})
     assert higher_cap["residual_land_value"] < result["residual_land_value"]
+
+
+def test_fee_and_financing_scale_with_project_cost() -> None:
+    baseline = calculate_rlv(**BASE)
+    larger = calculate_rlv(**{**BASE, "gross_building_area_sqft": 6000})
+    assert larger["fee_allowance"] > baseline["fee_allowance"]
+    assert larger["financing_allowance"] > baseline["financing_allowance"]
+
+
+def test_profit_target_includes_supportable_land_cost() -> None:
+    result = calculate_rlv(**BASE)
+    total_cost = result["non_land_cost"] + result["residual_land_value"]
+    assert result["required_profit"] == result["gross_revenue"] - total_cost
+    assert abs(result["required_profit"] - total_cost * BASE["required_profit_pct"]) < 0.01

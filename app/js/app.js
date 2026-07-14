@@ -22,9 +22,9 @@ const modeStyles = {
     legend: [["Strong (>=$150k)", "#2b7b78"], ["Moderate ($50k to $150k)", "#72a06a"], ["Marginal (-$50k to $50k)", "#d3a12f"], ["Weak (-$250k to -$50k)", "#c8794f"], ["Very weak (<-$250k)", "#9f4b45"], ["No basic fit", "#a8a9a4"]]
   },
   permits: {
-    property: "housing_pipeline_record_count",
-    paint: ["interpolate", ["linear"], ["get", "housing_pipeline_record_count"], 0, "#e2e0d9", 1, "#9ebdca", 2, "#4f839f", 4, "#173b5d"],
-    legend: [["No 2021–2026 housing application", "#e2e0d9"], ["1 application", "#9ebdca"], ["2–3 applications", "#4f839f"], ["4+ applications", "#173b5d"]]
+    property: "housing_application_project_count",
+    paint: ["interpolate", ["linear"], ["get", "housing_application_project_count"], 0, "#e2e0d9", 1, "#9ebdca", 2, "#4f839f", 4, "#173b5d"],
+    legend: [["No classified housing project", "#e2e0d9"], ["1 project", "#9ebdca"], ["2–3 projects", "#4f839f"], ["4+ projects", "#173b5d"]]
   }
 };
 
@@ -99,7 +99,7 @@ function feasibilityPaint() {
 function currentFilter() {
   const filters = [];
   if (state.zone !== "all") filters.push(["==", ["get", "BaseZone"], state.zone]);
-  if (state.fitOnly) filters.push(["==", ["get", prototypeField("prototype_basic_fit")], true]);
+  if (state.fitOnly && state.mode === "feasibility") filters.push(["==", ["get", prototypeField("prototype_basic_fit")], true]);
   return filters.length ? ["all", ...filters] : null;
 }
 
@@ -140,28 +140,118 @@ function updateFunnel() {
   document.querySelector("#scenario-explanation").textContent = explanation;
 }
 
+function signedPercent(value) {
+  if (value == null) return "Not available";
+  return `${value > 0 ? "+" : ""}${number(value, 1)}%`;
+}
+
+function renderPolicyOverview() {
+  if (!state.summary?.housing_policy_comparison || state.selectedId) return;
+  const zoneKey = state.zone === "all" ? "all" : state.zone;
+  const comparison = state.summary.housing_policy_comparison.by_zone[zoneKey];
+  const rows = Object.entries(comparison.by_type)
+    .filter(([, values]) => values.pre_policy_annual_average.permit_records || values.home_in_tacoma_year_one.permit_records)
+    .sort(([, a], [, b]) => b.home_in_tacoma_year_one.reported_units - a.home_in_tacoma_year_one.reported_units)
+    .map(([housingType, values]) => `<tr>
+      <th scope="row">${housingTypeLabels(housingType)}</th>
+      <td>${number(values.pre_policy_annual_average.permit_records, 1)} → ${number(values.home_in_tacoma_year_one.permit_records)}</td>
+      <td>${number(values.pre_policy_annual_average.reported_units, 1)} → ${number(values.home_in_tacoma_year_one.reported_units)}</td>
+    </tr>`).join("");
+  document.querySelector("#parcel-title").textContent = "Policy overview";
+  document.querySelector("#parcel-address").textContent = `${state.zone === "all" ? "All current UR zones" : state.zone} · Home in Tacoma effective Feb. 1, 2025`;
+  document.querySelector("#parcel-details").className = "parcel-details";
+  document.querySelector("#parcel-details").innerHTML = `<section class="detail-section"><h3>Housing type change</h3>
+    <div class="comparison-scroll"><table class="model-comparison policy-type-table"><caption>Pre-policy annual average → Home in Tacoma Year One</caption>
+      <thead><tr><th>Housing type</th><th>Applications</th><th>Proposed units</th></tr></thead><tbody>${rows}</tbody>
+    </table></div>
+    <p class="note">Cancelled and voided records are excluded. Categories translate historical Accela descriptions into current Tacoma housing types; sale versus rental tenure is not inferred.</p></section>
+    <section class="detail-section"><h3>How to read the map</h3><p class="empty-state">Darker parcels have more classified housing projects since February 2020. Select a parcel to inspect its application types, timing, units, and status.</p></section>`;
+}
+
+function renderDefaultParcelPrompt() {
+  if (state.selectedId || state.mode === "permits") return;
+  document.querySelector("#parcel-title").textContent = "Select a parcel";
+  document.querySelector("#parcel-address").textContent = "Click the map to inspect the evidence.";
+  document.querySelector("#parcel-details").className = "parcel-details empty-state";
+  document.querySelector("#parcel-details").textContent = "Capacity, site conditions, feasibility, provenance, and permit activity will appear here.";
+}
+
+function updatePolicyComparison() {
+  if (!state.summary?.housing_policy_comparison) return;
+  const zoneKey = state.zone === "all" ? "all" : state.zone;
+  const comparison = state.summary.housing_policy_comparison.by_zone[zoneKey];
+  if (!comparison) return;
+  const pre = comparison.pre_policy_annual_average;
+  const yearOne = comparison.home_in_tacoma_year_one;
+  const applicationChange = comparison.change_pct.permit_records;
+  const unitChange = comparison.change_pct.reported_units;
+  document.querySelector("#policy-geography").textContent = `${state.zone === "all" ? "All current UR zones" : state.zone} · active applications`;
+  document.querySelector("#metric-pre-applications").textContent = number(pre.permit_records, 1);
+  document.querySelector("#metric-year-one-applications").textContent = number(yearOne.permit_records);
+  document.querySelector("#metric-application-change").textContent = signedPercent(applicationChange);
+  document.querySelector("#metric-pre-units").textContent = number(pre.reported_units, 1);
+  document.querySelector("#metric-year-one-units").textContent = number(yearOne.reported_units);
+  document.querySelector("#metric-unit-change").textContent = `${signedPercent(unitChange)} versus prior average`;
+  const changeCard = document.querySelector(".policy-step.change");
+  changeCard.dataset.direction = applicationChange > 0 ? "up" : applicationChange < 0 ? "down" : "flat";
+  const partial = comparison.current_partial;
+  const through = partial.through ? new Date(`${partial.through}T00:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "latest extract";
+  document.querySelector("#policy-partial-period").textContent = `Current partial: ${number(partial.permit_records)} applications / ${number(partial.reported_units)} units through ${through}; not annualized`;
+  renderPolicyOverview();
+}
+
+function updateModeUI() {
+  const permitMode = state.mode === "permits";
+  document.body.classList.toggle("permit-mode", permitMode);
+  document.querySelector("#screening-funnel").hidden = permitMode;
+  document.querySelector("#permit-comparison").hidden = !permitMode;
+  document.querySelector("#scenario-filter").closest("label").hidden = permitMode;
+  document.querySelector("#prototype-filter").closest("label").hidden = permitMode;
+  document.querySelector("#fit-filter").closest("label").hidden = permitMode;
+  document.querySelector("#scenario-explanation").hidden = permitMode;
+  if (permitMode) updatePolicyComparison(); else renderDefaultParcelPrompt();
+}
+
 function money(value) { return value == null ? "Not available" : new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value); }
 function number(value, digits = 0) { return value == null ? "Not available" : new Intl.NumberFormat("en-US", { maximumFractionDigits: digits }).format(value); }
 function label(value) { return String(value ?? "Not available").replaceAll("_", " "); }
+function housingTypeLabels(value) {
+  const names = {
+    backyard_unit: "Backyard unit / ADU",
+    houseplex_2: "Duplex / 2-unit houseplex",
+    houseplex_3_6: "3–6 unit houseplex",
+    rowhouse: "Rowhouse / townhouse",
+    courtyard_cottage: "Courtyard / cottage cluster",
+    multiplex_7_20: "7–20 unit multiplex",
+    larger_multifamily_21_plus: "Larger multifamily (21+)",
+    detached_single_unit: "Detached single-unit",
+    other_uncertain_housing: "Housing type uncertain"
+  };
+  return value ? value.split("|").map(item => names[item] || label(item)).join(" · ") : "None";
+}
 function parcelAdjustedRlv(values, properties) {
   if (!values) return null;
-  const nonLand = values.non_land_cost - values.demolition_allowance + properties.parcel_demolition_allowance;
-  const profitRate = values.required_profit / values.non_land_cost;
-  return values.gross_revenue - nonLand * (1 + profitRate);
+  const financeable = values.financeable_cost - values.demolition_allowance + properties.parcel_demolition_allowance;
+  const nonLand = financeable * (1 + values.financing_pct_of_financeable_cost) + (values.sales_and_closing_cost || 0);
+  return values.gross_revenue / (1 + values.required_profit_pct_of_total_cost) - nonLand;
 }
 
 function parcelFinancialDiagnostic(values, properties) {
   if (!values) return null;
-  const nonLandCost = values.non_land_cost - values.demolition_allowance + properties.parcel_demolition_allowance;
-  const profitRate = values.required_profit / values.non_land_cost;
-  const requiredProfit = nonLandCost * profitRate;
+  const financeableCost = values.financeable_cost - values.demolition_allowance + properties.parcel_demolition_allowance;
+  const financingAllowance = financeableCost * values.financing_pct_of_financeable_cost;
+  const nonLandCost = financeableCost + financingAllowance + (values.sales_and_closing_cost || 0);
+  const profitRate = values.required_profit_pct_of_total_cost;
   const value = values.gross_revenue;
+  const residualLandValue = value / (1 + profitRate) - nonLandCost;
+  const requiredProfit = value - nonLandCost - residualLandValue;
   return {
     value,
     nonLandCost,
+    financingAllowance,
     requiredProfit,
-    valueCoverage: value / (nonLandCost + requiredProfit),
-    preLandGap: value - nonLandCost - requiredProfit
+    valueCoverage: value / ((nonLandCost + properties.acquisition_benchmark) * (1 + profitRate)),
+    preLandGap: value - nonLandCost * (1 + profitRate)
   };
 }
 
@@ -169,7 +259,7 @@ function rentalBreakEvenRent(values, properties, units) {
   if (!values?.potential_gross_income || !values?.net_operating_income || !values?.cap_rate) return null;
   const diagnostic = parcelFinancialDiagnostic(values, properties);
   const noiShareOfPotentialRent = values.net_operating_income / values.potential_gross_income;
-  const requiredDevelopmentValue = diagnostic.nonLandCost + diagnostic.requiredProfit + properties.acquisition_benchmark;
+  const requiredDevelopmentValue = (diagnostic.nonLandCost + properties.acquisition_benchmark) * (1 + values.required_profit_pct_of_total_cost);
   return requiredDevelopmentValue * values.cap_rate / noiShareOfPotentialRent / 12 / units;
 }
 
@@ -217,10 +307,10 @@ function renderParcel(properties) {
       <span>Hard construction</span><strong>-${money(proForma?.hard_cost)}</strong>
       <span>Soft costs</span><strong>-${money(proForma?.soft_cost)}</strong>
       <span>Fees</span><strong>-${money(proForma?.fee_allowance)}</strong>
-      <span>Financing</span><strong>-${money(proForma?.financing_allowance)}</strong>
+      <span>Financing</span><strong>-${money(diagnostic?.financingAllowance)}</strong>
       <span>Demolition</span><strong>-${money(properties.parcel_demolition_allowance)}</strong>
       <span>Contingency</span><strong>-${money(proForma?.contingency)}</strong>
-      <span>Required profit</span><strong>-${money(properties[prototypeField(`${scenario}_required_profit`)])}</strong>
+      <span>Target profit at RLV</span><strong>-${money(properties[prototypeField(`${scenario}_required_profit`)])}</strong>
       <span>Value / cost + target profit</span><strong>${number(diagnostic?.valueCoverage * 100, 1)}%</strong>
       <span class="subtotal">Residual land value</span><strong class="subtotal">${money(properties[prototypeField(`${scenario}_residual_land_value`)])}</strong>
       <span>Acquisition benchmark</span><strong>-${money(properties.acquisition_benchmark)}</strong>
@@ -258,7 +348,7 @@ function renderParcel(properties) {
     </div></section>
     ${renderPrototypeComparison(properties, scenario)}
     ${financialSection}
-    <section class="detail-section"><h3>Housing applications (2021–2026)</h3><div class="detail-grid"><span>New-building / unit-adding</span><strong>${number(properties.housing_pipeline_record_count)}</strong><span>With issue date</span><strong>${number(properties.housing_pipeline_issued_count)}</strong><span>Reported positive units</span><strong>${number(properties.housing_pipeline_reported_units)}</strong><span>Latest application</span><strong>${properties.housing_pipeline_latest_application ? new Date(properties.housing_pipeline_latest_application).toLocaleDateString() : "None"}</strong></div></section>
+    <section class="detail-section"><h3>Classified housing applications</h3><div class="detail-grid"><span>Projects since Feb. 2020</span><strong>${number(properties.housing_application_project_count)}</strong><span>Canonical building permits</span><strong>${number(properties.housing_application_permit_count)}</strong><span>Issued / completed projects</span><strong>${number(properties.housing_application_issued_project_count)}</strong><span>Reported proposed units</span><strong>${number(properties.housing_application_reported_units)}</strong><span>Pre-policy projects (5 years)</span><strong>${number(properties.housing_cohort__pre_home_in_tacoma_5yr_project_count)}</strong><span>Home in Tacoma Year One</span><strong>${number(properties.housing_cohort__home_in_tacoma_year_1_project_count)}</strong><span>Current partial period</span><strong>${number(properties.housing_cohort__home_in_tacoma_current_partial_project_count)}</strong><span>Housing types</span><strong>${housingTypeLabels(properties.housing_application_types)}</strong><span>Latest application</span><strong>${properties.housing_application_latest_application ? new Date(properties.housing_application_latest_application).toLocaleDateString() : "None"}</strong></div><p class="note">Cohorts use the February 1, 2025 Home in Tacoma effective date. Residential and Commercial records are text-classified; new buildings and alterations that explicitly create or legalize dwelling units are included, while repairs and nonhousing structures are excluded.</p></section>
     ${flags.length ? `<p class="warning"><strong>Review flags:</strong> ${flags.join(" · ")}</p>` : ""}
     <p class="note">Financial values are illustrative pending market validation. Passing the basic fit screen is not an entitlement or site design conclusion.</p>`;
   writeUrl();
@@ -301,6 +391,7 @@ map.on("load", async () => {
     document.querySelector("#share-constraint-pass").textContent = `${number(summary.mapped_constraint_pass_count / summary.parcel_count * 100, 1)}% retain ≥5,000 sq ft`;
     document.querySelector("#share-fit").textContent = `${number(summary.basic_fit_count / summary.parcel_count * 100, 1)}% of candidates`;
     updateFunnel();
+    updateModeUI();
     state.expectedSources = summary.map_chunk_count;
     document.querySelector("#loading-status").textContent = `Registering ${summary.map_chunk_count} map sections…`;
     summary.map_chunks.forEach(chunk => addParcelChunk(chunk));
@@ -403,6 +494,7 @@ document.querySelectorAll(".mode-button").forEach(button => button.addEventListe
   state.mode = button.dataset.mode;
   document.querySelectorAll(".mode-button").forEach(item => { const active = item === button; item.classList.toggle("active", active); item.setAttribute("aria-checked", String(active)); });
   updateMapStyle();
+  updateModeUI();
 }));
 document.querySelector(".mode-list").addEventListener("keydown", event => {
   if (!["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft"].includes(event.key)) return;
@@ -426,9 +518,9 @@ document.querySelector("#prototype-filter").addEventListener("change", event => 
   updateFunnel();
   if (state.selectedId && state.details?.[state.selectedId]) renderParcel(state.details[state.selectedId]);
 });
-document.querySelector("#zone-filter").addEventListener("change", event => { state.zone = event.target.value; updateMapStyle(); });
+document.querySelector("#zone-filter").addEventListener("change", event => { state.zone = event.target.value; updateMapStyle(); updatePolicyComparison(); });
 document.querySelector("#fit-filter").addEventListener("change", event => { state.fitOnly = event.target.checked; updateMapStyle(); });
-document.querySelector("#reset-filters").addEventListener("click", () => { state.zone = "all"; state.fitOnly = false; document.querySelector("#zone-filter").value = "all"; document.querySelector("#fit-filter").checked = false; updateMapStyle(); });
+document.querySelector("#reset-filters").addEventListener("click", () => { state.zone = "all"; state.fitOnly = false; document.querySelector("#zone-filter").value = "all"; document.querySelector("#fit-filter").checked = false; updateMapStyle(); updatePolicyComparison(); });
 
 async function runSearch() {
   const term = document.querySelector("#parcel-search").value.trim().toLowerCase();

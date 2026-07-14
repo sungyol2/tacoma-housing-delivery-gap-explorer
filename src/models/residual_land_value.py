@@ -34,8 +34,8 @@ def calculate_rlv(
     sale_price_per_unit: float,
     hard_cost_per_sqft: float,
     soft_cost_pct: float,
-    fee_allowance: float,
-    financing_allowance: float,
+    fee_pct_of_hard_cost: float,
+    financing_pct_of_financeable_cost: float,
     demolition_allowance: float,
     contingency_pct: float,
     required_profit_pct: float,
@@ -45,18 +45,21 @@ def calculate_rlv(
     sales_and_closing_cost = gross_revenue * sales_and_closing_cost_pct
     hard_cost = gross_building_area_sqft * hard_cost_per_sqft
     soft_cost = hard_cost * soft_cost_pct
+    fee_allowance = hard_cost * fee_pct_of_hard_cost
     contingency = hard_cost * contingency_pct
-    non_land_cost = (
+    financeable_cost = (
         hard_cost
         + soft_cost
         + fee_allowance
-        + financing_allowance
         + demolition_allowance
         + contingency
-        + sales_and_closing_cost
     )
-    required_profit = non_land_cost * required_profit_pct
-    residual_land_value = gross_revenue - non_land_cost - required_profit
+    financing_allowance = financeable_cost * financing_pct_of_financeable_cost
+    non_land_cost = financeable_cost + financing_allowance + sales_and_closing_cost
+    # Solve for the maximum land cost while earning the target return on total
+    # development cost, including land: revenue = total cost * (1 + return).
+    residual_land_value = gross_revenue / (1 + required_profit_pct) - non_land_cost
+    required_profit = gross_revenue - non_land_cost - residual_land_value
     return {
         "gross_revenue": gross_revenue,
         "hard_cost": hard_cost,
@@ -64,10 +67,13 @@ def calculate_rlv(
         "soft_cost": soft_cost,
         "fee_allowance": fee_allowance,
         "financing_allowance": financing_allowance,
+        "financeable_cost": financeable_cost,
+        "financing_pct_of_financeable_cost": financing_pct_of_financeable_cost,
         "demolition_allowance": demolition_allowance,
         "contingency": contingency,
         "non_land_cost": non_land_cost,
         "required_profit": required_profit,
+        "required_profit_pct_of_total_cost": required_profit_pct,
         "residual_land_value": residual_land_value,
     }
 
@@ -77,17 +83,16 @@ def scenario_result(
 ) -> dict[str, float]:
     values = assumption_values(assumptions)
     adjustment = assumptions["scenario_adjustments"][scenario]
-    scale = int(prototype["units"]) / 4
     return calculate_rlv(
         units=int(prototype["units"]),
         gross_building_area_sqft=float(prototype["gross_building_area_sqft"]),
-        sale_price_per_unit=values["townhouse_sale_price_per_unit"]
+        sale_price_per_unit=values["for_sale_price_per_unit"]
         * adjustment["sale_price_multiplier"],
-        hard_cost_per_sqft=values["townhouse_hard_cost_per_gross_sqft"]
+        hard_cost_per_sqft=values["hard_cost_per_gross_sqft"]
         * adjustment["hard_cost_multiplier"],
         soft_cost_pct=values["soft_cost_pct_of_hard_cost"],
-        fee_allowance=values["fee_allowance"] * scale,
-        financing_allowance=values["financing_allowance"] * scale
+        fee_pct_of_hard_cost=values["fee_pct_of_hard_cost"],
+        financing_pct_of_financeable_cost=values["financing_pct_of_financeable_cost"]
         * adjustment["financing_multiplier"],
         demolition_allowance=values["demolition_allowance"],
         contingency_pct=values["contingency_pct_of_hard_cost"],
@@ -100,8 +105,8 @@ def scenario_result(
 def calculate_rental_rlv(
     *, units: int, gross_building_area_sqft: float, monthly_rent_per_unit: float,
     vacancy_pct: float, operating_expense_pct: float, cap_rate: float,
-    hard_cost_per_sqft: float, soft_cost_pct: float, fee_allowance: float,
-    financing_allowance: float, demolition_allowance: float, contingency_pct: float,
+    hard_cost_per_sqft: float, soft_cost_pct: float, fee_pct_of_hard_cost: float,
+    financing_pct_of_financeable_cost: float, demolition_allowance: float, contingency_pct: float,
     required_profit_pct: float,
 ) -> dict[str, float]:
     potential_gross_income = units * monthly_rent_per_unit * 12
@@ -111,10 +116,13 @@ def calculate_rental_rlv(
     stabilized_value = net_operating_income / cap_rate
     hard_cost = gross_building_area_sqft * hard_cost_per_sqft
     soft_cost = hard_cost * soft_cost_pct
+    fee_allowance = hard_cost * fee_pct_of_hard_cost
     contingency = hard_cost * contingency_pct
-    non_land_cost = hard_cost + soft_cost + fee_allowance + financing_allowance + demolition_allowance + contingency
-    required_profit = non_land_cost * required_profit_pct
-    residual_land_value = stabilized_value - non_land_cost - required_profit
+    financeable_cost = hard_cost + soft_cost + fee_allowance + demolition_allowance + contingency
+    financing_allowance = financeable_cost * financing_pct_of_financeable_cost
+    non_land_cost = financeable_cost + financing_allowance
+    residual_land_value = stabilized_value / (1 + required_profit_pct) - non_land_cost
+    required_profit = stabilized_value - non_land_cost - residual_land_value
     return {
         "potential_gross_income": potential_gross_income,
         "effective_gross_income": effective_gross_income,
@@ -127,10 +135,13 @@ def calculate_rental_rlv(
         "soft_cost": soft_cost,
         "fee_allowance": fee_allowance,
         "financing_allowance": financing_allowance,
+        "financeable_cost": financeable_cost,
+        "financing_pct_of_financeable_cost": financing_pct_of_financeable_cost,
         "demolition_allowance": demolition_allowance,
         "contingency": contingency,
         "non_land_cost": non_land_cost,
         "required_profit": required_profit,
+        "required_profit_pct_of_total_cost": required_profit_pct,
         "residual_land_value": residual_land_value,
     }
 
@@ -138,7 +149,6 @@ def calculate_rental_rlv(
 def rental_scenario_result(assumptions: dict[str, Any], prototype: dict[str, Any], scenario: str) -> dict[str, float]:
     values = assumption_values(assumptions)
     adjustment = assumptions["scenario_adjustments"][scenario]
-    scale = int(prototype["units"]) / 4
     return calculate_rental_rlv(
         units=int(prototype["units"]),
         gross_building_area_sqft=float(prototype["gross_building_area_sqft"]),
@@ -146,10 +156,10 @@ def rental_scenario_result(assumptions: dict[str, Any], prototype: dict[str, Any
         vacancy_pct=values["rental_vacancy_pct"] * adjustment["vacancy_multiplier"],
         operating_expense_pct=values["rental_operating_expense_pct"],
         cap_rate=values["rental_cap_rate"] * adjustment["cap_rate_multiplier"],
-        hard_cost_per_sqft=values["rental_hard_cost_per_gross_sqft"] * adjustment["hard_cost_multiplier"],
+        hard_cost_per_sqft=values["hard_cost_per_gross_sqft"] * adjustment["hard_cost_multiplier"],
         soft_cost_pct=values["soft_cost_pct_of_hard_cost"],
-        fee_allowance=values["fee_allowance"] * scale,
-        financing_allowance=values["financing_allowance"] * scale * adjustment["financing_multiplier"],
+        fee_pct_of_hard_cost=values["fee_pct_of_hard_cost"],
+        financing_pct_of_financeable_cost=values["financing_pct_of_financeable_cost"] * adjustment["financing_multiplier"],
         demolition_allowance=values["demolition_allowance"],
         contingency_pct=values["contingency_pct_of_hard_cost"],
         required_profit_pct=values["required_developer_profit_pct"] * adjustment["required_profit_multiplier"],
@@ -161,7 +171,6 @@ def one_factor_sensitivity(
 ) -> dict[str, dict[str, float]]:
     """Hold baseline inputs fixed while moving one primary driver at a time."""
     values = assumption_values(assumptions)
-    scale = int(prototype["units"]) / 4
     cases = {
         "sales_down_5": {"sale": 0.95, "hard": 1.0},
         "sales_up_5": {"sale": 1.05, "hard": 1.0},
@@ -172,12 +181,12 @@ def one_factor_sensitivity(
         case: calculate_rlv(
             units=int(prototype["units"]),
             gross_building_area_sqft=float(prototype["gross_building_area_sqft"]),
-            sale_price_per_unit=values["townhouse_sale_price_per_unit"] * modifiers["sale"],
-            hard_cost_per_sqft=values["townhouse_hard_cost_per_gross_sqft"]
+            sale_price_per_unit=values["for_sale_price_per_unit"] * modifiers["sale"],
+            hard_cost_per_sqft=values["hard_cost_per_gross_sqft"]
             * modifiers["hard"],
             soft_cost_pct=values["soft_cost_pct_of_hard_cost"],
-            fee_allowance=values["fee_allowance"] * scale,
-            financing_allowance=values["financing_allowance"] * scale,
+            fee_pct_of_hard_cost=values["fee_pct_of_hard_cost"],
+            financing_pct_of_financeable_cost=values["financing_pct_of_financeable_cost"],
             demolition_allowance=values["demolition_allowance"],
             contingency_pct=values["contingency_pct_of_hard_cost"],
             required_profit_pct=values["required_developer_profit_pct"],
@@ -237,17 +246,27 @@ def apply_financial_screen(
         )
         scenario_outputs[scenario] = values
         prefix = f"{scenario}_"
-        parcel_non_land_cost = (
-            values["non_land_cost"]
+        parcel_financeable_cost = (
+            values["financeable_cost"]
             - values["demolition_allowance"]
             + result["parcel_demolition_allowance"]
         )
-        profit_rate = values["required_profit"] / values["non_land_cost"]
-        result[f"{prefix}required_profit"] = parcel_non_land_cost * profit_rate
+        parcel_financing = (
+            parcel_financeable_cost * values["financing_pct_of_financeable_cost"]
+        )
+        parcel_non_land_cost = (
+            parcel_financeable_cost
+            + parcel_financing
+            + values.get("sales_and_closing_cost", 0.0)
+        )
+        profit_rate = values["required_profit_pct_of_total_cost"]
         result[f"{prefix}residual_land_value"] = (
+            values["gross_revenue"] / (1 + profit_rate) - parcel_non_land_cost
+        )
+        result[f"{prefix}required_profit"] = (
             values["gross_revenue"]
             - parcel_non_land_cost
-            - result[f"{prefix}required_profit"]
+            - result[f"{prefix}residual_land_value"]
         )
         result[f"{prefix}feasibility_margin"] = (
             result[f"{prefix}residual_land_value"] - result["acquisition_benchmark"]

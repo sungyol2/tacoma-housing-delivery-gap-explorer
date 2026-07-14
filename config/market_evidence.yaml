@@ -1,5 +1,5 @@
 schema_version: 1
-as_of_date: 2026-07-12
+as_of_date: 2026-07-13
 status: small_public_evidence_sample_not_a_comparable_sales_model
 
 evidence:
@@ -65,13 +65,63 @@ evidence:
     geography: Puget_Sound
     property_type: multifamily
     observation_type: regional_market_report
-    asking_rent_per_unit: 2073
-    cap_rate: 0.057
+    asking_rent_per_unit: 2085
+    cap_rate: 0.050
     source: Lee & Associates Pacific Northwest Q1 2026 Multifamily Market Report
     url: https://www.lee-associates.com/northwest/2026/04/29/q1-2026-multifamily-market-report/
-    accessed_date: 2026-07-12
+    accessed_date: 2026-07-13
     confidence: low
     notes: Regional transaction and asking-rent context; not a Tacoma small-project comparable.
+
+  - id: two_ten_new_tacoma_townhome_rent
+    geography: Tacoma_98408
+    property_type: new_construction_townhome_two_bedroom
+    observation_type: active_asking_rent
+    monthly_rent: 2295
+    source: Apartments.com The Two-Ten Townhomes listing
+    url: https://www.apartments.com/the-two-ten-townhomes-tacoma-wa/383v8he/
+    accessed_date: 2026-07-13
+    confidence: low
+    notes: Active asking rent, not a signed lease; one new-construction townhome observation used as the favorable rent proxy.
+
+  - id: east_31st_new_tacoma_rental_estimate
+    geography: Tacoma_98404
+    property_type: newly_built_two_bedroom_townhouse
+    observation_type: automated_rent_estimate
+    monthly_rent: 1986
+    unit_area_sqft: 900
+    source: Zillow property page
+    url: https://www.zillow.com/homedetails/1436-E-31st-St-B2-Tacoma-WA-98404/461173574_zpid/
+    accessed_date: 2026-07-13
+    confidence: low
+    notes: Automated estimate for an off-market property, not an asking or executed rent; retained only as a lower new-product reasonableness check.
+
+  - id: nahb_2026_builder_finance_and_profit
+    geography: United_States
+    property_type: single_family_construction
+    observation_type: builder_financing_and_profit_assumptions
+    construction_loan_to_cost: 0.86
+    construction_loan_rate: 0.07345
+    construction_loan_initial_fee: 0.007
+    construction_months: 6.3
+    builder_developer_gross_profit_rate: 0.098
+    broker_fee_rate: 0.029
+    source: NAHB Government Regulation in the Price of a New Home 2026
+    url: https://www.nahb.org/-/media/NAHB/news-and-economics/docs/housing-economics-plus/special-studies/2026/special-study-government-regulation-in-the-price-of-a-home-june-2026-updated.pdf
+    accessed_date: 2026-07-13
+    confidence: low
+    notes: National single-family evidence, not Tacoma 2-to-4-unit project terms. Used only to check the order of magnitude and structure of financing, selling cost, and target return.
+
+  - id: federal_reserve_prime_rate_2026_07_08
+    geography: United_States
+    property_type: credit_market
+    observation_type: bank_prime_loan_rate
+    rate: 0.0675
+    source: Federal Reserve H.15 via FRED
+    url: https://fred.stlouisfed.org/series/WPRIME
+    accessed_date: 2026-07-13
+    confidence: high
+    notes: Market reference only; construction loans generally price at a spread and project-specific terms vary.
 
 recommended_screening_range:
   sale_price_per_unit:
@@ -80,3 +130,9 @@ recommended_screening_range:
     favorable: 495000
     confidence: low
     rationale: Rounded citywide screening range anchored by a small public listing and market-median sample; replace with market-area comps if time permits.
+  rental_monthly_rent_per_unit:
+    conservative: 1872
+    baseline: 1971
+    favorable: 2295
+    confidence: low
+    rationale: Baseline retains the official FY2026 two-bedroom FMR; favorable uses one observed new-construction two-bedroom townhome asking rent rather than an arbitrary percentage increase.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-13T03:52:09.053300+00:00",
+  "generated_at": "2026-07-14T06:24:51.179189+00:00",
   "status": "illustrative_financial_results_pending_market_validation",
   "parcel_count": 56484,
   "ur_zoning_count": 58319,
@@ -13,126 +13,146 @@
     "conservative": {
       "near_or_above_break_even_count": 0,
       "margin_bands": {
-        "very_weak": 50610,
-        "weak": 62
+        "very_weak": 50629,
+        "weak": 43
       }
     },
     "baseline": {
-      "near_or_above_break_even_count": 43,
+      "near_or_above_break_even_count": 2,
       "margin_bands": {
-        "very_weak": 49857,
-        "weak": 772,
-        "marginal": 43
+        "very_weak": 49955,
+        "weak": 715,
+        "marginal": 2
       }
     },
     "favorable": {
-      "near_or_above_break_even_count": 744,
+      "near_or_above_break_even_count": 590,
       "margin_bands": {
-        "very_weak": 41532,
-        "weak": 8396,
-        "marginal": 472,
-        "moderate": 246,
-        "strong": 26
+        "very_weak": 46703,
+        "weak": 3379,
+        "marginal": 452,
+        "moderate": 138
       }
     }
   },
   "scenario_pro_forma": {
     "conservative": {
       "gross_revenue": 810000.0,
-      "hard_cost": 594000.0000000001,
-      "sales_and_closing_cost": 48600.0,
-      "soft_cost": 106920.00000000001,
-      "fee_allowance": 27500.0,
-      "financing_allowance": 55199.99999999999,
+      "hard_cost": 653400.0000000001,
+      "sales_and_closing_cost": 32400.0,
+      "soft_cost": 117612.00000000001,
+      "fee_allowance": 32670.000000000007,
+      "financing_allowance": 40312.192,
+      "financeable_cost": 876352.0000000001,
+      "financing_pct_of_financeable_cost": 0.046,
       "demolition_allowance": 40000.0,
-      "contingency": 29700.000000000007,
-      "non_land_cost": 901920.0000000001,
-      "required_profit": 148816.80000000002,
-      "residual_land_value": -240736.80000000013
+      "contingency": 32670.000000000007,
+      "non_land_cost": 949064.1920000002,
+      "required_profit": 114721.03004291852,
+      "required_profit_pct_of_total_cost": 0.165,
+      "residual_land_value": -253785.22204291867
     },
     "baseline": {
       "gross_revenue": 900000.0,
-      "hard_cost": 540000.0,
-      "sales_and_closing_cost": 54000.0,
-      "soft_cost": 97200.0,
-      "fee_allowance": 27500.0,
-      "financing_allowance": 48000.0,
+      "hard_cost": 594000.0,
+      "sales_and_closing_cost": 36000.0,
+      "soft_cost": 106920.0,
+      "fee_allowance": 29700.0,
+      "financing_allowance": 32012.8,
+      "financeable_cost": 800320.0,
+      "financing_pct_of_financeable_cost": 0.04,
       "demolition_allowance": 40000.0,
-      "contingency": 27000.0,
-      "non_land_cost": 833700.0,
-      "required_profit": 125055.0,
-      "residual_land_value": -58755.0
+      "contingency": 29700.0,
+      "non_land_cost": 868332.8,
+      "required_profit": 117391.30434782605,
+      "required_profit_pct_of_total_cost": 0.15,
+      "residual_land_value": -85724.1043478261
     },
     "favorable": {
       "gross_revenue": 990000.0000000001,
-      "hard_cost": 486000.0,
-      "sales_and_closing_cost": 59400.00000000001,
-      "soft_cost": 87480.0,
-      "fee_allowance": 27500.0,
-      "financing_allowance": 40800.0,
+      "hard_cost": 534600.0,
+      "sales_and_closing_cost": 39600.00000000001,
+      "soft_cost": 96228.0,
+      "fee_allowance": 26730.0,
+      "financing_allowance": 24625.792,
+      "financeable_cost": 724288.0,
+      "financing_pct_of_financeable_cost": 0.034,
       "demolition_allowance": 40000.0,
-      "contingency": 24300.0,
-      "non_land_cost": 765480.0,
-      "required_profit": 103339.8,
-      "residual_land_value": 121180.20000000011
+      "contingency": 26730.0,
+      "non_land_cost": 788513.792,
+      "required_profit": 117753.30396475771,
+      "required_profit_pct_of_total_cost": 0.135,
+      "residual_land_value": 83732.90403524239
     }
   },
   "one_factor_sensitivity": {
     "sales_down_5": {
       "gross_revenue": 855000.0,
-      "hard_cost": 540000.0,
-      "sales_and_closing_cost": 51300.0,
-      "soft_cost": 97200.0,
-      "fee_allowance": 27500.0,
-      "financing_allowance": 48000.0,
+      "hard_cost": 594000.0,
+      "sales_and_closing_cost": 34200.0,
+      "soft_cost": 106920.0,
+      "fee_allowance": 29700.0,
+      "financing_allowance": 32012.8,
+      "financeable_cost": 800320.0,
+      "financing_pct_of_financeable_cost": 0.04,
       "demolition_allowance": 40000.0,
-      "contingency": 27000.0,
-      "non_land_cost": 831000.0,
-      "required_profit": 124650.0,
-      "residual_land_value": -100650.0,
+      "contingency": 29700.0,
+      "non_land_cost": 866532.8,
+      "required_profit": 111521.7391304347,
+      "required_profit_pct_of_total_cost": 0.15,
+      "residual_land_value": -123054.53913043474,
       "near_or_above_break_even_count": 0
     },
     "sales_up_5": {
       "gross_revenue": 945000.0,
-      "hard_cost": 540000.0,
-      "sales_and_closing_cost": 56700.0,
-      "soft_cost": 97200.0,
-      "fee_allowance": 27500.0,
-      "financing_allowance": 48000.0,
+      "hard_cost": 594000.0,
+      "sales_and_closing_cost": 37800.0,
+      "soft_cost": 106920.0,
+      "fee_allowance": 29700.0,
+      "financing_allowance": 32012.8,
+      "financeable_cost": 800320.0,
+      "financing_pct_of_financeable_cost": 0.04,
       "demolition_allowance": 40000.0,
-      "contingency": 27000.0,
-      "non_land_cost": 836400.0,
-      "required_profit": 125460.0,
-      "residual_land_value": -16860.0,
-      "near_or_above_break_even_count": 141
+      "contingency": 29700.0,
+      "non_land_cost": 870132.8,
+      "required_profit": 123260.86956521729,
+      "required_profit_pct_of_total_cost": 0.15,
+      "residual_land_value": -48393.66956521734,
+      "near_or_above_break_even_count": 50
     },
     "hard_cost_up_5": {
       "gross_revenue": 900000.0,
-      "hard_cost": 567000.0,
-      "sales_and_closing_cost": 54000.0,
-      "soft_cost": 102060.0,
-      "fee_allowance": 27500.0,
-      "financing_allowance": 48000.0,
+      "hard_cost": 623700.0,
+      "sales_and_closing_cost": 36000.0,
+      "soft_cost": 112266.0,
+      "fee_allowance": 31185.0,
+      "financing_allowance": 33533.44,
+      "financeable_cost": 838336.0,
+      "financing_pct_of_financeable_cost": 0.04,
       "demolition_allowance": 40000.0,
-      "contingency": 28350.0,
-      "non_land_cost": 866910.0,
-      "required_profit": 130036.5,
-      "residual_land_value": -96946.5,
+      "contingency": 31185.0,
+      "non_land_cost": 907869.44,
+      "required_profit": 117391.30434782605,
+      "required_profit_pct_of_total_cost": 0.15,
+      "residual_land_value": -125260.744347826,
       "near_or_above_break_even_count": 0
     },
     "hard_cost_down_5": {
       "gross_revenue": 900000.0,
-      "hard_cost": 513000.0,
-      "sales_and_closing_cost": 54000.0,
-      "soft_cost": 92340.0,
-      "fee_allowance": 27500.0,
-      "financing_allowance": 48000.0,
+      "hard_cost": 564300.0,
+      "sales_and_closing_cost": 36000.0,
+      "soft_cost": 101574.0,
+      "fee_allowance": 28215.0,
+      "financing_allowance": 30492.16,
+      "financeable_cost": 762304.0,
+      "financing_pct_of_financeable_cost": 0.04,
       "demolition_allowance": 40000.0,
-      "contingency": 25650.0,
-      "non_land_cost": 800490.0,
-      "required_profit": 120073.5,
-      "residual_land_value": -20563.5,
-      "near_or_above_break_even_count": 129
+      "contingency": 28215.0,
+      "non_land_cost": 828796.16,
+      "required_profit": 117391.30434782605,
+      "required_profit_pct_of_total_cost": 0.15,
+      "residual_land_value": -46187.464347826084,
+      "near_or_above_break_even_count": 50
     }
   },
   "site_condition_classes": {
@@ -149,16 +169,584 @@
   "mapped_constraint_pass_count": 52931,
   "split_zoned_count": 1757,
   "meaningful_split_zoned_count": 155,
-  "housing_pipeline_records_matched": 1446,
+  "housing_application_project_parcel_links": 1004,
+  "housing_policy_comparison": {
+    "effective_date": "2025-02-01",
+    "geography_note": "Current UR parcel geography; historical zoning geometry is unavailable.",
+    "status_note": "Cancelled and voided applications are excluded from the comparison.",
+    "official_year_one_benchmark": {
+      "permit_records": 213,
+      "reported_units": 385,
+      "source": "City of Tacoma Home in Tacoma Year One review"
+    },
+    "by_zone": {
+      "all": {
+        "pre_policy_five_year_total": {
+          "permit_records": 885,
+          "projects": 851,
+          "reported_units": 1134
+        },
+        "pre_policy_annual_average": {
+          "permit_records": 177.0,
+          "projects": 170.2,
+          "reported_units": 226.8
+        },
+        "home_in_tacoma_year_one": {
+          "permit_records": 231,
+          "projects": 193,
+          "reported_units": 416
+        },
+        "change_pct": {
+          "permit_records": 30.5,
+          "projects": 13.4,
+          "reported_units": 83.4
+        },
+        "current_partial": {
+          "permit_records": 191,
+          "projects": 108,
+          "reported_units": 399,
+          "through": "2026-07-09"
+        },
+        "by_type": {
+          "backyard_unit": {
+            "pre_policy_annual_average": {
+              "permit_records": 88.2,
+              "projects": 86.0,
+              "reported_units": 91.2
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 116,
+              "projects": 112,
+              "reported_units": 129
+            }
+          },
+          "courtyard_cottage": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.0,
+              "projects": 0.0,
+              "reported_units": 0.0
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 3,
+              "projects": 1,
+              "reported_units": 3
+            }
+          },
+          "detached_single_unit": {
+            "pre_policy_annual_average": {
+              "permit_records": 69.6,
+              "projects": 69.2,
+              "reported_units": 74.4
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 54,
+              "projects": 46,
+              "reported_units": 54
+            }
+          },
+          "houseplex_2": {
+            "pre_policy_annual_average": {
+              "permit_records": 2.2,
+              "projects": 2.0,
+              "reported_units": 4.4
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 26,
+              "projects": 19,
+              "reported_units": 63
+            }
+          },
+          "houseplex_3_6": {
+            "pre_policy_annual_average": {
+              "permit_records": 2.2,
+              "projects": 1.2,
+              "reported_units": 8.4
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 2,
+              "projects": 2,
+              "reported_units": 11
+            }
+          },
+          "larger_multifamily_21_plus": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.4,
+              "projects": 0.4,
+              "reported_units": 10.4
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 0,
+              "projects": 0,
+              "reported_units": 0
+            }
+          },
+          "multiplex_7_20": {
+            "pre_policy_annual_average": {
+              "permit_records": 1.4,
+              "projects": 0.6,
+              "reported_units": 20.0
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 5,
+              "projects": 3,
+              "reported_units": 60
+            }
+          },
+          "other_uncertain_housing": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.2,
+              "projects": 0.2,
+              "reported_units": 0.2
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 4,
+              "projects": 3,
+              "reported_units": 4
+            }
+          },
+          "rowhouse": {
+            "pre_policy_annual_average": {
+              "permit_records": 12.8,
+              "projects": 10.8,
+              "reported_units": 17.8
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 21,
+              "projects": 9,
+              "reported_units": 92
+            }
+          }
+        }
+      },
+      "UR1": {
+        "pre_policy_five_year_total": {
+          "permit_records": 278,
+          "projects": 271,
+          "reported_units": 375
+        },
+        "pre_policy_annual_average": {
+          "permit_records": 55.6,
+          "projects": 54.2,
+          "reported_units": 75.0
+        },
+        "home_in_tacoma_year_one": {
+          "permit_records": 86,
+          "projects": 71,
+          "reported_units": 100
+        },
+        "change_pct": {
+          "permit_records": 54.7,
+          "projects": 31.0,
+          "reported_units": 33.3
+        },
+        "current_partial": {
+          "permit_records": 85,
+          "projects": 49,
+          "reported_units": 143,
+          "through": "2026-07-09"
+        },
+        "by_type": {
+          "backyard_unit": {
+            "pre_policy_annual_average": {
+              "permit_records": 26.6,
+              "projects": 26.0,
+              "reported_units": 27.8
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 46,
+              "projects": 44,
+              "reported_units": 49
+            }
+          },
+          "courtyard_cottage": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.0,
+              "projects": 0.0,
+              "reported_units": 0.0
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 3,
+              "projects": 1,
+              "reported_units": 3
+            }
+          },
+          "detached_single_unit": {
+            "pre_policy_annual_average": {
+              "permit_records": 27.6,
+              "projects": 27.6,
+              "reported_units": 27.6
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 28,
+              "projects": 20,
+              "reported_units": 28
+            }
+          },
+          "houseplex_2": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.0,
+              "projects": 0.0,
+              "reported_units": 0.0
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 2,
+              "projects": 2,
+              "reported_units": 4
+            }
+          },
+          "houseplex_3_6": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.2,
+              "projects": 0.2,
+              "reported_units": 1.2
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 0,
+              "projects": 0,
+              "reported_units": 0
+            }
+          },
+          "larger_multifamily_21_plus": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.2,
+              "projects": 0.2,
+              "reported_units": 4.4
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 0,
+              "projects": 0,
+              "reported_units": 0
+            }
+          },
+          "multiplex_7_20": {
+            "pre_policy_annual_average": {
+              "permit_records": 1.0,
+              "projects": 0.2,
+              "reported_units": 14.0
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 0,
+              "projects": 0,
+              "reported_units": 0
+            }
+          },
+          "other_uncertain_housing": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.0,
+              "projects": 0.0,
+              "reported_units": 0.0
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 4,
+              "projects": 3,
+              "reported_units": 4
+            }
+          },
+          "rowhouse": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.0,
+              "projects": 0.0,
+              "reported_units": 0.0
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 3,
+              "projects": 2,
+              "reported_units": 12
+            }
+          }
+        }
+      },
+      "UR2": {
+        "pre_policy_five_year_total": {
+          "permit_records": 441,
+          "projects": 430,
+          "reported_units": 456
+        },
+        "pre_policy_annual_average": {
+          "permit_records": 88.2,
+          "projects": 86.0,
+          "reported_units": 91.2
+        },
+        "home_in_tacoma_year_one": {
+          "permit_records": 106,
+          "projects": 90,
+          "reported_units": 179
+        },
+        "change_pct": {
+          "permit_records": 20.2,
+          "projects": 4.7,
+          "reported_units": 96.3
+        },
+        "current_partial": {
+          "permit_records": 72,
+          "projects": 45,
+          "reported_units": 186,
+          "through": "2026-07-01"
+        },
+        "by_type": {
+          "backyard_unit": {
+            "pre_policy_annual_average": {
+              "permit_records": 47.8,
+              "projects": 46.2,
+              "reported_units": 49.0
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 58,
+              "projects": 56,
+              "reported_units": 64
+            }
+          },
+          "detached_single_unit": {
+            "pre_policy_annual_average": {
+              "permit_records": 32.4,
+              "projects": 32.2,
+              "reported_units": 32.4
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 18,
+              "projects": 18,
+              "reported_units": 18
+            }
+          },
+          "houseplex_2": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.6,
+              "projects": 0.6,
+              "reported_units": 1.2
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 13,
+              "projects": 11,
+              "reported_units": 25
+            }
+          },
+          "houseplex_3_6": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.4,
+              "projects": 0.2,
+              "reported_units": 1.6
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 1,
+              "projects": 1,
+              "reported_units": 5
+            }
+          },
+          "other_uncertain_housing": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.2,
+              "projects": 0.2,
+              "reported_units": 0.2
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 0,
+              "projects": 0,
+              "reported_units": 0
+            }
+          },
+          "rowhouse": {
+            "pre_policy_annual_average": {
+              "permit_records": 6.8,
+              "projects": 6.8,
+              "reported_units": 6.8
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 16,
+              "projects": 5,
+              "reported_units": 67
+            }
+          }
+        }
+      },
+      "UR3": {
+        "pre_policy_five_year_total": {
+          "permit_records": 166,
+          "projects": 150,
+          "reported_units": 303
+        },
+        "pre_policy_annual_average": {
+          "permit_records": 33.2,
+          "projects": 30.0,
+          "reported_units": 60.6
+        },
+        "home_in_tacoma_year_one": {
+          "permit_records": 39,
+          "projects": 32,
+          "reported_units": 137
+        },
+        "change_pct": {
+          "permit_records": 17.5,
+          "projects": 6.7,
+          "reported_units": 126.1
+        },
+        "current_partial": {
+          "permit_records": 34,
+          "projects": 14,
+          "reported_units": 70,
+          "through": "2026-07-09"
+        },
+        "by_type": {
+          "backyard_unit": {
+            "pre_policy_annual_average": {
+              "permit_records": 13.8,
+              "projects": 13.8,
+              "reported_units": 14.4
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 12,
+              "projects": 12,
+              "reported_units": 16
+            }
+          },
+          "detached_single_unit": {
+            "pre_policy_annual_average": {
+              "permit_records": 9.6,
+              "projects": 9.4,
+              "reported_units": 14.4
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 8,
+              "projects": 8,
+              "reported_units": 8
+            }
+          },
+          "houseplex_2": {
+            "pre_policy_annual_average": {
+              "permit_records": 1.6,
+              "projects": 1.4,
+              "reported_units": 3.2
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 11,
+              "projects": 6,
+              "reported_units": 34
+            }
+          },
+          "houseplex_3_6": {
+            "pre_policy_annual_average": {
+              "permit_records": 1.6,
+              "projects": 0.8,
+              "reported_units": 5.6
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 1,
+              "projects": 1,
+              "reported_units": 6
+            }
+          },
+          "larger_multifamily_21_plus": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.2,
+              "projects": 0.2,
+              "reported_units": 6.0
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 0,
+              "projects": 0,
+              "reported_units": 0
+            }
+          },
+          "multiplex_7_20": {
+            "pre_policy_annual_average": {
+              "permit_records": 0.4,
+              "projects": 0.4,
+              "reported_units": 6.0
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 5,
+              "projects": 3,
+              "reported_units": 60
+            }
+          },
+          "rowhouse": {
+            "pre_policy_annual_average": {
+              "permit_records": 6.0,
+              "projects": 4.0,
+              "reported_units": 11.0
+            },
+            "home_in_tacoma_year_one": {
+              "permit_records": 2,
+              "projects": 2,
+              "reported_units": 13
+            }
+          }
+        }
+      }
+    }
+  },
+  "housing_applications": {
+    "permit_records": 1485,
+    "projects": 1321,
+    "reported_units": 2006,
+    "by_type": {
+      "backyard_unit": {
+        "permit_records": 756,
+        "projects": 723,
+        "reported_units": 815
+      },
+      "courtyard_cottage": {
+        "permit_records": 12,
+        "projects": 4,
+        "reported_units": 12
+      },
+      "detached_single_unit": {
+        "permit_records": 468,
+        "projects": 449,
+        "reported_units": 473
+      },
+      "houseplex_2": {
+        "permit_records": 85,
+        "projects": 50,
+        "reported_units": 183
+      },
+      "houseplex_3_6": {
+        "permit_records": 17,
+        "projects": 12,
+        "reported_units": 68
+      },
+      "multiplex_7_20": {
+        "permit_records": 6,
+        "projects": 6,
+        "reported_units": 63
+      },
+      "other_uncertain_housing": {
+        "permit_records": 6,
+        "projects": 5,
+        "reported_units": 6
+      },
+      "rowhouse": {
+        "permit_records": 135,
+        "projects": 79,
+        "reported_units": 386
+      }
+    },
+    "by_cohort": {
+      "home_in_tacoma_current_partial": {
+        "permit_records": 198,
+        "projects": 108,
+        "reported_units": 434
+      },
+      "home_in_tacoma_year_1": {
+        "permit_records": 228,
+        "projects": 202,
+        "reported_units": 361
+      },
+      "pre_home_in_tacoma_5yr": {
+        "permit_records": 1059,
+        "projects": 1011,
+        "reported_units": 1211
+      }
+    }
+  },
   "zones": {
     "UR2": 26880,
     "UR1": 22316,
     "UR3": 7288
   },
   "baseline_feasibility_classes": {
-    "very_weak": 49857,
-    "weak": 772,
-    "marginal": 43
+    "very_weak": 49955,
+    "weak": 715,
+    "marginal": 2
   },
   "prototypes": {
     "duplex_for_sale": {
@@ -167,74 +755,82 @@
       "scenario_pro_forma": {
         "conservative": {
           "gross_revenue": 810000.0,
-          "hard_cost": 594000.0000000001,
-          "sales_and_closing_cost": 48600.0,
-          "soft_cost": 106920.00000000001,
-          "fee_allowance": 27500.0,
-          "financing_allowance": 55199.99999999999,
+          "hard_cost": 653400.0000000001,
+          "sales_and_closing_cost": 32400.0,
+          "soft_cost": 117612.00000000001,
+          "fee_allowance": 32670.000000000007,
+          "financing_allowance": 40312.192,
+          "financeable_cost": 876352.0000000001,
+          "financing_pct_of_financeable_cost": 0.046,
           "demolition_allowance": 40000.0,
-          "contingency": 29700.000000000007,
-          "non_land_cost": 901920.0000000001,
-          "required_profit": 148816.80000000002,
-          "residual_land_value": -240736.80000000013
+          "contingency": 32670.000000000007,
+          "non_land_cost": 949064.1920000002,
+          "required_profit": 114721.03004291852,
+          "required_profit_pct_of_total_cost": 0.165,
+          "residual_land_value": -253785.22204291867
         },
         "baseline": {
           "gross_revenue": 900000.0,
-          "hard_cost": 540000.0,
-          "sales_and_closing_cost": 54000.0,
-          "soft_cost": 97200.0,
-          "fee_allowance": 27500.0,
-          "financing_allowance": 48000.0,
+          "hard_cost": 594000.0,
+          "sales_and_closing_cost": 36000.0,
+          "soft_cost": 106920.0,
+          "fee_allowance": 29700.0,
+          "financing_allowance": 32012.8,
+          "financeable_cost": 800320.0,
+          "financing_pct_of_financeable_cost": 0.04,
           "demolition_allowance": 40000.0,
-          "contingency": 27000.0,
-          "non_land_cost": 833700.0,
-          "required_profit": 125055.0,
-          "residual_land_value": -58755.0
+          "contingency": 29700.0,
+          "non_land_cost": 868332.8,
+          "required_profit": 117391.30434782605,
+          "required_profit_pct_of_total_cost": 0.15,
+          "residual_land_value": -85724.1043478261
         },
         "favorable": {
           "gross_revenue": 990000.0000000001,
-          "hard_cost": 486000.0,
-          "sales_and_closing_cost": 59400.00000000001,
-          "soft_cost": 87480.0,
-          "fee_allowance": 27500.0,
-          "financing_allowance": 40800.0,
+          "hard_cost": 534600.0,
+          "sales_and_closing_cost": 39600.00000000001,
+          "soft_cost": 96228.0,
+          "fee_allowance": 26730.0,
+          "financing_allowance": 24625.792,
+          "financeable_cost": 724288.0,
+          "financing_pct_of_financeable_cost": 0.034,
           "demolition_allowance": 40000.0,
-          "contingency": 24300.0,
-          "non_land_cost": 765480.0,
-          "required_profit": 103339.8,
-          "residual_land_value": 121180.20000000011
+          "contingency": 26730.0,
+          "non_land_cost": 788513.792,
+          "required_profit": 117753.30396475771,
+          "required_profit_pct_of_total_cost": 0.135,
+          "residual_land_value": 83732.90403524239
         }
       },
       "baseline_classes": {
-        "very_weak": 49857,
-        "weak": 772,
-        "marginal": 43
+        "very_weak": 49955,
+        "weak": 715,
+        "marginal": 2
       },
       "basic_fit_count": 50672,
       "scenario_funnel": {
         "conservative": {
           "near_or_above_break_even_count": 0,
           "margin_bands": {
-            "very_weak": 50610,
-            "weak": 62
+            "very_weak": 50629,
+            "weak": 43
           }
         },
         "baseline": {
-          "near_or_above_break_even_count": 43,
+          "near_or_above_break_even_count": 2,
           "margin_bands": {
-            "very_weak": 49857,
-            "weak": 772,
-            "marginal": 43
+            "very_weak": 49955,
+            "weak": 715,
+            "marginal": 2
           }
         },
         "favorable": {
-          "near_or_above_break_even_count": 744,
+          "near_or_above_break_even_count": 590,
           "margin_bands": {
-            "very_weak": 41532,
-            "weak": 8396,
-            "marginal": 472,
-            "moderate": 246,
-            "strong": 26
+            "very_weak": 46703,
+            "weak": 3379,
+            "marginal": 452,
+            "moderate": 138
           }
         }
       }
@@ -248,78 +844,92 @@
           "effective_gross_income": 42242.471999999994,
           "operating_expenses": 13517.59104,
           "net_operating_income": 28724.880959999995,
-          "cap_rate": 0.0627,
-          "stabilized_value": 458132.0727272726,
-          "gross_revenue": 458132.0727272726,
-          "hard_cost": 554400.0,
-          "soft_cost": 99792.0,
-          "fee_allowance": 27500.0,
-          "financing_allowance": 55199.99999999999,
+          "cap_rate": 0.05500000000000001,
+          "stabilized_value": 522270.5629090908,
+          "gross_revenue": 522270.5629090908,
+          "hard_cost": 508200.00000000006,
+          "soft_cost": 91476.0,
+          "fee_allowance": 25410.000000000004,
+          "financing_allowance": 31762.816,
+          "financeable_cost": 690496.0,
+          "financing_pct_of_financeable_cost": 0.046,
           "demolition_allowance": 40000.0,
-          "contingency": 27720.0,
-          "non_land_cost": 804612.0,
-          "required_profit": 132760.98,
-          "residual_land_value": -479240.90727272746
+          "contingency": 25410.000000000004,
+          "non_land_cost": 722258.816,
+          "required_profit": 73969.65054077253,
+          "required_profit_pct_of_total_cost": 0.165,
+          "residual_land_value": -273957.90363168175
         },
         "baseline": {
           "potential_gross_income": 47304.0,
           "effective_gross_income": 44938.799999999996,
           "operating_expenses": 14380.416,
           "net_operating_income": 30558.384,
-          "cap_rate": 0.057,
-          "stabilized_value": 536112.0,
-          "gross_revenue": 536112.0,
-          "hard_cost": 504000.0,
-          "soft_cost": 90720.0,
-          "fee_allowance": 27500.0,
-          "financing_allowance": 48000.0,
+          "cap_rate": 0.05,
+          "stabilized_value": 611167.6799999999,
+          "gross_revenue": 611167.6799999999,
+          "hard_cost": 462000.0,
+          "soft_cost": 83160.0,
+          "fee_allowance": 23100.0,
+          "financing_allowance": 25254.4,
+          "financeable_cost": 631360.0,
+          "financing_pct_of_financeable_cost": 0.04,
           "demolition_allowance": 40000.0,
-          "contingency": 25200.0,
-          "non_land_cost": 735420.0,
-          "required_profit": 110313.0,
-          "residual_land_value": -309621.0
+          "contingency": 23100.0,
+          "non_land_cost": 656614.4,
+          "required_profit": 79717.52347826085,
+          "required_profit_pct_of_total_cost": 0.15,
+          "residual_land_value": -125164.24347826093
         },
         "favorable": {
-          "potential_gross_income": 49669.200000000004,
-          "effective_gross_income": 47682.432,
-          "operating_expenses": 15258.37824,
-          "net_operating_income": 32424.053760000003,
-          "cap_rate": 0.051300000000000005,
-          "stabilized_value": 632047.8315789474,
-          "gross_revenue": 632047.8315789474,
-          "hard_cost": 453600.0,
-          "soft_cost": 81648.0,
-          "fee_allowance": 27500.0,
-          "financing_allowance": 40800.0,
+          "potential_gross_income": 55079.999997926396,
+          "effective_gross_income": 52876.79999800934,
+          "operating_expenses": 16920.575999362987,
+          "net_operating_income": 35956.223998646354,
+          "cap_rate": 0.045000000000000005,
+          "stabilized_value": 799027.1999699189,
+          "gross_revenue": 799027.1999699189,
+          "hard_cost": 415800.0,
+          "soft_cost": 74844.0,
+          "fee_allowance": 20790.0,
+          "financing_allowance": 19455.616,
+          "financeable_cost": 572224.0,
+          "financing_pct_of_financeable_cost": 0.034,
           "demolition_allowance": 40000.0,
-          "contingency": 22680.0,
-          "non_land_cost": 666228.0,
-          "required_profit": 89940.78,
-          "residual_land_value": -124120.94842105263
+          "contingency": 20790.0,
+          "non_land_cost": 591679.616,
+          "required_profit": 95038.47752946173,
+          "required_profit_pct_of_total_cost": 0.135,
+          "residual_land_value": 112309.10644045717
         }
       },
       "baseline_classes": {
-        "very_weak": 50672
+        "very_weak": 50135,
+        "weak": 537
       },
       "basic_fit_count": 50672,
       "scenario_funnel": {
         "conservative": {
           "near_or_above_break_even_count": 0,
           "margin_bands": {
-            "very_weak": 50672
+            "very_weak": 50644,
+            "weak": 28
           }
         },
         "baseline": {
           "near_or_above_break_even_count": 0,
           "margin_bands": {
-            "very_weak": 50672
+            "very_weak": 50135,
+            "weak": 537
           }
         },
         "favorable": {
-          "near_or_above_break_even_count": 0,
+          "near_or_above_break_even_count": 714,
           "margin_bands": {
-            "very_weak": 50113,
-            "weak": 559
+            "very_weak": 42950,
+            "weak": 7008,
+            "marginal": 477,
+            "moderate": 237
           }
         }
       }
@@ -333,54 +943,63 @@
           "effective_gross_income": 84484.94399999999,
           "operating_expenses": 27035.18208,
           "net_operating_income": 57449.76191999999,
-          "cap_rate": 0.0627,
-          "stabilized_value": 916264.1454545452,
-          "gross_revenue": 916264.1454545452,
-          "hard_cost": 1240800.0,
-          "soft_cost": 223344.0,
-          "fee_allowance": 55000.0,
-          "financing_allowance": 110399.99999999999,
+          "cap_rate": 0.05500000000000001,
+          "stabilized_value": 1044541.1258181816,
+          "gross_revenue": 1044541.1258181816,
+          "hard_cost": 1137400.0000000002,
+          "soft_cost": 204732.00000000003,
+          "fee_allowance": 56870.000000000015,
+          "financing_allowance": 68810.11200000001,
+          "financeable_cost": 1495872.0000000002,
+          "financing_pct_of_financeable_cost": 0.046,
           "demolition_allowance": 40000.0,
-          "contingency": 62040.0,
-          "non_land_cost": 1731584.0,
-          "required_profit": 285711.36,
-          "residual_land_value": -1101031.2145454548
+          "contingency": 56870.000000000015,
+          "non_land_cost": 1564682.1120000002,
+          "required_profit": 147939.30108154507,
+          "required_profit_pct_of_total_cost": 0.165,
+          "residual_land_value": -668080.2872633637
         },
         "baseline": {
           "potential_gross_income": 94608.0,
           "effective_gross_income": 89877.59999999999,
           "operating_expenses": 28760.832,
           "net_operating_income": 61116.768,
-          "cap_rate": 0.057,
-          "stabilized_value": 1072224.0,
-          "gross_revenue": 1072224.0,
-          "hard_cost": 1128000.0,
-          "soft_cost": 203040.0,
-          "fee_allowance": 55000.0,
-          "financing_allowance": 96000.0,
+          "cap_rate": 0.05,
+          "stabilized_value": 1222335.3599999999,
+          "gross_revenue": 1222335.3599999999,
+          "hard_cost": 1034000.0,
+          "soft_cost": 186120.0,
+          "fee_allowance": 51700.0,
+          "financing_allowance": 54540.8,
+          "financeable_cost": 1363520.0,
+          "financing_pct_of_financeable_cost": 0.04,
           "demolition_allowance": 40000.0,
-          "contingency": 56400.0,
-          "non_land_cost": 1578440.0,
-          "required_profit": 236766.0,
-          "residual_land_value": -742982.0
+          "contingency": 51700.0,
+          "non_land_cost": 1418060.8,
+          "required_profit": 159435.0469565217,
+          "required_profit_pct_of_total_cost": 0.15,
+          "residual_land_value": -355160.48695652187
         },
         "favorable": {
-          "potential_gross_income": 99338.40000000001,
-          "effective_gross_income": 95364.864,
-          "operating_expenses": 30516.75648,
-          "net_operating_income": 64848.107520000005,
-          "cap_rate": 0.051300000000000005,
-          "stabilized_value": 1264095.6631578947,
-          "gross_revenue": 1264095.6631578947,
-          "hard_cost": 1015200.0,
-          "soft_cost": 182736.0,
-          "fee_allowance": 55000.0,
-          "financing_allowance": 81600.0,
+          "potential_gross_income": 110159.99999585279,
+          "effective_gross_income": 105753.59999601867,
+          "operating_expenses": 33841.151998725974,
+          "net_operating_income": 71912.44799729271,
+          "cap_rate": 0.045000000000000005,
+          "stabilized_value": 1598054.3999398379,
+          "gross_revenue": 1598054.3999398379,
+          "hard_cost": 930600.0,
+          "soft_cost": 167508.0,
+          "fee_allowance": 46530.0,
+          "financing_allowance": 41859.712,
+          "financeable_cost": 1231168.0,
+          "financing_pct_of_financeable_cost": 0.034,
           "demolition_allowance": 40000.0,
-          "contingency": 50760.0,
-          "non_land_cost": 1425296.0,
-          "required_profit": 192414.96000000002,
-          "residual_land_value": -353615.2968421053
+          "contingency": 46530.0,
+          "non_land_cost": 1273027.712,
+          "required_profit": 190076.95505892346,
+          "required_profit_pct_of_total_cost": 0.135,
+          "residual_land_value": 134949.73288091435
         }
       },
       "baseline_classes": {
@@ -401,9 +1020,13 @@
           }
         },
         "favorable": {
-          "near_or_above_break_even_count": 0,
+          "near_or_above_break_even_count": 600,
           "margin_bands": {
-            "very_weak": 42331
+            "very_weak": 33588,
+            "weak": 8143,
+            "marginal": 388,
+            "moderate": 194,
+            "strong": 18
           }
         }
       }
@@ -417,10 +1040,10 @@
       "detail_file": "parcel_details_00.json",
       "detail_gzip_file": "parcel_details_00.json.gz",
       "features": 1308,
-      "bytes": 1410315,
-      "gzip_bytes": 85216,
-      "detail_bytes": 7776399,
-      "detail_gzip_bytes": 417864,
+      "bytes": 1413213,
+      "gzip_bytes": 85639,
+      "detail_bytes": 9160867,
+      "detail_gzip_bytes": 433732,
       "bounds": [
         -122.50854997814514,
         47.18471097069078,
@@ -435,10 +1058,10 @@
       "detail_file": "parcel_details_01.json",
       "detail_gzip_file": "parcel_details_01.json.gz",
       "features": 737,
-      "bytes": 801595,
-      "gzip_bytes": 53389,
-      "detail_bytes": 4395910,
-      "detail_gzip_bytes": 254456,
+      "bytes": 803317,
+      "gzip_bytes": 53748,
+      "detail_bytes": 5177475,
+      "detail_gzip_bytes": 265444,
       "bounds": [
         -122.56134777358717,
         47.20367625200777,
@@ -453,10 +1076,10 @@
       "detail_file": "parcel_details_02.json",
       "detail_gzip_file": "parcel_details_02.json.gz",
       "features": 6148,
-      "bytes": 6662707,
-      "gzip_bytes": 408650,
-      "detail_bytes": 36394527,
-      "detail_gzip_bytes": 1960052,
+      "bytes": 6685251,
+      "gzip_bytes": 409131,
+      "detail_bytes": 42916343,
+      "detail_gzip_bytes": 2031617,
       "bounds": [
         -122.55601992483415,
         47.24118813680367,
@@ -471,10 +1094,10 @@
       "detail_file": "parcel_details_03.json",
       "detail_gzip_file": "parcel_details_03.json.gz",
       "features": 5928,
-      "bytes": 6422234,
-      "gzip_bytes": 395846,
-      "detail_bytes": 35095554,
-      "detail_gzip_bytes": 1908077,
+      "bytes": 6444755,
+      "gzip_bytes": 396070,
+      "detail_bytes": 41384145,
+      "detail_gzip_bytes": 1979940,
       "bounds": [
         -122.54151483299016,
         47.26650829896957,
@@ -489,10 +1112,10 @@
       "detail_file": "parcel_details_04.json",
       "detail_gzip_file": "parcel_details_04.json.gz",
       "features": 2879,
-      "bytes": 3102152,
-      "gzip_bytes": 186578,
-      "detail_bytes": 17109113,
-      "detail_gzip_bytes": 907178,
+      "bytes": 3107139,
+      "gzip_bytes": 187758,
+      "detail_bytes": 20158453,
+      "detail_gzip_bytes": 944746,
       "bounds": [
         -122.49144157263414,
         47.167686990159694,
@@ -507,10 +1130,10 @@
       "detail_file": "parcel_details_05.json",
       "detail_gzip_file": "parcel_details_05.json.gz",
       "features": 2284,
-      "bytes": 2458684,
-      "gzip_bytes": 148895,
-      "detail_bytes": 13580318,
-      "detail_gzip_bytes": 737874,
+      "bytes": 2460860,
+      "gzip_bytes": 149964,
+      "detail_bytes": 15995398,
+      "detail_gzip_bytes": 767830,
       "bounds": [
         -122.49294159671616,
         47.203858894164675,
@@ -525,10 +1148,10 @@
       "detail_file": "parcel_details_06.json",
       "detail_gzip_file": "parcel_details_06.json.gz",
       "features": 6631,
-      "bytes": 7153573,
-      "gzip_bytes": 437704,
-      "detail_bytes": 39169723,
-      "detail_gzip_bytes": 2126076,
+      "bytes": 7176390,
+      "gzip_bytes": 438442,
+      "detail_bytes": 46196915,
+      "detail_gzip_bytes": 2212525,
       "bounds": [
         -122.49383719318017,
         47.24232115103128,
@@ -543,10 +1166,10 @@
       "detail_file": "parcel_details_07.json",
       "detail_gzip_file": "parcel_details_07.json.gz",
       "features": 2327,
-      "bytes": 2519511,
-      "gzip_bytes": 161358,
-      "detail_bytes": 13822942,
-      "detail_gzip_bytes": 791383,
+      "bytes": 2528360,
+      "gzip_bytes": 161477,
+      "detail_bytes": 16300189,
+      "detail_gzip_bytes": 821933,
       "bounds": [
         -122.49447866960216,
         47.268761826845676,
@@ -561,10 +1184,10 @@
       "detail_file": "parcel_details_08.json",
       "detail_gzip_file": "parcel_details_08.json.gz",
       "features": 6472,
-      "bytes": 6978822,
-      "gzip_bytes": 430087,
-      "detail_bytes": 38253755,
-      "detail_gzip_bytes": 2057296,
+      "bytes": 6991091,
+      "gzip_bytes": 432567,
+      "detail_bytes": 45105075,
+      "detail_gzip_bytes": 2137001,
       "bounds": [
         -122.45772103176614,
         47.17010569651758,
@@ -579,10 +1202,10 @@
       "detail_file": "parcel_details_09.json",
       "detail_gzip_file": "parcel_details_09.json.gz",
       "features": 6219,
-      "bytes": 6693266,
-      "gzip_bytes": 398672,
-      "detail_bytes": 36723763,
-      "detail_gzip_bytes": 1980418,
+      "bytes": 6703709,
+      "gzip_bytes": 401061,
+      "detail_bytes": 43304064,
+      "detail_gzip_bytes": 2063671,
       "bounds": [
         -122.45898823293918,
         47.20455855190039,
@@ -597,10 +1220,10 @@
       "detail_file": "parcel_details_10.json",
       "detail_gzip_file": "parcel_details_10.json.gz",
       "features": 1323,
-      "bytes": 1426572,
-      "gzip_bytes": 89218,
-      "detail_bytes": 7829290,
-      "detail_gzip_bytes": 435597,
+      "bytes": 1430485,
+      "gzip_bytes": 89567,
+      "detail_bytes": 9234466,
+      "detail_gzip_bytes": 453906,
       "bounds": [
         -122.46032966813118,
         47.24301755636279,
@@ -615,10 +1238,10 @@
       "detail_file": "parcel_details_11.json",
       "detail_gzip_file": "parcel_details_11.json.gz",
       "features": 107,
-      "bytes": 116637,
-      "gzip_bytes": 8336,
-      "detail_bytes": 636967,
-      "detail_gzip_bytes": 38056,
+      "bytes": 117023,
+      "gzip_bytes": 8341,
+      "detail_bytes": 751635,
+      "detail_gzip_bytes": 39590,
       "bounds": [
         -122.46090268940814,
         47.26935881167206,
@@ -633,10 +1256,10 @@
       "detail_file": "parcel_details_12.json",
       "detail_gzip_file": "parcel_details_12.json.gz",
       "features": 3462,
-      "bytes": 3733544,
-      "gzip_bytes": 230106,
-      "detail_bytes": 20398791,
-      "detail_gzip_bytes": 1090353,
+      "bytes": 3741041,
+      "gzip_bytes": 231396,
+      "detail_bytes": 24066215,
+      "detail_gzip_bytes": 1133928,
       "bounds": [
         -122.42925824607917,
         47.170100530689005,
@@ -651,10 +1274,10 @@
       "detail_file": "parcel_details_13.json",
       "detail_gzip_file": "parcel_details_13.json.gz",
       "features": 4881,
-      "bytes": 5261493,
-      "gzip_bytes": 324982,
-      "detail_bytes": 28812680,
-      "detail_gzip_bytes": 1576960,
+      "bytes": 5267163,
+      "gzip_bytes": 327540,
+      "detail_bytes": 33980082,
+      "detail_gzip_bytes": 1643891,
       "bounds": [
         -122.42958596293518,
         47.20488012185288,
@@ -669,10 +1292,10 @@
       "detail_file": "parcel_details_14.json",
       "detail_gzip_file": "parcel_details_14.json.gz",
       "features": 19,
-      "bytes": 20804,
-      "gzip_bytes": 2008,
-      "detail_bytes": 113514,
-      "detail_gzip_bytes": 8472,
+      "bytes": 20859,
+      "gzip_bytes": 2013,
+      "detail_bytes": 133615,
+      "detail_gzip_bytes": 9099,
       "bounds": [
         -122.36629430860818,
         47.266362330462385,
@@ -687,10 +1310,10 @@
       "detail_file": "parcel_details_15.json",
       "detail_gzip_file": "parcel_details_15.json.gz",
       "features": 5759,
-      "bytes": 6281958,
-      "gzip_bytes": 391976,
-      "detail_bytes": 34229691,
-      "detail_gzip_bytes": 1873728,
+      "bytes": 6303810,
+      "gzip_bytes": 392373,
+      "detail_bytes": 40343125,
+      "detail_gzip_bytes": 1940722,
       "bounds": [
         -122.43238658124818,
         47.27097336973556,
@@ -700,11 +1323,11 @@
     }
   ],
   "map_chunk_count": 16,
-  "map_geojson_bytes": 61043867,
-  "map_geojson_gzip_bytes": 3753021,
-  "details_json_bytes": 334342922,
-  "details_json_gzip_bytes": 18146294,
-  "detail_chunk_gzip_bytes": 18163840,
+  "map_geojson_bytes": 61194466,
+  "map_geojson_gzip_bytes": 3767087,
+  "details_json_bytes": 394208047,
+  "details_json_gzip_bytes": 18856403,
+  "detail_chunk_gzip_bytes": 18879575,
   "search_index_bytes": 8056224,
   "search_index_gzip_bytes": 1286733,
   "geometry_simplification_feet": 8.0,
@@ -715,7 +1338,7 @@
     "improvement_value_ratio",
     "critical_area_screen_status",
     "meaningful_split_zoned",
-    "housing_pipeline_record_count",
+    "housing_application_project_count",
     "duplex_for_sale__prototype_basic_fit",
     "duplex_for_sale__baseline_feasibility_class",
     "duplex_for_sale__favorable_feasibility_class",
@@ -786,8 +1409,27 @@
     "housing_pipeline_reported_units",
     "housing_pipeline_first_application",
     "housing_pipeline_latest_application",
+    "housing_application_project_count",
+    "housing_application_permit_count",
+    "housing_application_issued_project_count",
+    "housing_application_reported_units",
+    "housing_application_first_application",
+    "housing_application_latest_application",
+    "housing_application_types",
     "map_center_lon",
     "map_center_lat",
+    "housing_type__backyard_unit_project_count",
+    "housing_type__houseplex_2_project_count",
+    "housing_type__houseplex_3_6_project_count",
+    "housing_type__rowhouse_project_count",
+    "housing_type__courtyard_cottage_project_count",
+    "housing_type__multiplex_7_20_project_count",
+    "housing_type__larger_multifamily_21_plus_project_count",
+    "housing_type__detached_single_unit_project_count",
+    "housing_type__other_uncertain_housing_project_count",
+    "housing_cohort__pre_home_in_tacoma_5yr_project_count",
+    "housing_cohort__home_in_tacoma_year_1_project_count",
+    "housing_cohort__home_in_tacoma_current_partial_project_count",
     "duplex_for_sale__prototype_basic_fit",
     "duplex_for_sale__prototype_fit_status",
     "duplex_for_sale__financial_screen_status",

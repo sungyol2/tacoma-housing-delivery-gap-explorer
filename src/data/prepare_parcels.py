@@ -15,6 +15,21 @@ import pandas as pd
 from shapely import union_all
 from shapely.geometry import Polygon
 
+try:
+    from src.data.permit_etl import (
+        BASELINE_START,
+        HOME_IN_TACOMA_EFFECTIVE,
+        HOUSING_TYPES,
+        classify_housing_applications,
+    )
+except ModuleNotFoundError:  # Support the documented direct-script invocation.
+    from permit_etl import (  # type: ignore[no-redef]
+        BASELINE_START,
+        HOME_IN_TACOMA_EFFECTIVE,
+        HOUSING_TYPES,
+        classify_housing_applications,
+    )
+
 ANALYSIS_CRS = "EPSG:2927"
 
 RESIDENTIAL_CANDIDATE_PATTERN = (
@@ -513,59 +528,126 @@ def add_permit_activity(
     permits["pull_date"] = pd.to_datetime(
         permits["pull_date"], unit="ms", errors="coerce", utc=True
     )
-    residential_building = permits["permit_type"].eq("Building") & permits[
-        "permit_subtype"
-    ].eq("Residential")
-    permits["housing_pipeline_record"] = (
-        residential_building
-        & permits["application_date"].ge("2021-01-01")
-        & (
-            permits["permit_category"].eq("New Building")
-            | (
-                permits["permit_category"].eq("Alteration")
-                & permits["housing_units"].gt(0)
-            )
-        )
-    )
-    permits["housing_pipeline_reported_units"] = permits["housing_units"].where(
-        permits["housing_pipeline_record"] & permits["housing_units"].gt(0)
-    )
     parcel_ids = set(parcels["parcel_id"])
     permits["parcel_match"] = permits["parcel_id"].isin(parcel_ids)
+    permits = classify_housing_applications(permits)
+    applications = permits.loc[
+        permits["parcel_match"] & permits["housing_application_record"]
+    ].copy()
+    applications["issued_or_completed"] = applications[
+        "housing_application_status"
+    ].isin(["issued", "completed_or_final"])
 
-    activity = (
-        permits.loc[permits["parcel_match"] & permits["housing_pipeline_record"]]
-        .groupby("parcel_id", as_index=False)
+    project_by_parcel = (
+        applications.groupby(["parcel_id", "housing_project_id"], as_index=False)
         .agg(
-            housing_pipeline_record_count=("permit_number", "count"),
-            housing_pipeline_first_application=("application_date", "min"),
-            housing_pipeline_latest_application=("application_date", "max"),
-            housing_pipeline_issued_count=("issued_date", "count"),
-            housing_pipeline_reported_units=(
-                "housing_pipeline_reported_units",
+            housing_application_permit_count=("permit_number", "count"),
+            housing_application_first_application=("application_date", "min"),
+            housing_application_latest_application=("application_date", "max"),
+            housing_application_issued=("issued_or_completed", "max"),
+            housing_application_reported_units=(
+                "housing_application_reported_units",
                 lambda values: values.sum(min_count=1),
+            ),
+            housing_application_types=(
+                "housing_type",
+                lambda values: "|".join(sorted(set(values.dropna()))),
             ),
         )
     )
+    activity = (
+        project_by_parcel.groupby("parcel_id", as_index=False)
+        .agg(
+            housing_application_project_count=("housing_project_id", "nunique"),
+            housing_application_permit_count=("housing_application_permit_count", "sum"),
+            housing_application_first_application=("housing_application_first_application", "min"),
+            housing_application_latest_application=("housing_application_latest_application", "max"),
+            housing_application_issued_project_count=("housing_application_issued", "sum"),
+            housing_application_reported_units=(
+                "housing_application_reported_units",
+                lambda values: values.sum(min_count=1),
+            ),
+            housing_application_types=(
+                "housing_application_types",
+                lambda values: "|".join(
+                    sorted({item for value in values for item in value.split("|") if item})
+                ),
+            ),
+        )
+    )
+
+    for dimension, values, prefix in [
+        ("housing_type", HOUSING_TYPES, "housing_type"),
+        (
+            "housing_policy_cohort",
+            (
+                "pre_home_in_tacoma_5yr",
+                "home_in_tacoma_year_1",
+                "home_in_tacoma_current_partial",
+            ),
+            "housing_cohort",
+        ),
+    ]:
+        counts = (
+            applications.groupby(["parcel_id", dimension])["housing_project_id"]
+            .nunique()
+            .unstack(fill_value=0)
+        )
+        counts = counts.reindex(columns=values, fill_value=0)
+        counts.columns = [f"{prefix}__{value}_project_count" for value in counts.columns]
+        activity = activity.merge(counts.reset_index(), on="parcel_id", how="left")
+
     parcels = parcels.merge(activity, on="parcel_id", how="left", validate="one_to_one")
-    parcels["housing_pipeline_record_count"] = (
-        parcels["housing_pipeline_record_count"].fillna(0).astype(int)
-    )
-    parcels["housing_pipeline_issued_count"] = (
-        parcels["housing_pipeline_issued_count"].fillna(0).astype(int)
-    )
+    count_columns = [
+        column
+        for column in parcels.columns
+        if column.startswith("housing_") and column.endswith("_count")
+    ]
+    for column in count_columns:
+        parcels[column] = parcels[column].fillna(0).astype(int)
+    parcels["housing_application_types"] = parcels["housing_application_types"].fillna("")
+
+    # Transitional aliases keep existing exports functional while the interface is
+    # refocused from generic permit records to classified housing projects.
+    parcels["housing_pipeline_record_count"] = parcels["housing_application_project_count"]
+    parcels["housing_pipeline_issued_count"] = parcels[
+        "housing_application_issued_project_count"
+    ]
+    parcels["housing_pipeline_reported_units"] = parcels[
+        "housing_application_reported_units"
+    ]
+    parcels["housing_pipeline_first_application"] = parcels[
+        "housing_application_first_application"
+    ]
+    parcels["housing_pipeline_latest_application"] = parcels[
+        "housing_application_latest_application"
+    ]
 
     processed_root.mkdir(parents=True, exist_ok=True)
     permits.to_parquet(processed_root / "permits.parquet", index=False)
+    applications.to_parquet(processed_root / "housing_applications.parquet", index=False)
     qa = {
-        "permit_records": int(len(permits)),
+        "canonical_permit_records": int(len(permits)),
         "invalid_or_nonstandard_parcel_number": int(permits["parcel_id"].isna().sum()),
         "matched_to_tacoma_parcel": int(permits["parcel_match"].sum()),
-        "housing_pipeline_records": int(permits["housing_pipeline_record"].sum()),
-        "housing_pipeline_start_date": "2021-01-01",
-        "housing_pipeline_records_matched": int(
-            (permits["housing_pipeline_record"] & permits["parcel_match"]).sum()
+        "housing_application_permits_matched": int(len(applications)),
+        "housing_application_projects_matched": int(
+            applications["housing_project_id"].nunique()
         ),
+        "housing_application_start_date": BASELINE_START.date().isoformat(),
+        "home_in_tacoma_effective_date": HOME_IN_TACOMA_EFFECTIVE.date().isoformat(),
+        "housing_application_by_cohort": {
+            key: int(value)
+            for key, value in applications["housing_policy_cohort"].value_counts().items()
+        },
+        "housing_application_by_type": {
+            key: int(value)
+            for key, value in applications["housing_type"].value_counts().items()
+        },
+        "housing_application_by_subtype": {
+            key: int(value)
+            for key, value in applications["permit_subtype"].value_counts().items()
+        },
         "parcel_match_pct": round(float(permits["parcel_match"].mean() * 100), 2),
         "missing_housing_units": int(permits["housing_units"].isna().sum()),
         "missing_housing_units_pct": round(float(permits["housing_units"].isna().mean() * 100), 2),

@@ -18,6 +18,79 @@ PROTOTYPE_IDS = [
     "four_unit_rowhouse_rental",
 ]
 
+POLICY_COHORTS = [
+    "pre_home_in_tacoma_5yr",
+    "home_in_tacoma_year_1",
+    "home_in_tacoma_current_partial",
+]
+
+
+def _application_metrics(applications: pd.DataFrame) -> dict[str, int]:
+    return {
+        "permit_records": int(len(applications)),
+        "projects": int(applications["housing_project_id"].nunique()),
+        "reported_units": int(
+            applications["housing_application_reported_units"].sum()
+        ),
+    }
+
+
+def _annualize_metrics(metrics: dict[str, int]) -> dict[str, float]:
+    return {key: round(value / 5, 1) for key, value in metrics.items()}
+
+
+def _policy_comparison(applications: pd.DataFrame) -> dict[str, object]:
+    pre = applications.loc[
+        applications["housing_policy_cohort"].eq("pre_home_in_tacoma_5yr")
+    ]
+    year_one = applications.loc[
+        applications["housing_policy_cohort"].eq("home_in_tacoma_year_1")
+    ]
+    current = applications.loc[
+        applications["housing_policy_cohort"].eq("home_in_tacoma_current_partial")
+    ]
+    pre_totals = _application_metrics(pre)
+    pre_average = _annualize_metrics(pre_totals)
+    year_one_totals = _application_metrics(year_one)
+
+    def change(metric: str) -> float | None:
+        baseline = pre_average[metric]
+        if not baseline:
+            return None
+        return round((year_one_totals[metric] / baseline - 1) * 100, 1)
+
+    type_keys = sorted(set(applications["housing_type"].dropna()))
+    return {
+        "pre_policy_five_year_total": pre_totals,
+        "pre_policy_annual_average": pre_average,
+        "home_in_tacoma_year_one": year_one_totals,
+        "change_pct": {
+            metric: change(metric)
+            for metric in ["permit_records", "projects", "reported_units"]
+        },
+        "current_partial": {
+            **_application_metrics(current),
+            "through": (
+                current["application_date"].max().date().isoformat()
+                if len(current)
+                else None
+            ),
+        },
+        "by_type": {
+            housing_type: {
+                "pre_policy_annual_average": _annualize_metrics(
+                    _application_metrics(
+                        pre.loc[pre["housing_type"].eq(housing_type)]
+                    )
+                ),
+                "home_in_tacoma_year_one": _application_metrics(
+                    year_one.loc[year_one["housing_type"].eq(housing_type)]
+                ),
+            }
+            for housing_type in type_keys
+        },
+    }
+
 PUBLISH_FIELDS = [
     "parcel_id",
     "Site_Address",
@@ -78,6 +151,13 @@ PUBLISH_FIELDS = [
     "housing_pipeline_reported_units",
     "housing_pipeline_first_application",
     "housing_pipeline_latest_application",
+    "housing_application_project_count",
+    "housing_application_permit_count",
+    "housing_application_issued_project_count",
+    "housing_application_reported_units",
+    "housing_application_first_application",
+    "housing_application_latest_application",
+    "housing_application_types",
     "map_center_lon",
     "map_center_lat",
 ]
@@ -89,8 +169,28 @@ MAP_FIELDS = [
     "improvement_value_ratio",
     "critical_area_screen_status",
     "meaningful_split_zoned",
-    "housing_pipeline_record_count",
+    "housing_application_project_count",
 ]
+
+for housing_type in [
+    "backyard_unit",
+    "houseplex_2",
+    "houseplex_3_6",
+    "rowhouse",
+    "courtyard_cottage",
+    "multiplex_7_20",
+    "larger_multifamily_21_plus",
+    "detached_single_unit",
+    "other_uncertain_housing",
+]:
+    PUBLISH_FIELDS.append(f"housing_type__{housing_type}_project_count")
+
+for cohort in [
+    "pre_home_in_tacoma_5yr",
+    "home_in_tacoma_year_1",
+    "home_in_tacoma_current_partial",
+]:
+    PUBLISH_FIELDS.append(f"housing_cohort__{cohort}_project_count")
 
 for prototype_id in PROTOTYPE_IDS:
     PUBLISH_FIELDS.extend(
@@ -125,6 +225,11 @@ def main() -> None:
     parser.add_argument(
         "--feasibility-qa", type=Path, default=Path("outputs/qa/feasibility_qa.json")
     )
+    parser.add_argument(
+        "--housing-applications",
+        type=Path,
+        default=Path("data_processed/housing_applications.parquet"),
+    )
     args = parser.parse_args()
 
     parcels = gpd.read_parquet(args.input)
@@ -135,11 +240,37 @@ def main() -> None:
             parcels["is_ur_zoning_scope"], "redevelopment_eligibility"
         ].value_counts().items()
     }
+    housing_applications_all = pd.read_parquet(args.housing_applications)
+    policy_applications = housing_applications_all.merge(
+        parcels[["parcel_id", "is_ur_zoning_scope", "BaseZone"]],
+        on="parcel_id",
+        how="inner",
+        validate="many_to_one",
+    )
+    policy_applications = policy_applications.loc[
+        policy_applications["is_ur_zoning_scope"]
+        & policy_applications["housing_policy_cohort"].isin(POLICY_COHORTS)
+        & policy_applications["housing_application_status"].ne("cancelled_or_voided")
+    ].copy()
+    policy_comparison = {
+        "all": _policy_comparison(policy_applications),
+        **{
+            zone: _policy_comparison(
+                policy_applications.loc[policy_applications["BaseZone"].eq(zone)]
+            )
+            for zone in ["UR1", "UR2", "UR3"]
+        },
+    }
+
     assessed_total = parcels["Land_Value"] + parcels["Improvement_Value"]
     parcels["improvement_value_ratio"] = np.where(
         assessed_total.gt(0), parcels["Improvement_Value"] / assessed_total, None
     )
     parcels = parcels.loc[parcels["is_primary_residential_scope"]].copy()
+    candidate_parcel_ids = set(parcels["parcel_id"])
+    housing_applications = housing_applications_all.loc[
+        housing_applications_all["parcel_id"].isin(candidate_parcel_ids)
+    ].copy()
     representative_points = parcels.geometry.representative_point().to_crs("EPSG:4326")
     parcels["map_center_lon"] = representative_points.x
     parcels["map_center_lat"] = representative_points.y
@@ -153,6 +284,8 @@ def main() -> None:
     for column in [
         "housing_pipeline_first_application",
         "housing_pipeline_latest_application",
+        "housing_application_first_application",
+        "housing_application_latest_application",
     ]:
         parcels[column] = parcels[column].apply(
             lambda value: value.isoformat() if pd.notna(value) else None
@@ -268,9 +401,47 @@ def main() -> None:
         ),
         "split_zoned_count": int(parcels["split_zoned"].sum()),
         "meaningful_split_zoned_count": int(parcels["meaningful_split_zoned"].sum()),
-        "housing_pipeline_records_matched": int(
-            parcels["housing_pipeline_record_count"].sum()
+        "housing_application_project_parcel_links": int(
+            parcels["housing_application_project_count"].sum()
         ),
+        "housing_policy_comparison": {
+            "effective_date": "2025-02-01",
+            "geography_note": "Current UR parcel geography; historical zoning geometry is unavailable.",
+            "status_note": "Cancelled and voided applications are excluded from the comparison.",
+            "official_year_one_benchmark": {
+                "permit_records": 213,
+                "reported_units": 385,
+                "source": "City of Tacoma Home in Tacoma Year One review",
+            },
+            "by_zone": policy_comparison,
+        },
+        "housing_applications": {
+            "permit_records": int(len(housing_applications)),
+            "projects": int(housing_applications["housing_project_id"].nunique()),
+            "reported_units": int(
+                housing_applications["housing_application_reported_units"].sum()
+            ),
+            "by_type": {
+                key: {
+                    "permit_records": int(len(group)),
+                    "projects": int(group["housing_project_id"].nunique()),
+                    "reported_units": int(
+                        group["housing_application_reported_units"].sum()
+                    ),
+                }
+                for key, group in housing_applications.groupby("housing_type")
+            },
+            "by_cohort": {
+                key: {
+                    "permit_records": int(len(group)),
+                    "projects": int(group["housing_project_id"].nunique()),
+                    "reported_units": int(
+                        group["housing_application_reported_units"].sum()
+                    ),
+                }
+                for key, group in housing_applications.groupby("housing_policy_cohort")
+            },
+        },
         "zones": {
             key: int(value) for key, value in parcels["BaseZone"].value_counts().items()
         },

@@ -41,7 +41,7 @@ def select_samples(parcels: pd.DataFrame) -> list[tuple[str, pd.Series]]:
         ),
         (
             "housing_application",
-            first_sorted(candidate[candidate["housing_pipeline_record_count"].gt(0)]),
+            first_sorted(candidate[candidate["housing_application_project_count"].gt(0)]),
         ),
         (
             "excluded_park",

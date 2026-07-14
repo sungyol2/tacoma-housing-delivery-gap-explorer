@@ -37,11 +37,15 @@ One row per unique Tacoma parcel after multipart parcel records are dissolved an
 | `building_footprint_sqft` | square feet | Sum of footprint area clipped to parcel geometry | Derived |
 | `building_coverage_ratio_raw` | ratio | Clipped footprint area divided by parcel area before display capping | Derived |
 | `building_coverage_ratio` | ratio, 0–1 | Numerically bounded building-coverage ratio | Derived |
-| `housing_pipeline_record_count` | count | Matched residential new-building or positive-unit alteration records | Tacoma Accela |
-| `permit_first_application` | UTC datetime | Earliest matched application date | Tacoma Accela |
-| `permit_latest_application` | UTC datetime | Latest matched application date | Tacoma Accela |
-| `housing_pipeline_issued_count` | count | Housing-pipeline records with a non-null issue date | Tacoma Accela |
-| `housing_pipeline_reported_units` | units, nullable | Sum of positive reported units in the housing-pipeline subset | Tacoma Accela |
+| `housing_application_project_count` | count | Likely housing projects matched to the parcel since February 2020 | Tacoma Accela + derived grouping |
+| `housing_application_permit_count` | count | Canonical Residential or Commercial permits classified as new housing, including alterations that explicitly create or legalize dwelling units | Tacoma Accela + derived classification |
+| `housing_application_first_application` | UTC datetime | Earliest classified housing application | Tacoma Accela |
+| `housing_application_latest_application` | UTC datetime | Latest classified housing application | Tacoma Accela |
+| `housing_application_issued_project_count` | count | Likely projects with at least one issued or completed permit | Derived |
+| `housing_application_reported_units` | units, nullable | Sum of permit-scope proposed units after structured-field and description reconciliation | Derived from Tacoma Accela |
+| `housing_application_types` | pipe-delimited string | Housing categories observed on the parcel | Derived |
+| `housing_type__*__project_count` | count | Likely projects by classified housing type | Derived |
+| `housing_cohort__*__project_count` | count | Likely projects in the five-year pre-policy, Home in Tacoma Year One, or current partial cohort | Derived |
 
 ## Modeled extensions
 
@@ -78,5 +82,5 @@ The uncompressed citywide detail dictionary is retained only as a local QA artif
 
 - A null assessor or zoning value means the source did not publish a usable value for that parcel.
 - Zero building footprints means no 2024 footprint intersected the parcel; it does not prove the parcel is vacant.
-- Zero permit records means no exact normalized parcel-number match in this extract.
-- Null `housing_pipeline_reported_units` means no matched housing-pipeline record supplied a positive unit count. It must not be converted to zero for delivery analysis.
+- Zero housing-application projects means no classified project was matched to that parcel in the February 2020–2026 policy-period extract.
+- Null `housing_application_reported_units` means the permit scope did not provide a defensible proposed-unit count. It must not be converted to zero for production analysis.

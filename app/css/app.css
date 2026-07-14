@@ -39,6 +39,7 @@ h1 { margin: 0; font-family: Georgia, serif; font-size: 25px; font-weight: 600; 
 .mode-button small { color: var(--muted); margin-top: 2px; }
 .mode-button.active { border-color: var(--blue); box-shadow: inset 3px 0 var(--blue); background: #edf3f7; }
 .filters { display: grid; gap: 11px; }
+.filters [hidden] { display: none !important; }
 .filters h2 { margin-bottom: 0; }
 .filters label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
 select, input[type="search"] { border: 1px solid #bfc6c9; background: white; padding: 8px; color: var(--ink); }
@@ -80,11 +81,13 @@ select, input[type="search"] { border: 1px solid #bfc6c9; background: white; pad
 .model-comparison th:first-child { text-align: left; white-space: normal; }
 .model-comparison thead th { color: var(--muted); font-weight: 600; }
 .model-comparison .selected-model { background: #edf3f7; box-shadow: inset 3px 0 var(--blue); }
+.policy-type-table caption { padding: 2px 0 8px; text-align: left; color: var(--muted); font-size: 10px; }
 .driver-note { margin: 9px 0 4px; padding: 7px 8px; font-size: 11px; line-height: 1.4; }
 .driver-note.negative { background: #f4e6df; color: #7a3d2e; border-left: 3px solid var(--terracotta); }
 .driver-note.positive { background: #e4f0e9; color: #275f4d; border-left: 3px solid var(--teal); }
 .warning { border-left: 3px solid var(--gold); padding-left: 9px; color: #685521; }
 .bottom-panel { grid-column: 1 / 4; display: grid; grid-template-columns: 1.25fr repeat(5, 1fr); align-items: stretch; }
+.bottom-panel[hidden] { display: none !important; }
 .summary-title { padding: 15px; border-right: 1px solid var(--line); display: grid; align-content: center; gap: 5px; }
 .summary-title strong { font-family: Georgia, serif; font-size: 16px; }
 .summary-title small { color: var(--muted); font-size: 10px; }
@@ -97,6 +100,15 @@ select, input[type="search"] { border: 1px solid #bfc6c9; background: white; pad
 .funnel-step strong { font-family: Georgia, serif; font-size: 23px; font-weight: 500; }
 .funnel-step em { color: var(--muted); font-size: 9px; font-style: normal; }
 .funnel-step.financial { box-shadow: inset 0 3px var(--gold); background: #fbf7e9; }
+.policy-step { padding: 15px 12px; border-right: 1px solid var(--line); display: grid; align-items: center; }
+.policy-step div { display: grid; gap: 4px; }
+.policy-step small { color: var(--muted); font-size: 10px; }
+.policy-step strong { font-family: Georgia, serif; font-size: 25px; font-weight: 500; }
+.policy-step em { color: var(--muted); font-size: 9px; font-style: normal; line-height: 1.35; }
+.policy-step.focal { box-shadow: inset 0 3px var(--teal); background: #f0f6f3; }
+.policy-step.change { box-shadow: inset 0 3px var(--blue); background: #edf3f7; }
+.policy-step.change[data-direction="up"] strong { color: #22624f; }
+.policy-step.change[data-direction="down"] strong { color: #8a4636; }
 .disclaimer { grid-column: 1 / -1; align-self: end; padding: 7px 17px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; }
 dialog { width: min(620px, calc(100vw - 32px)); max-height: min(760px, calc(100vh - 32px)); overflow-y: auto; border: 1px solid var(--line); padding: 28px; color: var(--ink); }
 dialog::backdrop { background: rgba(16,43,67,.55); }
@@ -120,12 +132,18 @@ dialog::backdrop { background: rgba(16,43,67,.55); }
   .title-block p, .brand-mark { display: none; }
   .app-header nav { gap: 5px; flex-shrink: 0; }
   .app-header nav button { padding: 4px; font-size: 11px; }
-  .workspace { grid-template-columns: 1fr; grid-template-rows: auto 62vh auto auto; }
+  .workspace { grid-template-columns: 1fr; grid-template-rows: auto; }
   .left-panel, .map-region, .right-panel, .bottom-panel { grid-column: 1; grid-row: auto; }
+  .map-region { min-height: 62vh; }
   .mode-list { grid-template-columns: 1fr 1fr; }
   .mode-button { padding: 8px; }
   .map-search { right: 10px; }
   .map-search input { width: 100%; }
   .bottom-panel { display: grid; grid-template-columns: 1fr 1fr; }
   .summary-title { grid-column: 1 / -1; }
+  .policy-step { min-height: 108px; }
+  body.permit-mode .left-panel { order: 1; }
+  body.permit-mode #permit-comparison { order: 2; }
+  body.permit-mode .map-region { order: 3; }
+  body.permit-mode .right-panel { order: 4; }
 }

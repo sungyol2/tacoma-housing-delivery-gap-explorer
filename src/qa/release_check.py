@@ -36,9 +36,14 @@ def main() -> None:
 
     html = (args.app / "index.html").read_text(encoding="utf-8")
     js = (args.app / "js/app.js").read_text(encoding="utf-8")
+    css = (args.app / "css/app.css").read_text(encoding="utf-8")
     ids = re.findall(r'\bid="([^"]+)"', html)
     duplicate_html_ids = sorted(key for key, count in Counter(ids).items() if count > 1)
     project_root = args.app.parent
+    policy = summary.get("housing_policy_comparison", {})
+    policy_all = policy.get("by_zone", {}).get("all", {})
+    policy_pre_total = policy_all.get("pre_policy_five_year_total", {})
+    policy_pre_average = policy_all.get("pre_policy_annual_average", {})
 
     checks = {
         "summary_matches_map_features": feature_total == summary["parcel_count"],
@@ -52,10 +57,22 @@ def main() -> None:
         "conservative_removed_from_ui": 'value="conservative"' not in html,
         "split_filter_removed": "split-filter" not in html and "split-filter" not in js,
         "applications_not_in_funnel": "permit-signal" not in html,
-        "housing_application_field_used": "housing_pipeline_record_count" in js,
+        "housing_application_field_used": "housing_application_project_count" in js,
         "broad_permit_field_not_used": "permit_record_count" not in js,
         "physical_failure_not_financially_screened": "Not screened because the selected prototype physical screen did not pass" in js,
-        "latest_javascript_asset": "app.js?v=20260712-27" in html,
+        "latest_javascript_asset": "app.js?v=20260713-34" in html,
+        "latest_stylesheet_asset": "app.css?v=20260713-21" in html,
+        "policy_comparison_visible": "Home in Tacoma comparison" in html,
+        "application_mode_precedes_prototypes": html.find('data-mode="permits"') < html.find('data-mode="feasibility"'),
+        "financial_mode_explicitly_qualified": "Scenario tests · not underwriting" in html and "transparent sensitivity demonstrations, not market findings" in html,
+        "permit_mode_hides_irrelevant_controls": "updateModeUI" in js,
+        "permit_mobile_reading_order": 'classList.toggle("permit-mode", permitMode)' in js and "body.permit-mode #permit-comparison { order: 2; }" in css and ".map-region { min-height: 62vh; }" in css,
+        "policy_cohort_contract": policy.get("effective_date") == "2025-02-01" and set(policy.get("by_zone", {})) == {"all", "UR1", "UR2", "UR3"},
+        "policy_annualization_correct": all(
+            abs(policy_pre_average.get(metric, -1) - policy_pre_total.get(metric, 0) / 5) < 0.11
+            for metric in ["permit_records", "projects", "reported_units"]
+        ),
+        "policy_official_benchmark_separate": policy.get("official_year_one_benchmark", {}).get("permit_records") == 213 and policy_all.get("home_in_tacoma_year_one", {}).get("permit_records") != 213,
         "stress_test_labeled": "Upside stress test" in html and "scenario-explanation" in js,
         "details_loaded_on_demand": "ensureParcelDetails(chunkId)" in js and "Loading the detailed parcel record on demand" in js,
         "details_chunked": "parcel_details_${chunk}.json.gz" in js and all("detail_gzip_file" in chunk for chunk in summary["map_chunks"]),

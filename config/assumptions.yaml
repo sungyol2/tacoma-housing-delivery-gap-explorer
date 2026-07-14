@@ -1,6 +1,6 @@
 schema_version: 1
 project_currency: USD
-project_price_year: 2025
+project_price_year: 2026
 status: illustrative_financial_architecture_pending_market_validation
 
 required_fields:
@@ -33,7 +33,7 @@ allowed_values:
     - low
 
 assumptions:
-  - id: townhouse_sale_price_per_unit
+  - id: for_sale_price_per_unit
     label: For-sale missing-middle price per unit proxy
     value: 450000
     unit: USD_per_unit
@@ -45,9 +45,9 @@ assumptions:
     confidence: low
     notes: Low-confidence citywide screening baseline; anchored by a small public evidence sample, not a comparable-sales model.
 
-  - id: townhouse_hard_cost_per_gross_sqft
-    label: For-sale missing-middle hard construction cost
-    value: 200
+  - id: hard_cost_per_gross_sqft
+    label: Missing-middle hard construction cost
+    value: 220
     unit: USD_per_gross_sqft
     scope: prototype
     scenario: baseline
@@ -55,7 +55,7 @@ assumptions:
     source_date: 2024-2026
     accessed_date: 2026-07-12
     confidence: low
-    notes: Low-confidence proxy. Recent described projects imply roughly $171-$214 per gross square foot, but permit valuation is not total development cost or a contractor bid.
+    notes: Common low-confidence screening proxy for all three prototypes. Recent described permits imply roughly $171-$214 per gross square foot in reported valuation, which is not total development cost or a contractor bid. A common value avoids an unsupported tenure-based cost difference.
 
   - id: soft_cost_pct_of_hard_cost
     label: Soft costs
@@ -67,34 +67,34 @@ assumptions:
     source_date: 2026-07-11
     accessed_date: 2026-07-11
     confidence: low
-    notes: Transparent screening assumption, not a contractor or consultant estimate.
+    notes: Architecture, engineering, insurance, and development administration proxy. Explicitly excludes permit fees, financing, contingency, sales costs, and demolition to avoid double counting.
 
-  - id: fee_allowance
-    label: Permit and impact fee allowance
-    value: 55000
-    unit: USD_total
+  - id: fee_pct_of_hard_cost
+    label: Permit, utility, and impact fee proxy
+    value: 0.05
+    unit: proportion_of_hard_cost
     scope: prototype
     scenario: baseline
-    source: project_concept_mockup_illustrative_value
-    source_date: null
-    accessed_date: 2026-07-11
+    source: City of Tacoma fee framework and project fee estimator; rounded screening proxy
+    source_date: 2026
+    accessed_date: 2026-07-13
     confidence: low
-    notes: Placeholder until Tacoma and utility fee schedules are validated.
+    notes: Scales with project hard cost instead of unit count. Not a project-specific calculation of building, utility, impact, fire, or right-of-way charges.
 
-  - id: financing_allowance
-    label: Financing carry and fees
-    value: 96000
-    unit: USD_total
+  - id: financing_pct_of_financeable_cost
+    label: Construction financing carry and fees
+    value: 0.04
+    unit: proportion_of_financeable_cost
     scope: prototype
     scenario: baseline
-    source: project_concept_mockup_illustrative_value
-    source_date: null
-    accessed_date: 2026-07-11
+    source: NAHB 2026 AD&C financing assumptions and Federal Reserve prime-rate cross-check; rounded screening proxy
+    source_date: 2026
+    accessed_date: 2026-07-13
     confidence: low
-    notes: Simplified allowance; not a loan model.
+    notes: Applied to hard cost, scoped soft cost, fees, contingency, and demolition. The 4 percent proxy approximates interest carry and origination under partial construction-loan draws; it is not a draw schedule or loan quote.
 
   - id: demolition_allowance
-    label: Demolition and site work
+    label: Demolition allowance
     value: 40000
     unit: USD_total
     scope: prototype
@@ -103,7 +103,7 @@ assumptions:
     source_date: null
     accessed_date: 2026-07-11
     confidence: low
-    notes: Parcel-independent placeholder.
+    notes: Applied only where a mapped building footprint exists. Basic site construction is assumed within the hard-cost proxy; extraordinary grading, remediation, utility extension, and off-site work are not modeled.
 
   - id: contingency_pct_of_hard_cost
     label: Construction contingency
@@ -120,26 +120,26 @@ assumptions:
   - id: required_developer_profit_pct
     label: Required developer profit
     value: 0.15
-    unit: proportion_of_non_land_cost
+    unit: proportion_of_total_development_cost
     scope: scenario
     scenario: baseline
-    source: project_concept_mockup_illustrative_value
-    source_date: null
-    accessed_date: 2026-07-11
+    source: NAHB 2026 builder gross-profit cross-check plus conservative small-infill screening hurdle
+    source_date: 2026
+    accessed_date: 2026-07-13
     confidence: low
-    notes: Simplified screening return requirement.
+    notes: Target return is applied to total development cost including supportable land, not only non-land cost. It exceeds the NAHB 9.8 percent national gross-profit observation to retain a conservative small-project hurdle; not an IRR.
 
   - id: sales_and_closing_cost_pct
     label: Sales, marketing, and closing costs
-    value: 0.06
+    value: 0.04
     unit: proportion_of_gross_sales
     scope: prototype
     scenario: all
-    source: independent_screening_assumption
-    source_date: 2026-07-12
-    accessed_date: 2026-07-12
+    source: NAHB 2026 broker-fee assumption plus rounded closing and marketing allowance
+    source_date: 2026
+    accessed_date: 2026-07-13
     confidence: low
-    notes: Newly explicit allowance; replaces the prior omission but is not validated to a project budget.
+    notes: Includes the NAHB 2.9 percent broker-fee observation plus a rounded 1.1 percent closing and marketing allowance; not a project-specific sales budget.
 
   - id: rental_monthly_rent_per_unit
     label: Two-bedroom monthly rent proxy
@@ -179,27 +179,15 @@ assumptions:
 
   - id: rental_cap_rate
     label: Stabilized multifamily capitalization rate proxy
-    value: 0.057
+    value: 0.050
     unit: proportion
     scope: market_area
     scenario: baseline
     source: Lee & Associates Pacific Northwest Q1 2026 Multifamily Market Report
     source_date: 2026-Q1
-    accessed_date: 2026-07-12
+    accessed_date: 2026-07-13
     confidence: low
-    notes: Puget Sound transaction proxy, not a Tacoma small-project comp.
-
-  - id: rental_hard_cost_per_gross_sqft
-    label: Rental missing-middle hard construction cost
-    value: 240
-    unit: USD_per_gross_sqft
-    scope: prototype
-    scenario: baseline
-    source: independent_screening_assumption
-    source_date: 2026-07-12
-    accessed_date: 2026-07-12
-    confidence: low
-    notes: Conservative low-confidence allowance above recent described permit valuations; permit valuation is not total development cost or a contractor bid.
+    notes: Corrected to the report's Q1 2026 value. Puget Sound transaction proxy, not a Tacoma small-project comp.
 
 scenario_adjustments:
   conservative:
@@ -223,6 +211,6 @@ scenario_adjustments:
     hard_cost_multiplier: 0.90
     financing_multiplier: 0.85
     required_profit_multiplier: 0.90
-    rent_multiplier: 1.05
+    rent_multiplier: 1.1643835616
     vacancy_multiplier: 0.80
     cap_rate_multiplier: 0.90

@@ -60,17 +60,23 @@ For each scenario:
 
 ```text
 Gross revenue = units × sale price per unit
-Non-land cost = hard cost + soft cost + fees + financing + demolition + contingency
-Required profit = non-land cost × required profit rate
-Residual land value = gross revenue - non-land cost - required profit
+Financeable cost = hard cost + scoped soft cost + fees + demolition + contingency
+Financing = financeable cost × financing proxy
+Non-land cost = financeable cost + financing + applicable selling cost
+Residual land value = development value ÷ (1 + target return) - non-land cost
+Target profit at RLV = development value - non-land cost - residual land value
 Feasibility margin = residual land value - acquisition benchmark
 ```
 
+This form applies the target return to total development cost, including supportable land. It replaces the earlier shortcut that applied profit only to non-land cost.
+
 The current acquisition benchmark is assessed land value plus assessed improvement value, with low confidence. It is not treated as market value.
 
-The demolition allowance is parcel-specific at screening level: it is zero when the mapped building footprint is effectively absent and $40,000 when a building footprint is present. For-sale results now also include an explicit 6 percent sales, marketing, and closing-cost allowance. These corrections do not estimate actual demolition scope, hazardous materials, grading, brokerage contracts, or site work.
+The demolition allowance is parcel-specific at screening level: it is zero when the mapped building footprint is effectively absent and $40,000 when a building footprint is present. It is no longer labeled as general site work; basic site construction remains inside the hard-cost proxy and extraordinary grading, remediation, utility extension, or off-site work is unmodeled. For-sale results include a 4 percent sales, marketing, and closing-cost allowance.
 
-Rental prototypes use potential rent less vacancy and operating expenses to estimate NOI, divide NOI by a cap-rate proxy to estimate stabilized value, then deduct non-land development cost and required profit. FY2026 HUD Tacoma two-bedroom FMR ($1,971/month) is used as a sourced rent proxy, not a new-construction rent comp. A 5.7 percent Puget Sound multifamily cap rate is a regional transaction proxy, not evidence specific to Tacoma duplex or four-unit rowhouse construction. Vacancy, operating expenses, hard cost, financing, fees, and return remain illustrative assumptions.
+All three prototypes use the same $220 per gross-square-foot hard-cost proxy. This removes an unsupported tenure-based difference between sale and rental duplexes. Scoped soft cost is 18 percent of hard cost and excludes separately shown fees, financing, contingency, sales cost, and demolition. Fees are 5 percent of hard cost, and financing is 4 percent of financeable cost, so both scale with project cost rather than an arbitrary unit-count lump sum. Target return is 15 percent of total development cost. These remain low-confidence screening assumptions, but each has a distinct non-overlapping role.
+
+Rental prototypes use potential rent less vacancy and operating expenses to estimate NOI, divide NOI by a cap-rate proxy to estimate stabilized value, then deduct non-land development cost and required profit. FY2026 HUD Tacoma two-bedroom FMR ($1,971/month) is the baseline sourced proxy, not a new-construction rent comp. The upside stress test uses one observed $2,295 new-construction two-bedroom townhome asking rent. A corrected 5.0 percent Q1 2026 Puget Sound multifamily cap rate is a regional transaction proxy, not evidence specific to Tacoma duplex or four-unit rowhouse construction. Vacancy, operating expenses, hard cost, financing, fees, and return remain illustrative assumptions.
 
 Feasibility is shown as five screening bands rather than a binary pass/fail: strong at $150,000 or more; moderate from $50,000 to $149,999; marginal from -$50,000 to $49,999; weak from -$250,000 to -$50,001; and very weak below -$250,000. The parcel panel also reports margin divided by the acquisition benchmark so the same dollar gap is not interpreted identically for low- and high-value parcels.
 
@@ -78,6 +84,12 @@ The sale-price range now uses a small public evidence sample documented in `conf
 
 ## Permit activity
 
-All Accela records remain in the processed permit table, but the map uses applications from January 1, 2021 onward and only residential Building permits categorized as `New Building`, plus residential Building `Alteration` records that report a positive housing-unit count. Mechanical, plumbing, sewer, right-of-way, utility, repair, demolition, and unrelated permit records are not included in the map count. ArcGIS epoch timestamps are parsed explicitly as milliseconds. Because unit reporting remains incomplete and no reliable completion field is available, the layer is described as observed housing-development activity rather than completed or net housing production.
+Accela rows are canonicalized to one record per permit number. The housing universe includes both Residential and Commercial `Building / New Building` workflows because Tacoma's 3–20-unit projects occur in both, plus `Building / Alteration` records whose descriptions show that an ADU is being created, converted, or legalized. Repairs to an existing ADU do not qualify. Structured fields and description text classify the primary scope as backyard unit/ADU, duplex, 3–6-unit houseplex, rowhouse, courtyard/cottage, 7–20-unit multiplex, larger multifamily, detached single-unit, uncertain housing, or nonhousing. Repair and nonhousing primary scopes are removed. Description-reported unit counts override demonstrably incorrect structured counts, with type-specific rules preventing a related project's total from being assigned to an individual duplex, cottage, or detached-house permit.
+
+Duplicate building records are reduced by permit number. Related `SDEV`, `LU`, `PRE`, and `WO` identifiers group likely projects; parcel, application date, and housing type provide the fallback project key. This is reproducible project linkage, not authoritative City project identification.
+
+The comparison date is the February 1, 2025 effective date of Tacoma's Home in Tacoma zoning regulations implementing the current UR framework and state middle-housing requirements. Cohorts are February 2020–January 2025, February 2025–January 2026, and February 2026 onward. HB 1110 itself took effect July 23, 2023, but that state date is not treated as the date Tacoma's local UR development regulations became available. See `docs/permit_etl.md` for the legal timeline, classification rules, and QA counts.
+
+The policy comparison excludes cancelled and voided applications, divides the five-year pre-policy total by five to form an annual average, and compares that average with the complete first implementation year. The current partial period is reported but never annualized. The calculation can be filtered by the parcel's current dominant UR zone. Because historical zoning geometry is unavailable, current UR geography is applied retrospectively and the comparison is descriptive rather than causal.
 
 Housing applications are not treated as the next stage of the financial screen or as validation of the three pilot prototypes. The application universe includes multiple housing products, most records predate the February 1, 2025 Home in Tacoma effective date, development decisions depend on owner and market timing, and exact parcel-ID matching can miss assemblies and parcel changes. Application geography remains an independent historical context layer until product-matched, policy-aligned validation cohorts are large enough.
