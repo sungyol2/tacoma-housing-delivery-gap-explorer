@@ -3,18 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Planning-level Tacoma parcel capacity and housing delivery screening." />
-    <title>Tacoma Housing Delivery Gap Explorer</title>
+    <meta name="description" content="Early housing-application evidence after Tacoma's Home in Tacoma zoning reform." />
+    <title>Home in Tacoma Housing Application Explorer</title>
     <link rel="preconnect" href="https://unpkg.com" />
     <link href="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.css" rel="stylesheet" />
-    <link href="./css/app.css?v=20260713-21" rel="stylesheet" />
+    <link href="./css/app.css?v=20260724-1" rel="stylesheet" />
   </head>
-  <body>
+  <body class="policy-mode">
     <header class="app-header">
       <div class="brand-mark" aria-hidden="true">T</div>
       <div class="title-block">
-        <h1>Tacoma Housing Delivery Gap Explorer</h1>
-        <p>From zoning reform to early housing-application evidence</p>
+        <h1>Home in Tacoma Housing Application Explorer</h1>
+        <p>Early evidence on applications, projects, proposed units, and place</p>
       </div>
       <nav aria-label="Project information">
         <button id="methodology-button" type="button">Methodology</button>
@@ -26,47 +26,33 @@
     <main class="workspace">
       <aside class="left-panel" aria-label="Map controls">
         <section>
-          <h2>Map modes</h2>
+          <span class="eyebrow">Start here</span>
+          <h2>What changed after reform?</h2>
           <div class="mode-list" role="radiogroup" aria-label="Map mode">
-            <button class="mode-button active" data-mode="capacity" role="radio" aria-checked="true">
-              <span>1</span><strong>Legal capacity</strong><small>Baseline units allowed</small>
+            <button class="mode-button active" data-mode="permits" role="radio" aria-checked="true">
+              <span>1</span><strong>Housing change</strong><small>Year One applications and units</small>
+            </button>
+            <button class="mode-button" data-mode="capacity" role="radio" aria-checked="false">
+              <span>2</span><strong>Legal capacity</strong><small>Current gross zoning allowance</small>
             </button>
             <button class="mode-button" data-mode="readiness" role="radio" aria-checked="false">
-              <span>2</span><strong>Site constraints</strong><small>Critical areas before prototype fit</small>
-            </button>
-            <button class="mode-button" data-mode="permits" role="radio" aria-checked="false">
-              <span>3</span><strong>Housing applications</strong><small>Home in Tacoma policy comparison</small>
-            </button>
-            <button class="mode-button" data-mode="feasibility" role="radio" aria-checked="false">
-              <span>4</span><strong>Illustrative prototypes</strong><small>Scenario tests · not underwriting</small>
+              <span>3</span><strong>Site constraints</strong><small>Mapped critical-area screen</small>
             </button>
           </div>
         </section>
 
         <section class="filters">
-          <h2>Filters</h2>
-          <label>Base zone
+          <h2>Geography</h2>
+          <label>Current UR zone
             <select id="zone-filter"><option value="all">All UR zones</option><option>UR1</option><option>UR2</option><option>UR3</option></select>
           </label>
-          <label>Financial test
-            <select id="scenario-filter"><option value="baseline" selected>Baseline</option><option value="favorable">Upside stress test</option></select>
-          </label>
-          <label>Prototype
-            <select id="prototype-filter">
-              <option value="duplex_for_sale">Duplex houseplex — for sale</option>
-              <option value="duplex_rental">Duplex houseplex — rental</option>
-              <option value="four_unit_rowhouse_rental">4-unit rowhouse cluster — rental</option>
-            </select>
-          </label>
-          <label class="check-row"><input id="fit-filter" type="checkbox" /> Basic physical fit only</label>
-          <p id="scenario-explanation" class="scenario-explanation" aria-live="polite"></p>
-          <button id="reset-filters" class="secondary-button" type="button">Reset filters</button>
+          <button id="reset-filters" class="secondary-button" type="button">Show all UR zones</button>
         </section>
 
         <section>
-          <h2>Legend</h2>
+          <h2>Map legend</h2>
           <div id="legend" class="legend"></div>
-          <p class="note">Map classes are screening estimates. Parcel-specific evidence and review flags appear after selection.</p>
+          <p id="legend-note" class="note">The policy map shows likely housing projects filed during Home in Tacoma Year One.</p>
         </section>
       </aside>
 
@@ -77,56 +63,69 @@
         <div class="map-search"><input id="parcel-search" type="search" placeholder="Search address or parcel ID" aria-label="Search address or parcel ID" /><button id="search-button" type="button">Search</button></div>
       </section>
 
-      <aside class="right-panel" aria-label="Selected parcel details">
-        <div class="panel-heading"><div><span class="eyebrow">Selected parcel</span><h2 id="parcel-title">Select a parcel</h2><p id="parcel-address">Click the map to inspect the evidence.</p></div></div>
-        <div id="parcel-details" class="parcel-details empty-state" aria-live="polite">
-          Capacity, site conditions, feasibility, provenance, and permit activity will appear here.
-        </div>
+      <aside class="right-panel" aria-label="Evidence and selected parcel details">
+        <div class="panel-heading"><div><span class="eyebrow" id="panel-eyebrow">Policy evidence</span><h2 id="parcel-title">Policy overview</h2><p id="parcel-address">Home in Tacoma effective February 1, 2025</p></div></div>
+        <div id="parcel-details" class="parcel-details" aria-live="polite"></div>
       </aside>
 
-      <section id="screening-funnel" class="bottom-panel" aria-label="Development screening funnel">
-        <div class="summary-title"><span class="eyebrow">Development screening funnel</span><strong>Where candidates fall away</strong><small><span id="funnel-scenario">Baseline</span> · parcel counts</small></div>
-        <div class="funnel-step"><span class="step-number">1</span><div><small>UR-zoned inventory</small><strong id="metric-zoned">58,319</strong><em>Starting inventory</em></div></div>
-        <div class="funnel-step"><span class="step-number">2</span><div><small>Existing-use candidates</small><strong id="metric-parcels">56,484</strong><em id="share-candidates">96.9% of inventory</em></div></div>
-        <div class="funnel-step"><span class="step-number">3</span><div><small>Mapped-constraint screen</small><strong id="metric-constraint-pass">52,931</strong><em id="share-constraint-pass">93.7% retain ≥5,000 sq ft</em></div></div>
-        <div class="funnel-step"><span class="step-number">4</span><div><small>Prototype physical fit</small><strong id="metric-fit">50,672</strong><em id="share-fit">89.7% of candidates</em></div></div>
-        <div class="funnel-step financial"><span class="step-number">5</span><div><small>Illustrative <span id="financial-scenario">baseline</span> screen</small><strong id="metric-promising">2</strong><em id="share-promising">Input-sensitive · not a market finding</em></div></div>
-        <div class="disclaimer">Independent portfolio case study · not an official City or County product, capacity estimate, entitlement determination, appraisal, or investment tool.</div>
+      <section id="policy-comparison" class="bottom-panel policy-comparison" aria-label="Home in Tacoma Year One comparison" aria-live="polite">
+        <div class="summary-title">
+          <span class="eyebrow">Home in Tacoma Year One</span>
+          <strong>More units—not just more filings</strong>
+          <small id="policy-geography">All current UR zones · active applications</small>
+        </div>
+        <div class="change-metric">
+          <small>Applications</small>
+          <strong><span id="metric-pre-applications">—</span><i>→</i><span id="metric-year-one-applications">—</span></strong>
+          <em id="metric-application-change">—</em>
+        </div>
+        <div class="change-metric">
+          <small>Likely projects</small>
+          <strong><span id="metric-pre-projects">—</span><i>→</i><span id="metric-year-one-projects">—</span></strong>
+          <em id="metric-project-change">—</em>
+        </div>
+        <div class="change-metric focal">
+          <small>Proposed units</small>
+          <strong><span id="metric-pre-units">—</span><i>→</i><span id="metric-year-one-units">—</span></strong>
+          <em id="metric-unit-change">—</em>
+        </div>
+        <div class="disclaimer"><span id="policy-partial-period">Current partial period loading…</span> · Pre-policy values are annual averages for Feb. 2020–Jan. 2025. Current zoning is applied retrospectively; this is descriptive, not a causal estimate.</div>
       </section>
 
-      <section id="permit-comparison" class="bottom-panel policy-comparison" aria-label="Home in Tacoma policy comparison" aria-live="polite" hidden>
-        <div class="summary-title"><span class="eyebrow">Home in Tacoma comparison</span><strong>Year One versus prior annual average</strong><small id="policy-geography">Current UR geography · active applications</small></div>
-        <div class="policy-step"><div><small>Pre-policy applications</small><strong id="metric-pre-applications">—</strong><em>Annual average · Feb. 2020–Jan. 2025</em></div></div>
-        <div class="policy-step focal"><div><small>Year One applications</small><strong id="metric-year-one-applications">—</strong><em>Feb. 2025–Jan. 2026</em></div></div>
-        <div class="policy-step change"><div><small>Application change</small><strong id="metric-application-change">—</strong><em>Versus prior annual average</em></div></div>
-        <div class="policy-step"><div><small>Pre-policy proposed units</small><strong id="metric-pre-units">—</strong><em>Annual average · reported units</em></div></div>
-        <div class="policy-step focal"><div><small>Year One proposed units</small><strong id="metric-year-one-units">—</strong><em id="metric-unit-change">— versus prior average</em></div></div>
-        <div class="disclaimer"><span id="policy-partial-period">Current partial period loading…</span> · Current zoning is applied retrospectively; this is descriptive, not a causal estimate. City benchmark: 213 applications / 385 units.</div>
+      <section id="context-summary" class="bottom-panel context-summary" aria-label="Parcel context summary" hidden>
+        <div class="summary-title">
+          <span class="eyebrow" id="context-eyebrow">Parcel context</span>
+          <strong id="context-title">Current zoning context</strong>
+          <small id="context-subtitle">Planning-level screening values</small>
+        </div>
+        <div class="context-metric"><small id="context-label-1">—</small><strong id="context-value-1">—</strong><em id="context-note-1">—</em></div>
+        <div class="context-metric"><small id="context-label-2">—</small><strong id="context-value-2">—</strong><em id="context-note-2">—</em></div>
+        <div class="context-metric"><small id="context-label-3">—</small><strong id="context-value-3">—</strong><em id="context-note-3">—</em></div>
+        <div class="context-metric"><small id="context-label-4">—</small><strong id="context-value-4">—</strong><em id="context-note-4">—</em></div>
+        <div class="disclaimer" id="context-disclaimer">Context only; these values do not predict housing delivery.</div>
       </section>
     </main>
 
     <dialog id="about-dialog">
       <button class="dialog-close" aria-label="Close">×</button>
       <h2>About this explorer</h2>
-      <p>This self-directed portfolio project examines how Tacoma's current zoning, parcel conditions, and mapped constraints relate to housing applications before and after Home in Tacoma took effect.</p>
-      <p>Three financial prototypes are retained as transparent sensitivity demonstrations, not market findings. The interface deliberately exposes split zoning, evidence, confidence, and known limitations.</p>
+      <p>This independent portfolio project asks how the volume and mix of housing applications changed after Tacoma's Home in Tacoma regulations took effect.</p>
+      <p>Parcel zoning and mapped constraints provide spatial context. The app does not estimate causation, completed housing production, or parcel redevelopment probability.</p>
       <p><a href="../DATA_SOURCES_AND_TERMS.md">Data sources, attribution, and terms</a> · <a href="../LICENSE">MIT code license</a></p>
     </dialog>
 
     <dialog id="methodology-dialog" class="info-dialog">
       <button class="dialog-close" aria-label="Close">×</button>
       <span class="eyebrow">Methods</span>
-      <h2>How the screen works</h2>
-      <h3>1. Parcel and zoning base</h3>
-      <p>Pierce County parcel parts are dissolved to a normalized parcel ID. Every parcel–zoning intersection is measured; the dominant zone is displayed while material split zones remain in the capacity calculation.</p>
-      <h3>2. Candidate scope</h3>
-      <p>The model starts with UR1, UR2, and UR3 base parcels. Existing residential and clearly developable vacant uses are retained. Parks, open space, schools, cemeteries, rights-of-way, utilities, drainage facilities, and golf courses are excluded. Ambiguous nonresidential uses require manual review.</p>
-      <h3>3. Capacity and physical fit</h3>
-      <p>Baseline density uses 1,500 sq ft/unit in UR1, 1,000 in UR2, and 750 in UR3, with area-weighted treatment of split zones. Before prototype fit, mapped 40%+ slopes, wetlands, biodiversity areas, special flood hazard areas, and protected-water buffers are removed. Each prototype then applies its own unit count, gross area, residual site-area, FAR, and parcel-width proxy.</p>
-      <h3>4. Illustrative prototype screening</h3>
-      <p>The pilot compares a for-sale duplex houseplex, rental duplex houseplex, and four-unit rental rowhouse cluster—all permitted housing types in UR1, UR2, and UR3. All three use a common $220/gross-sq-ft hard-cost proxy. Fees are 5% of hard cost and financing is 4% of financeable cost, replacing arbitrary per-unit lump sums. Target return is 15% of total development cost including supportable land. For-sale RLV includes 4% selling and closing cost. Rental RLV capitalizes stabilized NOI; its baseline uses the FY2026 Tacoma two-bedroom FMR ($1,971) and a 5.0% Q1 2026 regional cap-rate proxy. Demolition is charged only where a mapped building footprint exists. Assessed land plus improvement value is a low-confidence acquisition benchmark, not an appraisal.</p>
-      <h3>5. Permit activity</h3>
-      <p>Accela building records from both Residential and Commercial workflows are canonicalized by permit number, matched by normalized parcel number, and classified from structured fields and project descriptions. The housing universe includes new buildings plus alterations that explicitly create or legalize dwelling units; repairs, garages, and other nonhousing scopes are excluded. The comparison uses a five-year pre-policy period (February 2020–January 2025), Home in Tacoma Year One (February 2025–January 2026), and a current partial period. Application types and units remain screening-level because project linkage and source fields are incomplete.</p>
+      <h2>How to read the evidence</h2>
+      <h3>1. Policy comparison</h3>
+      <p>Active classified housing applications in current UR geography are divided into a five-year pre-policy period (February 2020–January 2025), Home in Tacoma Year One (February 2025–January 2026), and a current partial period. The five-year totals are divided by five before comparison with Year One.</p>
+      <h3>2. Housing application ETL</h3>
+      <p>Residential and Commercial Accela building records are canonicalized by permit number and grouped into likely projects. Structured fields and descriptions classify ADUs, detached houses, duplexes, 3–6-unit houseplexes, rowhouses, courtyard/cottage clusters, and multiplexes. Repairs and nonhousing scopes are excluded.</p>
+      <h3>3. Parcel and zoning context</h3>
+      <p>Pierce County parcel parts are dissolved to normalized parcel IDs. All parcel–zoning intersections are measured; the dominant current UR zone is displayed while material split zones remain in the gross capacity calculation.</p>
+      <h3>4. Mapped constraints</h3>
+      <p>Parks, institutional uses, rights-of-way, utilities, and other clear noncandidate uses are excluded. Mapped 40%+ slopes, wetlands, biodiversity areas, special flood hazard areas, and protected-water buffers are unioned before measuring the largest contiguous residual area.</p>
     </dialog>
 
     <dialog id="limitations-dialog" class="info-dialog">
@@ -134,21 +133,17 @@
       <span class="eyebrow">Limitations</span>
       <h2>Read before interpreting results</h2>
       <ul>
-        <li>This is an independent portfolio case study, not an official Tacoma capacity estimate or entitlement determination.</li>
-        <li>Existing-use eligibility relies on assessor descriptions; 1,229 ambiguous nonresidential parcels are held for manual review.</li>
-        <li>The partially vacant category is a current-data proxy, not Pierce County's official 2020 Buildable Lands classification.</li>
-        <li>Capacity omits bonuses and some site-specific code exceptions.</li>
-        <li>Critical-area GIS is a generalized screening source, not a field delineation. Unmapped resources and site-specific buffers may change the result.</li>
-        <li>Public parcel-level utility-easement geometry was not available, so easements require title and utility review and are not inferred.</li>
-        <li>Physical fit does not establish frontage, fire access, utility capacity, parking, tree compliance, title, or environmental feasibility.</li>
-        <li>Assessed value is a low-confidence acquisition benchmark, not market value.</li>
-        <li>Sale prices use a small public evidence sample; construction, financing, and fee assumptions remain illustrative.</li>
-        <li>Permit descriptions and unit fields remain imperfect. Related SDEV/LU/PRE/WO identifiers and same-site application dates group likely projects, but a project can still span multiple parcels or permits.</li>
-        <li>Housing applications are independent historical context, not validation or the next stage of a selected prototype financial screen.</li>
+        <li>The before/after comparison is descriptive. It does not isolate zoning effects from interest rates, construction costs, owner decisions, project lead time, or other market conditions.</li>
+        <li>Current UR zoning geography is applied retrospectively because historical parcel-level zoning geometry is unavailable.</li>
+        <li>Permit descriptions, unit fields, project relationships, and parcel lineage remain imperfect; the City benchmark is shown separately rather than treated as a replication target.</li>
+        <li>The map is limited to existing-use candidate parcels, while the headline policy comparison uses active applications across current UR geography. Map totals need not equal the headline.</li>
+        <li>Applications indicate development interest, not permits issued, construction starts, completions, or net housing production.</li>
+        <li>Gross legal capacity does not subtract existing units and is not an estimate of net added capacity.</li>
+        <li>Critical-area GIS is a generalized screen, not a site delineation. Public utility-easement geometry was unavailable.</li>
       </ul>
     </dialog>
 
     <script src="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.js"></script>
-    <script type="module" src="./js/app.js?v=20260713-34"></script>
+    <script type="module" src="./js/app.js?v=20260724-1"></script>
   </body>
 </html>

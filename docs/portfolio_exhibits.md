@@ -1,40 +1,35 @@
 # Portfolio Exhibit Handoff
 
-Capture at 1920 × 1080 when possible. Keep the header, funnel, right-hand evidence panel, and bottom disclaimer visible. The local examples below assume the preview server is running at `http://127.0.0.1:4173`; replace the origin with the final GitHub Pages origin after deployment.
+Capture at 1920 × 1080 when possible. Keep the header, evidence panel, bottom comparison, and interpretation caveat visible.
 
-## 1. Home in Tacoma policy comparison
+## 1. Core policy result
 
 `/app/?mode=permits`
 
-**Caption:** Active housing applications and reported proposed units increased in Home in Tacoma Year One relative to the prior five-year annual average; the housing-type table shows where the observed mix changed while keeping the City benchmark separate.
+**Caption:** Home in Tacoma Year One shows a 30.5 percent increase in applications, a 13.4 percent increase in likely projects, and an 83.4 percent increase in proposed units relative to the prior five-year annual average.
 
-## 2. System overview
+## 2. Housing type and zone change
 
-`/app/?mode=capacity&scenario=baseline&prototype=duplex_for_sale`
+`/app/?mode=permits&zone=all`
 
-**Caption:** Current UR zoning provides broad legal capacity, but the funnel distinguishes existing-use candidates, mapped constraints, prototype fit, and the much smaller financially near-break-even subset.
+**Caption:** Duplex projects increased sharply, while rowhouse proposed units increased without an increase in likely projects. UR1 leads application growth; UR2 and UR3 show larger increases in proposed units.
 
-## 3. Model correction
+## 3. Consequential parcel correction
 
-`/app/?mode=readiness&scenario=baseline&prototype=duplex_for_sale&parcel=6245000035`
+`/app/?mode=readiness&parcel=6245000035`
 
-**Caption:** A wooded parcel classified as vacant is screened out before feasibility because generalized City mapping shows steep-slope and biodiversity constraints with insufficient contiguous residual area.
+**Caption:** A wooded parcel classified as vacant is screened by steep-slope and biodiversity mapping, demonstrating why vacant cannot be treated as developable.
 
-## 4. Financial interpretation
+## 4. Legal context
 
-`/app/?mode=feasibility&scenario=baseline&prototype=duplex_for_sale&parcel=0221237011`
+`/app/?mode=capacity`
 
-**Caption:** A representative marginal for-sale duplex parcel exposes the complete residual-land-value calculation, acquisition benchmark, normalized margin, confidence, and three-model comparison.
-
-## 5. Upside stress test
-
-`/app/?mode=feasibility&scenario=favorable&prototype=duplex_for_sale&parcel=0221237011`
-
-**Caption:** The upside stress test improves several inputs simultaneously and expands the near-break-even set, but remains a stacked sensitivity rather than a forecast.
+**Caption:** Current UR zoning creates broad gross legal permission, but the app explicitly separates that allowance from observed applications and completed housing delivery.
 
 ## Capture QA
 
-- Wait until all parcel sections render and the transient map-status badge disappears.
-- For selected-parcel exhibits, wait for the on-demand detail section to finish loading.
-- Do not crop the scenario label, evidence panel, funnel, or independent-project disclaimer.
-- Use PNG and descriptive names: `01_home_in_tacoma_comparison.png`, `02_system_overview.png`, `03_constraint_correction.png`, `04_financial_interpretation.png`, and `05_upside_stress_test.png`.
+- Verify applications, likely projects, and proposed units are all visible.
+- Verify the policy map legend says Home in Tacoma Year One.
+- Verify the housing-type table includes a Projects column.
+- Verify no prototype, financial scenario, residual-land-value, or feasibility controls appear.
+- Use PNG names: `01_policy_result.png`, `02_type_zone_change.png`, `03_constraint_correction.png`, and `04_legal_context.png`.

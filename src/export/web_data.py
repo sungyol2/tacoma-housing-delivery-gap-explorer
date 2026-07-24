@@ -12,12 +12,6 @@ import geopandas as gpd
 import numpy as np
 import pandas as pd
 
-PROTOTYPE_IDS = [
-    "duplex_for_sale",
-    "duplex_rental",
-    "four_unit_rowhouse_rental",
-]
-
 POLICY_COHORTS = [
     "pre_home_in_tacoma_5yr",
     "home_in_tacoma_year_1",
@@ -124,33 +118,6 @@ PUBLISH_FIELDS = [
     "modeled_max_floor_area_sqft",
     "capacity_overlay_review",
     "capacity_unmodeled_zone_share",
-    "prototype_basic_fit",
-    "prototype_fit_status",
-    "parcel_demolition_allowance",
-    "acquisition_benchmark",
-    "acquisition_source",
-    "acquisition_confidence",
-    "conservative_feasibility_margin",
-    "conservative_required_profit",
-    "conservative_residual_land_value",
-    "conservative_normalized_margin",
-    "conservative_feasibility_class",
-    "baseline_feasibility_margin",
-    "baseline_required_profit",
-    "baseline_residual_land_value",
-    "baseline_normalized_margin",
-    "baseline_feasibility_class",
-    "favorable_feasibility_margin",
-    "favorable_required_profit",
-    "favorable_residual_land_value",
-    "favorable_normalized_margin",
-    "favorable_feasibility_class",
-    "financial_screen_status",
-    "housing_pipeline_record_count",
-    "housing_pipeline_issued_count",
-    "housing_pipeline_reported_units",
-    "housing_pipeline_first_application",
-    "housing_pipeline_latest_application",
     "housing_application_project_count",
     "housing_application_permit_count",
     "housing_application_issued_project_count",
@@ -169,7 +136,7 @@ MAP_FIELDS = [
     "improvement_value_ratio",
     "critical_area_screen_status",
     "meaningful_split_zoned",
-    "housing_application_project_count",
+    "housing_cohort__home_in_tacoma_year_1_project_count",
 ]
 
 for housing_type in [
@@ -192,39 +159,13 @@ for cohort in [
 ]:
     PUBLISH_FIELDS.append(f"housing_cohort__{cohort}_project_count")
 
-for prototype_id in PROTOTYPE_IDS:
-    PUBLISH_FIELDS.extend(
-        [
-            f"{prototype_id}__prototype_basic_fit",
-            f"{prototype_id}__prototype_fit_status",
-            f"{prototype_id}__financial_screen_status",
-        ]
-        + [
-            f"{prototype_id}__{scenario}_{suffix}"
-            for scenario in ["conservative", "baseline", "favorable"]
-            for suffix in [
-                "required_profit",
-                "residual_land_value",
-                "feasibility_margin",
-                "normalized_margin",
-                "feasibility_class",
-            ]
-        ]
-    )
-    MAP_FIELDS.extend(
-        [f"{prototype_id}__prototype_basic_fit"]
-        + [f"{prototype_id}__{scenario}_feasibility_class" for scenario in ["baseline", "favorable"]]
-    )
-
-
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", type=Path, default=Path("data_processed/parcels_model.parquet"))
+    parser.add_argument(
+        "--input", type=Path, default=Path("data_processed/parcels_capacity.parquet")
+    )
     parser.add_argument("--output-dir", type=Path, default=Path("app/public/data"))
     parser.add_argument("--simplify-feet", type=float, default=8.0)
-    parser.add_argument(
-        "--feasibility-qa", type=Path, default=Path("outputs/qa/feasibility_qa.json")
-    )
     parser.add_argument(
         "--housing-applications",
         type=Path,
@@ -266,6 +207,18 @@ def main() -> None:
     parcels["improvement_value_ratio"] = np.where(
         assessed_total.gt(0), parcels["Improvement_Value"] / assessed_total, None
     )
+    parcels["site_condition_class"] = np.select(
+        [
+            parcels["Landuse_Description"]
+            .fillna("")
+            .str.upper()
+            .eq("VACANT LAND UNDEVELOPED"),
+            parcels["improvement_value_ratio"].le(0.55)
+            & parcels["building_coverage_ratio"].le(0.25),
+        ],
+        ["vacant", "partially_vacant_proxy"],
+        default="developed",
+    )
     parcels = parcels.loc[parcels["is_primary_residential_scope"]].copy()
     candidate_parcel_ids = set(parcels["parcel_id"])
     housing_applications = housing_applications_all.loc[
@@ -282,8 +235,6 @@ def main() -> None:
     )
     parcels = parcels[PUBLISH_FIELDS + ["map_chunk", "geometry"]].copy()
     for column in [
-        "housing_pipeline_first_application",
-        "housing_pipeline_latest_application",
         "housing_application_first_application",
         "housing_application_latest_application",
     ]:
@@ -345,57 +296,30 @@ def main() -> None:
     with gzip.open(search_gzip_path, "wb", compresslevel=9) as output:
         output.write(search_path.read_bytes())
 
-    scenario_funnel = {}
-    for scenario in ["conservative", "baseline", "favorable"]:
-        screened = parcels[parcels["prototype_basic_fit"]]
-        bands = {
-            key: int(value)
-            for key, value in screened[f"{scenario}_feasibility_class"]
-            .value_counts()
-            .items()
-        }
-        scenario_funnel[scenario] = {
-            "near_or_above_break_even_count": sum(
-                bands.get(key, 0) for key in ["marginal", "moderate", "strong"]
-            ),
-            "margin_bands": bands,
-        }
-    feasibility_qa = json.loads(args.feasibility_qa.read_text(encoding="utf-8"))
-    sensitivity = feasibility_qa["one_factor_sensitivity"]
-    sensitivity_summary = {}
-    screened = parcels.loc[parcels["prototype_basic_fit"]]
-    for case, values in sensitivity.items():
-        profit_rate = values["required_profit"] / values["non_land_cost"]
-        parcel_non_land = (
-            values["non_land_cost"]
-            - values["demolition_allowance"]
-            + screened["parcel_demolition_allowance"]
-        )
-        parcel_rlv = values["gross_revenue"] - parcel_non_land * (1 + profit_rate)
-        sensitivity_summary[case] = {
-            **values,
-            "near_or_above_break_even_count": int(
-                (parcel_rlv - screened["acquisition_benchmark"]).ge(-50_000).sum()
-            ),
-        }
+    capacity_units = parcels["modeled_base_capacity_units"].dropna()
+    critical_status = {
+        key: int(value)
+        for key, value in parcels["critical_area_screen_status"].value_counts().items()
+    }
     summary = {
         "generated_at": datetime.now(UTC).isoformat(),
-        "status": "illustrative_financial_results_pending_market_validation",
+        "status": "home_in_tacoma_early_application_evidence",
         "parcel_count": int(len(parcels)),
         "ur_zoning_count": ur_zoning_count,
         "ur_existing_use_status": ur_existing_use_status,
-        "basic_fit_count": int(parcels["prototype_basic_fit"].sum()),
-        "scenario_funnel": scenario_funnel,
-        "scenario_pro_forma": feasibility_qa["scenario_pro_forma"],
-        "one_factor_sensitivity": sensitivity_summary,
+        "capacity_context": {
+            "gross_modeled_units": int(capacity_units.sum()),
+            "median_modeled_units_per_candidate": float(capacity_units.median()),
+        },
         "site_condition_classes": {
             key: int(value)
             for key, value in parcels["site_condition_class"].value_counts().items()
         },
-        "critical_area_status": {
-            key: int(value)
-            for key, value in parcels["critical_area_screen_status"].value_counts().items()
-        },
+        "critical_area_status": critical_status,
+        "mapped_constraint_intersection_count": (
+            critical_status.get("mapped_constraint_review", 0)
+            + critical_status.get("constrained_out", 0)
+        ),
         "mapped_constraint_pass_count": int(
             parcels["critical_area_screen_status"].ne("constrained_out").sum()
         ),
@@ -444,37 +368,6 @@ def main() -> None:
         },
         "zones": {
             key: int(value) for key, value in parcels["BaseZone"].value_counts().items()
-        },
-        "baseline_feasibility_classes": {
-            key: int(value)
-            for key, value in parcels.loc[
-                parcels["prototype_basic_fit"], "baseline_feasibility_class"
-            ].value_counts().items()
-        },
-        "prototypes": {
-            prototype_id: {
-                **feasibility_qa["prototypes"][prototype_id],
-                "basic_fit_count": int(parcels[f"{prototype_id}__prototype_basic_fit"].sum()),
-                "scenario_funnel": {
-                    scenario: {
-                        "near_or_above_break_even_count": int(
-                            parcels.loc[
-                                parcels[f"{prototype_id}__prototype_basic_fit"],
-                                f"{prototype_id}__{scenario}_feasibility_class",
-                            ].isin(["marginal", "moderate", "strong"]).sum()
-                        ),
-                        "margin_bands": {
-                            key: int(value)
-                            for key, value in parcels.loc[
-                                parcels[f"{prototype_id}__prototype_basic_fit"],
-                                f"{prototype_id}__{scenario}_feasibility_class",
-                            ].value_counts().items()
-                        },
-                    }
-                    for scenario in ["conservative", "baseline", "favorable"]
-                },
-            }
-            for prototype_id in PROTOTYPE_IDS
         },
         "map_chunks": map_chunks,
         "map_chunk_count": len(map_chunks),

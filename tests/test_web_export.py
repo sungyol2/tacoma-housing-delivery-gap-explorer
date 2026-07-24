@@ -31,9 +31,12 @@ def test_policy_comparison_uses_five_year_annual_average():
     comparison = _policy_comparison(pd.DataFrame(rows))
 
     assert comparison["pre_policy_annual_average"]["permit_records"] == 2.0
+    assert comparison["pre_policy_annual_average"]["projects"] == 2.0
     assert comparison["pre_policy_annual_average"]["reported_units"] == 4.0
     assert comparison["home_in_tacoma_year_one"]["permit_records"] == 3
+    assert comparison["home_in_tacoma_year_one"]["projects"] == 3
     assert comparison["change_pct"]["permit_records"] == 50.0
+    assert comparison["change_pct"]["projects"] == 50.0
     assert (
         comparison["by_type"]["houseplex_2"]["pre_policy_annual_average"][
             "reported_units"

@@ -2,42 +2,52 @@
 
 All findings are planning-level results for an independent portfolio case study. The policy comparison is descriptive and does not isolate causation.
 
-## 1. Current zoning creates broad theoretical capacity, not a delivery forecast
+## 1. Proposed units increased much faster than applications or likely projects
 
-The current UR1–UR3 zoning inventory contains 58,319 base parcels. After excluding protected/institutional uses and holding ambiguous nonresidential uses for review, 56,484 parcels remain in the current-use candidate scope. Their modeled baseline allowance totals 418,264 units, with a median of six units per parcel. This is a zoning allowance, not net added capacity; reliable existing-unit data are not available for subtraction.
+Within current UR geography, the pre-policy annual average was 177.0 active applications, 170.2 likely projects, and 226.8 reported proposed units. Home in Tacoma Year One contains 231 applications, 193 likely projects, and 416 units.
 
-## 2. Housing applications increased after Home in Tacoma took effect
+| Measure | Pre-policy annual average | Year One | Change |
+|---|---:|---:|---:|
+| Applications | 177.0 | 231 | +30.5% |
+| Likely projects | 170.2 | 193 | +13.4% |
+| Proposed units | 226.8 | 416 | +83.4% |
 
-Within current UR parcel geography and after excluding cancelled or voided records, the independent ETL finds a pre-policy annual average of 177.0 applications and 226.8 reported proposed units. Home in Tacoma Year One contains 231 applications and 416 units: changes of +30.5% and +83.4%, respectively.
+Units per likely project increased from 1.33 to 2.16, and applications per likely project from 1.04 to 1.20. The observed shift is therefore not simply a larger number of independent projects; Year One also contains more units and more permit records per likely project.
 
-Tacoma's official review reports 213 applications, 385 units, and changes of +39% and +62%. The independent estimates are displayed as the analytical result and the City values as an external benchmark, not as a replication. Current zoning is applied retrospectively, public Accela text requires classification, and neither comparison controls for interest rates, construction costs, owner decisions, project lead time, or other market conditions.
+## 2. The housing mix shifted toward more unit-producing forms
 
-## 3. The observed application mix shifted toward more unit-producing forms
+Detached single-unit applications declined from 69.6 annually to 54. ADU/backyard-unit applications increased from 88.2 to 116. Duplex/two-unit houseplex applications increased from 2.2 to 26, with likely projects increasing from 2.0 to 19 and proposed units from 4.4 to 63.
 
-Detached single-unit applications declined from a pre-policy annual average of 69.6 to 54 in Year One. ADU/backyard-unit applications increased from 88.2 to 116. The clearest proportional changes occurred in duplex/two-unit houseplex applications, from 2.2 annually to 26, and rowhouses, from 12.8 to 21.
+Rowhouse applications increased from 12.8 to 21 and proposed units from 17.8 to 92, while likely rowhouse projects declined from 10.8 to 9. The rowhouse signal is therefore larger project or permit structure, not more independent projects. Seven-to-20-unit multiplex units increased from 20.0 to 60 from a small base.
 
-Reported proposed units make the shift more visible: duplex/two-unit houseplex units increased from a 4.4 annual average to 63, rowhouse units from 17.8 to 92, and 7–20-unit multiplex units from 20.0 to 60. These categories translate historical permit terminology into current housing types; they do not establish project tenure or completed production.
+These categories translate historical permit terminology into current housing types. They do not establish tenure, construction start, completion, or net housing production.
 
-## 4. Critical-area screening removes false-positive vacant land
+## 3. Current zones show different forms of change
 
-Of 56,484 candidates, 11,070 intersect at least one mapped critical-area constraint. After removing the unioned mapped geometry, 3,553 have less than 5,000 square feet of contiguous residual area and are screened out; 7,517 retain enough residual area but require site review. Another 1,358 have a mapped 25–40 percent slope review flag.
+| Current dominant zone | Application change | Likely-project change | Proposed-unit change |
+|---|---:|---:|---:|
+| UR1 | +54.7% | +31.0% | +33.3% |
+| UR2 | +20.2% | +1.5% | +96.3% |
+| UR3 | +17.5% | +5.9% | +126.1% |
 
-The 3014 N Mildred St parcel (6245000035) is a confirmed false positive from the earlier model: 78.8 percent overlaps mapped slopes over 40 percent and essentially all of it lies in the West Tacoma biodiversity area, leaving no unconstrained residual area in this screen.
+UR1 shows the largest increase in application volume, while UR2 and UR3 show much larger increases in proposed units than in likely projects. Current zoning is applied retrospectively, so this is descriptive geography rather than a historical-zone causal comparison.
 
-## 5. Site conditions and prototype form narrow legal capacity in different ways
+## 4. Broad legal permission is context, not a production forecast
 
-The current assessor/building screen classifies 1,662 candidates as vacant, 11,884 as partially vacant proxies, and 42,938 as developed. The partially vacant class is a transparent proxy based on improvement share and mapped building coverage, not an official Buildable Lands designation.
+The current UR1–UR3 inventory contains 58,319 parcels. After excluding protected and institutional uses and holding ambiguous nonresidential uses for review, 56,484 current-use candidates remain. Their modeled gross allowance totals 418,264 units, with a median of six per candidate parcel.
 
-The for-sale and rental duplexes each pass the basic physical screen on 50,672 candidate parcels (89.7%); the four-unit rental rowhouse passes on 42,331 (74.9%). The rowhouse screen is narrower because it requires four-unit capacity, 4,700 gross square feet, 5,000 square feet of residual site area, and a 40-foot parcel-width proxy. Passing does not establish surveyed frontage, setbacks, access, parking, utility capacity, trees, title, or an architectural envelope.
+Existing units are not reliably subtracted, and the model does not encode ownership, infrastructure, detailed site design, financing, or market timing. Gross legal capacity therefore explains the scale of permission but does not measure a delivery gap.
 
-## 6. Financial prototypes demonstrate method and sensitivity, not a market conclusion
+## 5. Mapped constraints remove consequential false positives
 
-Under current low-confidence inputs, baseline results are predominantly weak: only two for-sale duplex parcels are within $50,000 of break-even or above, and neither rental prototype reaches that threshold. The reverse-solved baseline diagnostic shows why. Against the $1,971 monthly two-bedroom rent proxy, the median physical-fit parcel requires about $4,191 per duplex unit or $3,521 per four-unit rowhouse unit to cover modeled non-land cost, target return, and the assessed-value acquisition benchmark at the 5.0 percent cap rate.
+Of 56,484 candidates, 11,070 intersect at least one mapped critical-area constraint. After unioning and removing mapped geometry, 3,553 have less than 5,000 square feet of contiguous residual area and are screened out; 7,517 retain residual area but require site review. Another 1,358 receive a mapped 25–40 percent slope review flag.
 
-The upside stress test improves sale or rent values while simultaneously lowering hard cost, financing, and required return. It produces 744 near/above-break-even for-sale duplex parcels, 714 rental-duplex parcels, and 600 rental-rowhouse parcels. These results demonstrate formula behavior and input sensitivity; they are not forecasts or evidence that the broader market does or does not pencil out.
+Parcel `6245000035` at 3014 N Mildred St initially appeared vacant. Approximately 78.8 percent overlaps mapped slopes above 40 percent and essentially all of it lies in the West Tacoma biodiversity area. The correction demonstrates why `vacant` cannot be treated as `developable`.
 
 ## Application ETL scope
 
-The rebuilt February 2020–2026 layer includes Residential and Commercial workflows and alterations that explicitly create or legalize dwelling units. It removes repair and nonhousing primary scopes, canonicalizes duplicate permit numbers, classifies housing type, and groups likely projects. Within the published candidate-parcel map it contains 1,485 canonical permits, 1,321 likely projects, and 2,006 reported proposed units. The full matched Tacoma policy-period table contains 1,835 permits and 1,552 likely projects.
+The February 2020–2026 layer combines Residential and Commercial workflows and alterations that explicitly create or legalize dwelling units. It removes repairs and nonhousing scopes, canonicalizes permit numbers, classifies housing type, and groups likely projects.
 
-Applications remain separate from the prototype financial funnel. They measure observed development interest and processing activity—not completed homes, prototype validation, or parcel redevelopment probability.
+The public candidate-parcel map and the headline policy comparison use related but different universes. The map is restricted to existing-use candidates; the headline comparison uses active applications across current UR geography. Map totals therefore need not equal the headline.
+
+Tacoma's official Year One review reports 213 applications and 385 proposed units. The independent result of 231 and 416 is shown separately rather than tuned to reproduce the City result.

@@ -1,35 +1,31 @@
 # Deployment Handoff
 
-The repository includes a GitHub Pages workflow at `.github/workflows/pages.yml`. It deploys the repository root, and the explorer is served from `/app/`.
+The repository uses `.github/workflows/pages.yml` to deploy the repository root. The explorer is served from `/app/`.
 
-## First publication
-
-1. Create an empty public GitHub repository.
-2. Add it as the local `origin`.
-3. Push the local `main` branch.
-4. In GitHub repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions**.
-5. Run the Pages workflow if it did not start automatically.
-6. Open `https://<account>.github.io/<repository>/app/` in a clean current browser.
-7. Add the final repository and app URLs to `README.md`.
-8. Capture the five states documented in `docs/portfolio_exhibits.md`, beginning with the Home in Tacoma policy comparison.
+## Release commands
 
 ```powershell
-git remote add origin https://github.com/<account>/<repository>.git
-git push -u origin main
+uv run python src/export/web_data.py
+uv run python src/qa/release_check.py
+uv run python -m pytest -q
+git add -A
+git commit -m "Center explorer on Home in Tacoma evidence"
+git push
 ```
 
 ## Post-deployment acceptance
 
-- All 16 parcel map sections render.
-- Selecting a parcel loads only its compressed detail section.
-- Parcel/address search loads the compressed search index and resolves a record.
+- Housing change is the default mode.
+- The headline shows applications, likely projects, and proposed units.
+- The all-UR result is 177.0 → 231 applications, 170.2 → 193 projects, and 226.8 → 416 units.
+- The map legend and encoding refer to Home in Tacoma Year One.
+- Housing-type and zone tables update with the UR filter.
+- Legal capacity and site constraints appear as supporting context.
+- No prototype, financial scenario, feasibility, residual-land-value, or funnel UI appears.
+- Parcel search and selection load on-demand detail records.
 - Methodology, Limitations, and About open as dialogs.
-- The About dialog links to data terms and the MIT license.
-- Housing Applications replaces the development funnel with the policy comparison, and the UR zone filter updates both the headline metrics and housing-type table.
-- The all-UR policy comparison displays the independent 177.0-to-231 application change and 226.8-to-416 proposed-unit change while keeping the City 213/385 benchmark separate.
-- Baseline and Upside stress test labels match the funnel and selected-parcel pro forma.
-- The layout remains usable at desktop and mobile widths.
-- The independent-project disclaimer remains visible.
+- Desktop and mobile layouts preserve the explanatory reading order.
 
-Planned public repository: `https://github.com/sungyol2/tacoma-housing-delivery-gap-explorer`  
-Planned live explorer: `https://sungyol2.github.io/tacoma-housing-delivery-gap-explorer/app/`
+Public repository: `https://github.com/sungyol2/tacoma-housing-delivery-gap-explorer`
+
+Live explorer: `https://sungyol2.github.io/tacoma-housing-delivery-gap-explorer/app/`

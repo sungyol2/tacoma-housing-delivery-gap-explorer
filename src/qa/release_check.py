@@ -54,43 +54,89 @@ def main() -> None:
         "excluded_point_defiance_absent": "0221103000" not in feature_ids,
         "sixteen_map_chunks": summary["map_chunk_count"] == 16,
         "no_duplicate_html_ids": not duplicate_html_ids,
-        "conservative_removed_from_ui": 'value="conservative"' not in html,
-        "split_filter_removed": "split-filter" not in html and "split-filter" not in js,
-        "applications_not_in_funnel": "permit-signal" not in html,
-        "housing_application_field_used": "housing_application_project_count" in js,
-        "broad_permit_field_not_used": "permit_record_count" not in js,
-        "physical_failure_not_financially_screened": "Not screened because the selected prototype physical screen did not pass" in js,
-        "latest_javascript_asset": "app.js?v=20260713-34" in html,
-        "latest_stylesheet_asset": "app.css?v=20260713-21" in html,
-        "policy_comparison_visible": "Home in Tacoma comparison" in html,
-        "application_mode_precedes_prototypes": html.find('data-mode="permits"') < html.find('data-mode="feasibility"'),
-        "financial_mode_explicitly_qualified": "Scenario tests · not underwriting" in html and "transparent sensitivity demonstrations, not market findings" in html,
-        "permit_mode_hides_irrelevant_controls": "updateModeUI" in js,
-        "permit_mobile_reading_order": 'classList.toggle("permit-mode", permitMode)' in js and "body.permit-mode #permit-comparison { order: 2; }" in css and ".map-region { min-height: 62vh; }" in css,
-        "policy_cohort_contract": policy.get("effective_date") == "2025-02-01" and set(policy.get("by_zone", {})) == {"all", "UR1", "UR2", "UR3"},
+        "policy_mode_is_default": 'mode: "permits"' in js
+        and 'data-mode="permits" role="radio" aria-checked="true"' in html,
+        "prototype_mode_removed": 'data-mode="feasibility"' not in html
+        and "prototype-filter" not in html
+        and "prototypeMeta" not in js,
+        "financial_ui_removed": "scenario-filter" not in html
+        and "residual land value" not in js.lower(),
+        "financial_fields_not_published": not any(
+            "feasibility" in field or "prototype" in field
+            for field in summary.get("published_fields", [])
+        ),
+        "latest_javascript_asset": "app.js?v=20260724-1" in html,
+        "latest_stylesheet_asset": "app.css?v=20260724-1" in html,
+        "policy_comparison_visible": "More units—not just more filings" in html,
+        "applications_projects_units_visible": all(
+            marker in html
+            for marker in [
+                "metric-year-one-applications",
+                "metric-year-one-projects",
+                "metric-year-one-units",
+            ]
+        ),
+        "policy_map_uses_year_one_projects": (
+            "housing_cohort__home_in_tacoma_year_1_project_count" in js
+            and "housing_cohort__home_in_tacoma_year_1_project_count"
+            in summary.get("map_fields", [])
+        ),
+        "policy_map_period_labeled": "Home in Tacoma Year One" in js
+        and "February 2025–January 2026" in js,
+        "map_headline_universe_caveat": "map totals need not equal the headline"
+        in html.lower()
+        and "map totals need not equal the headline" in js.lower(),
+        "policy_mobile_reading_order": 'classList.toggle("policy-mode", policyMode)'
+        in js
+        and "body.policy-mode #policy-comparison { order: 2; }" in css
+        and ".map-region { min-height: 62vh; }" in css,
+        "policy_cohort_contract": policy.get("effective_date") == "2025-02-01"
+        and set(policy.get("by_zone", {})) == {"all", "UR1", "UR2", "UR3"},
         "policy_annualization_correct": all(
-            abs(policy_pre_average.get(metric, -1) - policy_pre_total.get(metric, 0) / 5) < 0.11
+            abs(
+                policy_pre_average.get(metric, -1)
+                - policy_pre_total.get(metric, 0) / 5
+            )
+            < 0.11
             for metric in ["permit_records", "projects", "reported_units"]
         ),
-        "policy_official_benchmark_separate": policy.get("official_year_one_benchmark", {}).get("permit_records") == 213 and policy_all.get("home_in_tacoma_year_one", {}).get("permit_records") != 213,
-        "stress_test_labeled": "Upside stress test" in html and "scenario-explanation" in js,
-        "details_loaded_on_demand": "ensureParcelDetails(chunkId)" in js and "Loading the detailed parcel record on demand" in js,
-        "details_chunked": "parcel_details_${chunk}.json.gz" in js and all("detail_gzip_file" in chunk for chunk in summary["map_chunks"]),
+        "policy_official_benchmark_separate": policy.get(
+            "official_year_one_benchmark", {}
+        ).get("permit_records")
+        == 213
+        and policy_all.get("home_in_tacoma_year_one", {}).get("permit_records")
+        != 213,
+        "details_loaded_on_demand": "ensureParcelDetails(chunkId)" in js
+        and "Loading the detailed parcel record on demand" in js,
+        "details_chunked": "parcel_details_${chunk}.json.gz" in js
+        and all("detail_gzip_file" in chunk for chunk in summary["map_chunks"]),
         "search_index_used": "ensureSearchIndex" in js,
-        "prototype_comparison_visible": "Three-model comparison" in js,
-        "financial_driver_visible": "Value / cost + target profit" in js,
-        "rental_break_even_visible": "Break-even monthly rent / unit" in js,
-        "keyboard_map_modes": 'document.querySelector(".mode-list").addEventListener("keydown"' in js,
+        "keyboard_map_modes": '.mode-list").addEventListener("keydown"' in js,
         "live_status_regions": 'aria-live="polite"' in html,
-        "comparison_table_captioned": "Physical and financial comparison of the three pilot prototypes" in js,
-        "prototype_selector": "prototype-filter" in html and "four_unit_rowhouse_rental" in js,
+        "comparison_tables_captioned": "Pre-policy annual average → Home in Tacoma Year One"
+        in js
+        and "Year One change versus pre-policy annual average" in js,
+        "housing_type_projects_visible": "<th>Projects</th>" in js,
+        "zone_change_visible": "Different change by current zone" in js,
+        "project_intensity_visible": "Units per likely project" in js,
+        "capacity_context_published": summary.get("capacity_context", {}).get(
+            "gross_modeled_units", 0
+        )
+        > 0,
         "critical_area_mode_published": "critical_area_screen_status" in js,
-        "utility_easement_limitation_visible": "utility-easement geometry was not available" in html,
-        "critical_area_stage_in_funnel": "metric-constraint-pass" in html and "mapped_constraint_pass_count" in js,
-        "mit_license_present": (project_root / "LICENSE").exists() and "MIT License" in (project_root / "LICENSE").read_text(encoding="utf-8"),
+        "utility_easement_limitation_visible": "utility-easement geometry was unavailable"
+        in html,
+        "critical_area_context_visible": "Mapped constraints remove false positives"
+        in js
+        and summary.get("mapped_constraint_intersection_count") == 11070,
+        "mit_license_present": (project_root / "LICENSE").exists()
+        and "MIT License"
+        in (project_root / "LICENSE").read_text(encoding="utf-8"),
         "data_terms_present": (project_root / "DATA_SOURCES_AND_TERMS.md").exists(),
-        "independent_government_disclaimer": "not an official City or County product" in html,
-        "exhibit_handoff_present": (project_root / "docs/portfolio_exhibits.md").exists(),
+        "independent_scope_visible": "independent portfolio project" in html.lower(),
+        "exhibit_handoff_present": (
+            project_root / "docs/portfolio_exhibits.md"
+        ).exists(),
     }
     failed = [key for key, value in checks.items() if not value]
     result = {

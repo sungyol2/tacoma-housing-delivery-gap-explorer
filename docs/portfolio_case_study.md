@@ -1,40 +1,44 @@
-# Tacoma Housing Delivery Gap Explorer
+# Home in Tacoma Housing Application Explorer
 
 ## Case-study question
 
-How did the volume and mix of housing applications change after Home in Tacoma took effect, and what do current zoning capacity, parcel constraints, and representative prototypes reveal about the gap between legal opportunity and delivery?
+How did the volume and mix of housing applications change after Home in Tacoma took effect, and what do current zoning and mapped parcel constraints reveal about the geography in which that change occurred?
 
-| Stage or model | Parcels | Interpretation |
-|---|---:|---|
-| UR1–UR3 zoning inventory | 58,319 | Legal-policy starting point |
-| Existing-use candidates | 56,484 | Residential and clearly developable vacant uses |
-| Retain at least 5,000 sq ft after mapped constraints | 52,931 | Generalized critical-area screen |
-| For-sale duplex physical fit | 50,672 | Area, FAR, and 25-ft width proxy |
-| Rental duplex physical fit | 50,672 | Same form, rental valuation |
-| Four-unit rental rowhouse physical fit | 42,331 | Four units, FAR, area, and 40-ft width proxy |
-| Pre-policy active applications, annual average | 177.0 | February 2020–January 2025 in current UR geography |
-| Home in Tacoma Year One active applications | 231 | February 2025–January 2026 |
-| Pre-policy proposed units, annual average | 226.8 | Reported units; annualized over five years |
-| Home in Tacoma Year One proposed units | 416 | Independent classified Accela result |
+## Core evidence
 
-Tacoma's official Year One review reports 213 applications and 385 proposed units. The independent ETL produces the same direction but is not a replication: current zoning is applied retrospectively, public Accela descriptions require classification, and project and parcel lineage remain incomplete. The observed change is descriptive and does not isolate the effect of zoning from market conditions, owner decisions, financing, or development lead time.
+| Measure | Pre-policy annual average | Home in Tacoma Year One | Change |
+|---|---:|---:|---:|
+| Active applications | 177.0 | 231 | +30.5% |
+| Likely projects | 170.2 | 193 | +13.4% |
+| Reported proposed units | 226.8 | 416 | +83.4% |
+| Units per likely project | 1.33 | 2.16 | +61.7% |
 
-The three financial prototypes remain available to demonstrate transparent residual-land-value logic and sensitivity. Their extreme baseline results are not presented as the project's central empirical finding.
+The most important result is the divergence: proposed units increased much faster than applications, and applications increased faster than likely projects. Early Home in Tacoma activity therefore reflects a shift in project and permit structure as well as application volume.
 
-## Consequential QA correction
+Duplex likely projects increased from 2.0 annually to 19, with proposed units increasing from 4.4 to 63. Rowhouse proposed units increased from 17.8 to 92 even though likely rowhouse projects declined from 10.8 to 9. Detached single-unit applications declined from 69.6 to 54.
 
-Parcel `6245000035` at 3014 N Mildred St initially appeared vacant and promising. Official mapping showed approximately 78.8 percent overlap with slopes greater than 40 percent and essentially complete overlap with the West Tacoma biodiversity area. It is now screened out before prototype feasibility. `Vacant` describes improvement status, not developability.
+UR1 shows the largest application increase (+54.7%). UR2 and UR3 show larger proposed-unit increases (+96.3% and +126.1%) than application increases (+20.2% and +17.5%).
+
+Tacoma's official Year One review reports 213 applications and 385 proposed units. The independent ETL result of 231 and 416 has the same direction but is not a replication.
+
+## Spatial context
+
+The current UR inventory contains 58,319 parcels and 56,484 existing-use candidates. Their gross modeled allowance is 418,264 units, but existing units are not subtracted and the result is not a production forecast.
+
+Of the candidates, 11,070 intersect mapped critical-area geometry. The generalized screen removes 3,553 parcels with less than 5,000 square feet of contiguous residual area and retains 7,517 for site review.
+
+Parcel `6245000035` at 3014 N Mildred St demonstrates the consequence: land that appeared vacant was screened by steep-slope and biodiversity mapping. `Vacant` does not mean `developable`.
 
 ## What this demonstrates
 
-- Reproducible GIS and area-weighted split zoning
-- Canonical housing-application ETL across Residential and Commercial workflows
-- Policy-period and housing-type comparisons with an external City benchmark
-- Critical-area screening before prototype and financial results
-- Prototype-specific unit, area, FAR, and width-proxy tests
-- For-sale and stabilized-NOI rental RLV methods
-- Explicit assumption confidence and sensitivity
-- A performant MapLibre parcel interface with mode-specific analytical summaries
-- Unit tests, representative-parcel QA, and release checks
+- Canonical permit ETL across Residential and Commercial workflows
+- Text classification into policy-relevant housing types
+- Reproducible likely-project grouping
+- Policy-cohort comparison with correct annualization
+- Separation of applications, projects, and proposed units
+- Current-zone and housing-type comparison
+- Parcel GIS, area-weighted split zoning, and critical-area overlays
+- A performant MapLibre interface with on-demand parcel evidence
+- Unit tests, gold-set classification review, and release-contract QA
 
-This is not an official capacity estimate, entitlement determination, appraisal, contractor estimate, or redevelopment prediction.
+The analysis does not establish causation or measure completed housing delivery.
