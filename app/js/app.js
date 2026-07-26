@@ -16,11 +16,10 @@ const state = {
   loadedSources: new Set(),
   dataVersion: "",
   popup: null,
-  handledMapClicks: new WeakSet(),
-  hoveredLayers: new Set()
+  handledMapClicks: new WeakSet()
 };
 
-const parcelHoverCursor = `url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="8" fill="rgba(23,59,93,0.14)" stroke="#173b5d" stroke-width="2"/><circle cx="14" cy="14" r="2.3" fill="#173b5d"/></svg>')}") 14 14, pointer`;
+const mapCursor = `url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="8" fill="rgba(180,80,38,0.14)" stroke="#b45026" stroke-width="2"/><circle cx="14" cy="14" r="2.3" fill="#b45026"/></svg>')}") 14 14, crosshair`;
 
 const modeStyles = {
   permits: {
@@ -80,7 +79,7 @@ const map = new maplibregl.Map({
     }]
   }
 });
-map.getCanvas().style.cursor = "default";
+map.getCanvas().style.cursor = mapCursor;
 map.addControl(new maplibregl.NavigationControl({ visualizePitch: false }), "bottom-left");
 
 async function loadCompressedJson(path) {
@@ -560,13 +559,6 @@ function addParcelChunk(chunk) {
   };
   map.on("click", fillId, selectParcel);
   map.on("click", pointId, selectParcel);
-  const setFeatureHover = hovering => {
-    if (hovering) state.hoveredLayers.add(fillId);
-    else state.hoveredLayers.delete(fillId);
-    map.getCanvas().style.cursor = state.hoveredLayers.size > 0 ? parcelHoverCursor : "default";
-  };
-  map.on("mouseenter", fillId, () => setFeatureHover(true));
-  map.on("mouseleave", fillId, () => setFeatureHover(false));
 }
 
 function reportParcelRendering() {
