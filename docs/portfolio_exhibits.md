@@ -6,13 +6,13 @@ Capture at 1920 × 1080 when possible. Keep the header, evidence panel, bottom c
 
 `/app/?mode=permits`
 
-**Caption:** Home in Tacoma Year One shows a 30.5 percent increase in applications, a 13.4 percent increase in likely projects, and an 83.4 percent increase in proposed units relative to the prior five-year annual average.
+**Caption:** Home in Tacoma Year One shows a 30.5 percent increase in applications, a 13.4 percent increase in estimated projects, and an 83.4 percent increase in proposed units relative to the prior five-year annual average.
 
 ## 2. Housing type and zone change
 
 `/app/?mode=permits&zone=all`
 
-**Caption:** Duplex projects increased sharply, while rowhouse proposed units increased without an increase in likely projects. UR1 leads application growth; UR2 and UR3 show larger increases in proposed units.
+**Caption:** Estimated duplex projects increased sharply, while rowhouse proposed units increased without an increase in estimated projects. UR-1 leads application growth; UR-2 and UR-3 show larger increases in proposed units.
 
 ## 3. Consequential parcel correction
 
@@ -28,7 +28,7 @@ Capture at 1920 × 1080 when possible. Keep the header, evidence panel, bottom c
 
 ## Capture QA
 
-- Verify applications, likely projects, and proposed units are all visible.
+- Verify applications, estimated projects, and proposed units are all visible.
 - Verify the policy map legend says Home in Tacoma Year One.
 - Verify the housing-type table includes a Projects column.
 - Verify no prototype, financial scenario, residual-land-value, or feasibility controls appear.

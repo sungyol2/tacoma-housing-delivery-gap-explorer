@@ -11,18 +11,18 @@ Home in Tacoma Housing Application Explorer combines public Accela, parcel, zoni
 - Reproducible likely-project grouping and reported-unit correction
 - A policy-aligned five-year annual average versus complete Year One comparison
 - Separate application, likely-project, and proposed-unit measures
-- Current-zone and housing-type change analysis
+- Urban Residential district and housing-type change analysis
 - Area-weighted split-zone capacity and mapped critical-area screening
 - High-performance MapLibre delivery of more than 56,000 parcel records
 - Classification gold-set, representative-parcel, unit-test, and release-contract QA
 
 ## Current analytical takeaway
 
-Home in Tacoma Year One contains 231 active applications, 193 likely projects, and 416 reported proposed units, compared with pre-policy annual averages of 177.0, 170.2, and 226.8. Proposed units increased much faster than likely projects, and the mix shifted toward duplexes and larger rowhouse output. The observed change is descriptive and does not establish causation or completed production.
+Home in Tacoma Year One contains 231 non-cancelled applications, 193 estimated projects, and 416 proposed units, compared with pre-policy annual averages of 177.0, 170.2, and 226.8. Proposed units increased much faster than estimated projects, and the mix shifted toward duplexes and larger rowhouse output. The observed change is descriptive and does not establish causation or completed production.
 
 ## Appropriate claim
 
-“I built a reproducible permit ETL and parcel-GIS explorer that distinguishes application records, likely projects, and proposed units to evaluate early Home in Tacoma activity by housing type and current UR zone.”
+“I built a reproducible permit ETL and parcel-GIS explorer that distinguishes application records, estimated projects, and proposed units to evaluate early Home in Tacoma activity by housing type and Urban Residential district.”
 
 ## Resume version
 

@@ -6,7 +6,7 @@
 - Accela descriptions, unit fields, project relationships, status, and parcel lineage remain imperfect.
 - Likely-project grouping is reproducible but not authoritative City project identification.
 - Applications indicate development interest, not issuance, construction start, completion, demolition, or net housing production.
-- The public parcel map excludes protected, institutional, and other noncandidate existing uses, while the headline policy comparison uses active applications across current UR geography. Map totals need not equal the headline.
+- The public parcel map excludes protected, institutional, and other clear non-housing uses, while the headline comparison uses non-cancelled applications across today's three Urban Residential districts. Map totals need not equal the headline.
 - Gross legal capacity does not subtract existing units and is not net added capacity.
 - Existing-use eligibility relies on assessor descriptions; 1,229 ambiguous nonresidential parcels remain outside candidate totals for manual review.
 - The partially vacant category is a transparent proxy, not Pierce County's official Buildable Lands designation.

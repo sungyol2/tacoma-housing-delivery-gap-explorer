@@ -41,11 +41,11 @@ One row per unique Tacoma parcel after multipart parcel records are dissolved an
 | `housing_application_permit_count` | count | Canonical Residential or Commercial permits classified as new housing, including alterations that explicitly create or legalize dwelling units | Tacoma Accela + derived classification |
 | `housing_application_first_application` | UTC datetime | Earliest classified housing application | Tacoma Accela |
 | `housing_application_latest_application` | UTC datetime | Latest classified housing application | Tacoma Accela |
-| `housing_application_issued_project_count` | count | Likely projects with at least one issued or completed permit | Derived |
+| `housing_application_issued_project_count` | count | Estimated projects with at least one issued or completed permit | Derived |
 | `housing_application_reported_units` | units, nullable | Sum of permit-scope proposed units after structured-field and description reconciliation | Derived from Tacoma Accela |
 | `housing_application_types` | pipe-delimited string | Housing categories observed on the parcel | Derived |
-| `housing_type__*__project_count` | count | Likely projects by classified housing type | Derived |
-| `housing_cohort__*__project_count` | count | Likely projects in the five-year pre-policy, Home in Tacoma Year One, or current partial cohort | Derived |
+| `housing_type__*__project_count` | count | Estimated projects by classified housing type | Derived |
+| `housing_cohort__*__project_count` | count | Estimated projects in the five-year pre-policy, Home in Tacoma Year One, or current partial cohort | Derived |
 
 ## Modeled extensions
 

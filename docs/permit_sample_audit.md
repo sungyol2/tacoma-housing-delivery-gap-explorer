@@ -3,7 +3,7 @@
 This audit records a deterministic manual-review sample of Tacoma Home in Tacoma Year One applications. It is a regression fixture, not a statistically representative accuracy estimate.
 
 - Active current-UR applications: **231**
-- Likely projects: **193**
+- Estimated projects: **193**
 - Reported proposed units: **416**
 - Gold-set records passing: **37 / 37**
 

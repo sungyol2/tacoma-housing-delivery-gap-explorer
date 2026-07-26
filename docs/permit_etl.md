@@ -27,7 +27,7 @@ The current ETL:
 5. classifies the primary construction scope from structured fields and description text;
 6. excludes repairs to existing housing, garages, and other nonhousing structures when they are the primary permit scope;
 7. resolves unit counts from the permit scope rather than a related project's total where the text distinguishes them;
-8. groups likely projects using related `SDEV`, `LU`, `PRE`, or `WO` identifiers, with parcel/date/type as a fallback; and
+8. groups applications into estimated projects using related `SDEV`, `LU`, `PRE`, or `WO` identifiers, with parcel/date/type as a fallback; and
 9. retains status groups so cancelled, issued, completed, expired, and in-review applications are distinguishable.
 
 ## Published housing types
@@ -45,7 +45,7 @@ The categories translate historical permit terminology into the current Tacoma h
 
 ## Current QA result
 
-The July 2026 raw extract contains 109,614 rows and 109,415 canonical permit numbers. Of those, 1,835 classified housing-building permits representing 1,552 likely projects match a Tacoma parcel in the policy-period universe. The full matched citywide type counts are:
+The July 2026 raw extract contains 109,614 rows and 109,415 deduplicated permit numbers. Of those, 1,835 classified housing-building permits representing 1,552 estimated projects match a Tacoma parcel in the policy-period set. The full matched citywide type counts are:
 
 | Type | Canonical permits |
 |---|---:|
@@ -59,7 +59,7 @@ The July 2026 raw extract contains 109,614 rows and 109,415 canonical permit num
 | Courtyard / cottage cluster | 12 |
 | Housing type uncertain | 6 |
 
-The public candidate-parcel map contains 1,485 permit records, 1,321 likely projects, and 2,006 reported proposed units after restricting to the mapped parcel scope. Larger multifamily generally falls outside that scope and remains contextual rather than a middle-housing map category.
+The public parcel map contains 1,485 permit records, 1,321 estimated projects, and 2,006 proposed units after restricting to mapped parcels. Larger apartment buildings generally fall outside that scope and remain context rather than a core map category.
 
 ## External benchmark and remaining limitation
 

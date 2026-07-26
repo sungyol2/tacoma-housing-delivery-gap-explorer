@@ -43,3 +43,35 @@ def test_policy_comparison_uses_five_year_annual_average():
         ]
         == 4.0
     )
+
+
+def test_policy_comparison_publishes_six_aligned_annual_periods():
+    rows = [
+        {
+            "permit_number": f"PERMIT-{year}",
+            "housing_project_id": f"PROJECT-{year}",
+            "housing_application_reported_units": year - 2018,
+            "housing_policy_cohort": (
+                "pre_home_in_tacoma_5yr"
+                if year < 2025
+                else "home_in_tacoma_year_1"
+            ),
+            "housing_type": "houseplex_2",
+            "application_date": pd.Timestamp(f"{year}-06-01", tz="UTC"),
+        }
+        for year in range(2020, 2026)
+    ]
+
+    periods = _policy_comparison(pd.DataFrame(rows))["annual_periods"]
+
+    assert [period["label"] for period in periods] == [
+        "Feb. 2020–Jan. 2021",
+        "Feb. 2021–Jan. 2022",
+        "Feb. 2022–Jan. 2023",
+        "Feb. 2023–Jan. 2024",
+        "Feb. 2024–Jan. 2025",
+        "Feb. 2025–Jan. 2026",
+    ]
+    assert [period["permit_records"] for period in periods] == [1] * 6
+    assert periods[-1]["period_type"] == "year_one"
+    assert periods[-1]["reported_units"] == 7

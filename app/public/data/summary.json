@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-24T18:52:18.087099+00:00",
+  "generated_at": "2026-07-26T04:54:21.675429+00:00",
   "status": "home_in_tacoma_early_application_evidence",
   "parcel_count": 56484,
   "ur_zoning_count": 58319,
@@ -54,6 +54,62 @@
           "projects": 193,
           "reported_units": 416
         },
+        "annual_periods": [
+          {
+            "label": "Feb. 2020\u2013Jan. 2021",
+            "start": "2020-02-01",
+            "end": "2021-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 212,
+            "projects": 203,
+            "reported_units": 233
+          },
+          {
+            "label": "Feb. 2021\u2013Jan. 2022",
+            "start": "2021-02-01",
+            "end": "2022-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 161,
+            "projects": 157,
+            "reported_units": 179
+          },
+          {
+            "label": "Feb. 2022\u2013Jan. 2023",
+            "start": "2022-02-01",
+            "end": "2023-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 175,
+            "projects": 173,
+            "reported_units": 228
+          },
+          {
+            "label": "Feb. 2023\u2013Jan. 2024",
+            "start": "2023-02-01",
+            "end": "2024-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 166,
+            "projects": 158,
+            "reported_units": 195
+          },
+          {
+            "label": "Feb. 2024\u2013Jan. 2025",
+            "start": "2024-02-01",
+            "end": "2025-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 171,
+            "projects": 160,
+            "reported_units": 299
+          },
+          {
+            "label": "Feb. 2025\u2013Jan. 2026",
+            "start": "2025-02-01",
+            "end": "2026-01-31",
+            "period_type": "year_one",
+            "permit_records": 231,
+            "projects": 193,
+            "reported_units": 416
+          }
+        ],
         "change_pct": {
           "permit_records": 30.5,
           "projects": 13.4,
@@ -192,6 +248,62 @@
           "projects": 71,
           "reported_units": 100
         },
+        "annual_periods": [
+          {
+            "label": "Feb. 2020\u2013Jan. 2021",
+            "start": "2020-02-01",
+            "end": "2021-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 97,
+            "projects": 96,
+            "reported_units": 97
+          },
+          {
+            "label": "Feb. 2021\u2013Jan. 2022",
+            "start": "2021-02-01",
+            "end": "2022-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 41,
+            "projects": 40,
+            "reported_units": 43
+          },
+          {
+            "label": "Feb. 2022\u2013Jan. 2023",
+            "start": "2022-02-01",
+            "end": "2023-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 61,
+            "projects": 60,
+            "reported_units": 63
+          },
+          {
+            "label": "Feb. 2023\u2013Jan. 2024",
+            "start": "2023-02-01",
+            "end": "2024-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 40,
+            "projects": 40,
+            "reported_units": 41
+          },
+          {
+            "label": "Feb. 2024\u2013Jan. 2025",
+            "start": "2024-02-01",
+            "end": "2025-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 39,
+            "projects": 35,
+            "reported_units": 131
+          },
+          {
+            "label": "Feb. 2025\u2013Jan. 2026",
+            "start": "2025-02-01",
+            "end": "2026-01-31",
+            "period_type": "year_one",
+            "permit_records": 86,
+            "projects": 71,
+            "reported_units": 100
+          }
+        ],
         "change_pct": {
           "permit_records": 54.7,
           "projects": 31.0,
@@ -330,6 +442,62 @@
           "projects": 90,
           "reported_units": 179
         },
+        "annual_periods": [
+          {
+            "label": "Feb. 2020\u2013Jan. 2021",
+            "start": "2020-02-01",
+            "end": "2021-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 79,
+            "projects": 76,
+            "reported_units": 79
+          },
+          {
+            "label": "Feb. 2021\u2013Jan. 2022",
+            "start": "2021-02-01",
+            "end": "2022-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 91,
+            "projects": 88,
+            "reported_units": 93
+          },
+          {
+            "label": "Feb. 2022\u2013Jan. 2023",
+            "start": "2022-02-01",
+            "end": "2023-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 79,
+            "projects": 78,
+            "reported_units": 83
+          },
+          {
+            "label": "Feb. 2023\u2013Jan. 2024",
+            "start": "2023-02-01",
+            "end": "2024-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 99,
+            "projects": 97,
+            "reported_units": 100
+          },
+          {
+            "label": "Feb. 2024\u2013Jan. 2025",
+            "start": "2024-02-01",
+            "end": "2025-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 93,
+            "projects": 91,
+            "reported_units": 101
+          },
+          {
+            "label": "Feb. 2025\u2013Jan. 2026",
+            "start": "2025-02-01",
+            "end": "2026-01-31",
+            "period_type": "year_one",
+            "permit_records": 106,
+            "projects": 90,
+            "reported_units": 179
+          }
+        ],
         "change_pct": {
           "permit_records": 20.2,
           "projects": 4.7,
@@ -432,6 +600,62 @@
           "projects": 32,
           "reported_units": 137
         },
+        "annual_periods": [
+          {
+            "label": "Feb. 2020\u2013Jan. 2021",
+            "start": "2020-02-01",
+            "end": "2021-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 36,
+            "projects": 31,
+            "reported_units": 57
+          },
+          {
+            "label": "Feb. 2021\u2013Jan. 2022",
+            "start": "2021-02-01",
+            "end": "2022-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 29,
+            "projects": 29,
+            "reported_units": 43
+          },
+          {
+            "label": "Feb. 2022\u2013Jan. 2023",
+            "start": "2022-02-01",
+            "end": "2023-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 35,
+            "projects": 35,
+            "reported_units": 82
+          },
+          {
+            "label": "Feb. 2023\u2013Jan. 2024",
+            "start": "2023-02-01",
+            "end": "2024-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 27,
+            "projects": 21,
+            "reported_units": 54
+          },
+          {
+            "label": "Feb. 2024\u2013Jan. 2025",
+            "start": "2024-02-01",
+            "end": "2025-01-31",
+            "period_type": "pre_policy",
+            "permit_records": 39,
+            "projects": 34,
+            "reported_units": 67
+          },
+          {
+            "label": "Feb. 2025\u2013Jan. 2026",
+            "start": "2025-02-01",
+            "end": "2026-01-31",
+            "period_type": "year_one",
+            "permit_records": 39,
+            "projects": 32,
+            "reported_units": 137
+          }
+        ],
         "change_pct": {
           "permit_records": 17.5,
           "projects": 6.7,

@@ -3,147 +3,161 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Early housing-application evidence after Tacoma's Home in Tacoma zoning reform." />
+    <meta name="description" content="How housing applications changed after Tacoma's Home in Tacoma zoning reform." />
     <title>Home in Tacoma Housing Application Explorer</title>
     <link rel="preconnect" href="https://unpkg.com" />
     <link href="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.css" rel="stylesheet" />
-    <link href="./css/app.css?v=20260724-1" rel="stylesheet" />
+    <link href="./css/app.css?v=20260725-1" rel="stylesheet" />
   </head>
   <body class="policy-mode">
     <header class="app-header">
       <div class="brand-mark" aria-hidden="true">T</div>
       <div class="title-block">
-        <h1>Home in Tacoma Housing Application Explorer</h1>
-        <p>Early evidence on applications, projects, proposed units, and place</p>
+        <h1>Home in Tacoma Explorer</h1>
+        <p>What changed after Tacoma opened more residential land to more housing types?</p>
       </div>
       <nav aria-label="Project information">
-        <button id="methodology-button" type="button">Methodology</button>
+        <button id="methodology-button" type="button">Methods</button>
         <button id="limitations-button" type="button">Limitations</button>
         <button id="about-button" type="button">About</button>
       </nav>
     </header>
 
     <main class="workspace">
-      <aside class="left-panel" aria-label="Map controls">
-        <section>
-          <span class="eyebrow">Start here</span>
-          <h2>What changed after reform?</h2>
-          <div class="mode-list" role="radiogroup" aria-label="Map mode">
-            <button class="mode-button active" data-mode="permits" role="radio" aria-checked="true">
-              <span>1</span><strong>Housing change</strong><small>Year One applications and units</small>
-            </button>
-            <button class="mode-button" data-mode="capacity" role="radio" aria-checked="false">
-              <span>2</span><strong>Legal capacity</strong><small>Current gross zoning allowance</small>
-            </button>
-            <button class="mode-button" data-mode="readiness" role="radio" aria-checked="false">
-              <span>3</span><strong>Site constraints</strong><small>Mapped critical-area screen</small>
-            </button>
+      <section id="policy-comparison" class="policy-comparison" aria-label="Housing applications before and after Home in Tacoma" aria-live="polite">
+        <div class="reform-intro">
+          <p class="policy-date">Zoning reform effective February 1, 2025</p>
+          <h2>Tacoma opened former single-family neighborhoods to more housing types.</h2>
+          <p>Home in Tacoma replaced the former single-family zones with three <strong>Urban Residential</strong> districts: UR-1, UR-2, and UR-3. This explorer focuses on those three reform districts; Downtown and mixed-use centers follow different zoning rules.</p>
+          <p class="primary-finding" id="policy-finding">Year One applications represented far more proposed homes, while the estimated number of distinct projects remained within the prior five-year range.</p>
+        </div>
+
+        <div class="annual-evidence">
+          <div class="evidence-heading">
+            <div>
+              <h2>Housing applications by year</h2>
+              <p id="policy-geography">All three Urban Residential districts</p>
+            </div>
           </div>
-        </section>
-
-        <section class="filters">
-          <h2>Geography</h2>
-          <label>Current UR zone
-            <select id="zone-filter"><option value="all">All UR zones</option><option>UR1</option><option>UR2</option><option>UR3</option></select>
-          </label>
-          <button id="reset-filters" class="secondary-button" type="button">Show all UR zones</button>
-        </section>
-
-        <section>
-          <h2>Map legend</h2>
-          <div id="legend" class="legend"></div>
-          <p id="legend-note" class="note">The policy map shows likely housing projects filed during Home in Tacoma Year One.</p>
-        </section>
-      </aside>
-
-      <section class="map-region" aria-label="Tacoma parcel map">
-        <div class="loading" id="loading"><strong id="loading-title">Loading parcel map…</strong><span id="loading-status">56,484 candidate parcels · optimized map transfer</span></div>
-        <div id="map"></div>
-        <div id="map-status" class="map-status" role="status" aria-live="polite">Loading parcel layers…</div>
-        <div class="map-search"><input id="parcel-search" type="search" placeholder="Search address or parcel ID" aria-label="Search address or parcel ID" /><button id="search-button" type="button">Search</button></div>
+          <div class="comparison-scroll">
+            <table class="annual-table">
+              <caption class="visually-hidden">Housing applications, estimated distinct projects, and proposed units across six comparable 12-month periods</caption>
+              <thead>
+                <tr>
+                  <th scope="col">12-month period</th>
+                  <th scope="col">Applications</th>
+                  <th scope="col">Estimated projects</th>
+                  <th scope="col">Proposed units</th>
+                </tr>
+              </thead>
+              <tbody id="annual-table-body"></tbody>
+            </table>
+          </div>
+          <p class="table-note"><strong>Year One</strong> is Feb. 2025–Jan. 2026. The pre-policy average is the average of the five rows above. “Estimated projects” groups related permit applications; “proposed units” are reported or derived from application records. This comparison does not prove that zoning caused the change.</p>
+        </div>
       </section>
 
-      <aside class="right-panel" aria-label="Evidence and selected parcel details">
-        <div class="panel-heading"><div><span class="eyebrow" id="panel-eyebrow">Policy evidence</span><h2 id="parcel-title">Policy overview</h2><p id="parcel-address">Home in Tacoma effective February 1, 2025</p></div></div>
-        <div id="parcel-details" class="parcel-details" aria-live="polite"></div>
-      </aside>
-
-      <section id="policy-comparison" class="bottom-panel policy-comparison" aria-label="Home in Tacoma Year One comparison" aria-live="polite">
+      <section id="context-summary" class="context-summary" aria-label="Parcel context summary" hidden>
         <div class="summary-title">
-          <span class="eyebrow">Home in Tacoma Year One</span>
-          <strong>More units—not just more filings</strong>
-          <small id="policy-geography">All current UR zones · active applications</small>
-        </div>
-        <div class="change-metric">
-          <small>Applications</small>
-          <strong><span id="metric-pre-applications">—</span><i>→</i><span id="metric-year-one-applications">—</span></strong>
-          <em id="metric-application-change">—</em>
-        </div>
-        <div class="change-metric">
-          <small>Likely projects</small>
-          <strong><span id="metric-pre-projects">—</span><i>→</i><span id="metric-year-one-projects">—</span></strong>
-          <em id="metric-project-change">—</em>
-        </div>
-        <div class="change-metric focal">
-          <small>Proposed units</small>
-          <strong><span id="metric-pre-units">—</span><i>→</i><span id="metric-year-one-units">—</span></strong>
-          <em id="metric-unit-change">—</em>
-        </div>
-        <div class="disclaimer"><span id="policy-partial-period">Current partial period loading…</span> · Pre-policy values are annual averages for Feb. 2020–Jan. 2025. Current zoning is applied retrospectively; this is descriptive, not a causal estimate.</div>
-      </section>
-
-      <section id="context-summary" class="bottom-panel context-summary" aria-label="Parcel context summary" hidden>
-        <div class="summary-title">
-          <span class="eyebrow" id="context-eyebrow">Parcel context</span>
-          <strong id="context-title">Current zoning context</strong>
-          <small id="context-subtitle">Planning-level screening values</small>
+          <h2 id="context-title">Housing allowed by zoning</h2>
+          <p id="context-subtitle">Planning-level context</p>
         </div>
         <div class="context-metric"><small id="context-label-1">—</small><strong id="context-value-1">—</strong><em id="context-note-1">—</em></div>
         <div class="context-metric"><small id="context-label-2">—</small><strong id="context-value-2">—</strong><em id="context-note-2">—</em></div>
         <div class="context-metric"><small id="context-label-3">—</small><strong id="context-value-3">—</strong><em id="context-note-3">—</em></div>
         <div class="context-metric"><small id="context-label-4">—</small><strong id="context-value-4">—</strong><em id="context-note-4">—</em></div>
-        <div class="disclaimer" id="context-disclaimer">Context only; these values do not predict housing delivery.</div>
+        <p class="context-disclaimer" id="context-disclaimer">These values provide context; they do not predict housing construction.</p>
       </section>
+
+      <aside class="left-panel" aria-label="Map controls">
+        <section>
+          <h2>Choose a map</h2>
+          <div class="mode-list" role="radiogroup" aria-label="Map view">
+            <button class="mode-button active" data-mode="permits" role="radio" aria-checked="true">
+              <strong>Year One housing applications</strong>
+              <small>Estimated projects by parcel, Feb. 2025–Jan. 2026</small>
+            </button>
+            <button class="mode-button" data-mode="capacity" role="radio" aria-checked="false">
+              <strong>Housing allowed by zoning</strong>
+              <small>Maximum housing under the standard new rules</small>
+            </button>
+            <button class="mode-button" data-mode="readiness" role="radio" aria-checked="false">
+              <strong>Environmental constraints</strong>
+              <small>Wetlands, steep slopes, flood hazards, and protected waters</small>
+            </button>
+          </div>
+        </section>
+
+        <section class="filters">
+          <h2>Urban Residential district</h2>
+          <label class="visually-hidden" for="zone-filter">Show one Urban Residential district</label>
+          <select id="zone-filter">
+            <option value="all">All three districts</option>
+            <option value="UR1">UR-1 · lower-scale residential</option>
+            <option value="UR2">UR-2 · lower-scale residential</option>
+            <option value="UR3">UR-3 · mid-scale residential</option>
+          </select>
+        </section>
+
+        <section>
+          <h2>What the map colors mean</h2>
+          <div id="legend" class="legend"></div>
+          <p id="legend-note" class="note">The map shows estimated housing projects filed during the first year after reform.</p>
+        </section>
+      </aside>
+
+      <section class="map-region" aria-label="Tacoma parcel map">
+        <div class="loading" id="loading"><strong id="loading-title">Loading parcel map…</strong><span id="loading-status">56,484 parcels included in the map</span></div>
+        <div id="map"></div>
+        <div id="map-status" class="map-status" role="status" aria-live="polite">Loading parcel boundaries…</div>
+        <div class="map-search"><input id="parcel-search" type="search" placeholder="Search address or parcel ID" aria-label="Search address or parcel ID" /><button id="search-button" type="button">Search</button></div>
+      </section>
+
+      <aside class="right-panel" aria-label="Evidence and selected parcel details">
+        <div class="panel-heading">
+          <h2 id="parcel-title">How housing types changed</h2>
+          <p id="parcel-address">Pre-policy annual average compared with Year One</p>
+        </div>
+        <div id="parcel-details" class="parcel-details" aria-live="polite"></div>
+      </aside>
     </main>
 
     <dialog id="about-dialog">
       <button class="dialog-close" aria-label="Close">×</button>
       <h2>About this explorer</h2>
-      <p>This independent portfolio project asks how the volume and mix of housing applications changed after Tacoma's Home in Tacoma regulations took effect.</p>
-      <p>Parcel zoning and mapped constraints provide spatial context. The app does not estimate causation, completed housing production, or parcel redevelopment probability.</p>
-      <p><a href="../DATA_SOURCES_AND_TERMS.md">Data sources, attribution, and terms</a> · <a href="../LICENSE">MIT code license</a></p>
+      <p>This independent portfolio project examines how housing applications changed after Tacoma's Home in Tacoma zoning reform took effect.</p>
+      <p>The application comparison is the main evidence. Zoning allowances and mapped environmental constraints provide context; they do not predict which parcels will be developed.</p>
+      <p><a href="../DATA_SOURCES_AND_TERMS.md">Data sources and terms</a> · <a href="../LICENSE">MIT code license</a></p>
     </dialog>
 
     <dialog id="methodology-dialog" class="info-dialog">
       <button class="dialog-close" aria-label="Close">×</button>
-      <span class="eyebrow">Methods</span>
-      <h2>How to read the evidence</h2>
-      <h3>1. Policy comparison</h3>
-      <p>Active classified housing applications in current UR geography are divided into a five-year pre-policy period (February 2020–January 2025), Home in Tacoma Year One (February 2025–January 2026), and a current partial period. The five-year totals are divided by five before comparison with Year One.</p>
-      <h3>2. Housing application ETL</h3>
-      <p>Residential and Commercial Accela building records are canonicalized by permit number and grouped into likely projects. Structured fields and descriptions classify ADUs, detached houses, duplexes, 3–6-unit houseplexes, rowhouses, courtyard/cottage clusters, and multiplexes. Repairs and nonhousing scopes are excluded.</p>
-      <h3>3. Parcel and zoning context</h3>
-      <p>Pierce County parcel parts are dissolved to normalized parcel IDs. All parcel–zoning intersections are measured; the dominant current UR zone is displayed while material split zones remain in the gross capacity calculation.</p>
-      <h3>4. Mapped constraints</h3>
-      <p>Parks, institutional uses, rights-of-way, utilities, and other clear noncandidate uses are excluded. Mapped 40%+ slopes, wetlands, biodiversity areas, special flood hazard areas, and protected-water buffers are unioned before measuring the largest contiguous residual area.</p>
+      <h2>How the comparison works</h2>
+      <h3>Comparable 12-month periods</h3>
+      <p>The first year under Home in Tacoma is February 2025–January 2026. It is compared with each of the five preceding 12-month periods and their average. Cancelled and voided applications are excluded.</p>
+      <h3>Applications, projects, and units</h3>
+      <p>“Applications” are building permit records. Related applications are grouped into “estimated projects” using project references, parcel, date, and housing type. “Proposed units” come from unit fields or clear application descriptions. Estimated projects are not official City project counts.</p>
+      <h3>Urban Residential districts</h3>
+      <p>The comparison covers UR-1, UR-2, and UR-3 because Home in Tacoma created these districts to replace former single-family zoning. Today's district boundaries are also used for the earlier applications because historical parcel-level boundaries were unavailable.</p>
+      <h3>Environmental constraints</h3>
+      <p>Parks, schools, rights-of-way, utilities, and other clear non-housing uses are excluded from the parcel map. Mapped steep slopes, wetlands, biodiversity areas, flood hazards, and protected-water buffers are combined to show where site review may be needed.</p>
     </dialog>
 
     <dialog id="limitations-dialog" class="info-dialog">
       <button class="dialog-close" aria-label="Close">×</button>
-      <span class="eyebrow">Limitations</span>
-      <h2>Read before interpreting results</h2>
+      <h2>Important limitations</h2>
       <ul>
-        <li>The before/after comparison is descriptive. It does not isolate zoning effects from interest rates, construction costs, owner decisions, project lead time, or other market conditions.</li>
-        <li>Current UR zoning geography is applied retrospectively because historical parcel-level zoning geometry is unavailable.</li>
-        <li>Permit descriptions, unit fields, project relationships, and parcel lineage remain imperfect; the City benchmark is shown separately rather than treated as a replication target.</li>
-        <li>The map is limited to existing-use candidate parcels, while the headline policy comparison uses active applications across current UR geography. Map totals need not equal the headline.</li>
-        <li>Applications indicate development interest, not permits issued, construction starts, completions, or net housing production.</li>
-        <li>Gross legal capacity does not subtract existing units and is not an estimate of net added capacity.</li>
-        <li>Critical-area GIS is a generalized screen, not a site delineation. Public utility-easement geometry was unavailable.</li>
+        <li>The comparison does not separate zoning effects from interest rates, construction costs, owner decisions, or project timing.</li>
+        <li>Today's Urban Residential boundaries are applied to earlier applications because historical parcel-level zoning was unavailable.</li>
+        <li>Permit descriptions, unit counts, project grouping, and parcel matching are imperfect. Results are checked against, but do not reproduce, the City's internal totals.</li>
+        <li>The parcel map excludes clear non-housing uses. The citywide comparison includes all non-cancelled housing applications in the three reform districts, so map totals can differ from the headline totals.</li>
+        <li>Applications are not the same as permits issued, construction starts, completed homes, or net new housing.</li>
+        <li>Housing allowed by zoning is a gross estimate and does not subtract existing homes.</li>
+        <li>Environmental maps are a first screen, not a field survey or site-specific determination. Public utility-easement boundaries were unavailable.</li>
       </ul>
     </dialog>
 
     <script src="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.js"></script>
-    <script type="module" src="./js/app.js?v=20260724-1"></script>
+    <script type="module" src="./js/app.js?v=20260725-1"></script>
   </body>
 </html>

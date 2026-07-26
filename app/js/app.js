@@ -19,18 +19,18 @@ const state = {
 const modeStyles = {
   permits: {
     paint: ["interpolate", ["linear"], ["get", "housing_cohort__home_in_tacoma_year_1_project_count"], 0, "#e3e2dd", 1, "#91b7c9", 2, "#397ca7", 3, "#173b5d"],
-    legend: [["No Year One project", "#e3e2dd"], ["1 likely project", "#91b7c9"], ["2 likely projects", "#397ca7"], ["3+ likely projects", "#173b5d"]],
-    note: "Likely housing projects filed during Home in Tacoma Year One, February 2025–January 2026."
+    legend: [["No Year One project", "#e3e2dd"], ["1 estimated project", "#91b7c9"], ["2 estimated projects", "#397ca7"], ["3 or more estimated projects", "#173b5d"]],
+    note: "Estimated housing projects filed from February 2025 through January 2026."
   },
   capacity: {
     paint: ["interpolate", ["linear"], ["get", "modeled_base_capacity_units"], 4, "#d5e4ee", 6, "#8ab4ce", 8, "#397ca7", 16, "#173b5d"],
-    legend: [["4 modeled units", "#d5e4ee"], ["6 modeled units", "#8ab4ce"], ["8 modeled units", "#397ca7"], ["16+ modeled units", "#173b5d"]],
-    note: "Gross current zoning allowance; existing units are not subtracted."
+    legend: [["4 homes allowed", "#d5e4ee"], ["6 homes allowed", "#8ab4ce"], ["8 homes allowed", "#397ca7"], ["16 or more homes allowed", "#173b5d"]],
+    note: "Gross allowance under the new zoning rules. Existing homes are not subtracted."
   },
   readiness: {
     paint: ["match", ["get", "critical_area_screen_status"], "no_mapped_constraint", "#dce8c8", "moderate_slope_review", "#d3a12f", "mapped_constraint_review", "#c8794f", "constrained_out", "#815a68", "#a8a9a4"],
-    legend: [["No mapped constraint", "#dce8c8"], ["25–40% slope review", "#d3a12f"], ["Mapped constraint—site review", "#c8794f"], ["Constrained out", "#815a68"]],
-    note: "Generalized mapped critical-area screen; site delineation and title review remain necessary."
+    legend: [["No listed environmental area or hazard", "#dce8c8"], ["Part of parcel has 25–40% slopes", "#d3a12f"], ["Mapped area or hazard; review needed", "#c8794f"], ["Less than 5,000 sq. ft. remains outside mapped areas", "#815a68"]],
+    note: "A first screen using public environmental maps, not a site-specific determination."
   }
 };
 
@@ -126,21 +126,54 @@ function label(value) {
 
 function housingTypeLabel(value) {
   const names = {
-    backyard_unit: "Backyard unit / ADU",
-    houseplex_2: "Duplex / 2-unit houseplex",
-    houseplex_3_6: "3–6 unit houseplex",
+    backyard_unit: "Backyard / accessory dwelling unit (ADU)",
+    houseplex_2: "Duplex (2 units)",
+    houseplex_3_6: "Small multi-unit building (3–6 units)",
     rowhouse: "Rowhouse / townhouse",
-    courtyard_cottage: "Courtyard / cottage cluster",
-    multiplex_7_20: "7–20 unit multiplex",
-    larger_multifamily_21_plus: "Larger multifamily (21+)",
-    detached_single_unit: "Detached single-unit",
-    other_uncertain_housing: "Housing type uncertain"
+    courtyard_cottage: "Courtyard or cottage cluster",
+    multiplex_7_20: "Multi-unit building (7–20 units)",
+    larger_multifamily_21_plus: "Apartment building (21+ units)",
+    detached_single_unit: "Detached house",
+    other_uncertain_housing: "Housing type unclear"
   };
   return names[value] || label(value);
 }
 
 function housingTypeLabels(value) {
   return value ? value.split("|").map(housingTypeLabel).join(" · ") : "None";
+}
+
+function zoneLabel(value) {
+  const names = {
+    all: "All three Urban Residential districts",
+    UR1: "UR-1",
+    UR2: "UR-2",
+    UR3: "UR-3"
+  };
+  return names[value] || value;
+}
+
+function zoneCompositionLabel(value) {
+  return String(value || "Not available").replaceAll(/UR([123])/g, "UR-$1");
+}
+
+function siteConditionLabel(value) {
+  const names = {
+    vacant: "Vacant",
+    partially_vacant_proxy: "Partially developed (screening estimate)",
+    developed: "Developed"
+  };
+  return names[value] || "Not available";
+}
+
+function constraintStatusLabel(value) {
+  const names = {
+    no_mapped_constraint: "No listed environmental area or hazard",
+    moderate_slope_review: "Part of parcel has 25–40% slopes",
+    mapped_constraint_review: "Mapped environmental area or hazard; site review needed",
+    constrained_out: "Less than 5,000 sq. ft. remains outside mapped environmental areas"
+  };
+  return names[value] || "Not available";
 }
 
 function currentFilter() {
@@ -190,23 +223,25 @@ function updatePolicyComparison() {
   if (!comparison) return;
   const pre = comparison.pre_policy_annual_average;
   const yearOne = comparison.home_in_tacoma_year_one;
-  const change = comparison.change_pct;
-  document.querySelector("#policy-geography").textContent = `${state.zone === "all" ? "All current UR zones" : state.zone} · active applications`;
-  document.querySelector("#metric-pre-applications").textContent = number(pre.permit_records, 1);
-  document.querySelector("#metric-year-one-applications").textContent = number(yearOne.permit_records);
-  document.querySelector("#metric-application-change").textContent = signedPercent(change.permit_records);
-  document.querySelector("#metric-pre-projects").textContent = number(pre.projects, 1);
-  document.querySelector("#metric-year-one-projects").textContent = number(yearOne.projects);
-  document.querySelector("#metric-project-change").textContent = signedPercent(change.projects);
-  document.querySelector("#metric-pre-units").textContent = number(pre.reported_units, 1);
-  document.querySelector("#metric-year-one-units").textContent = number(yearOne.reported_units);
-  document.querySelector("#metric-unit-change").textContent = signedPercent(change.reported_units);
-  const partial = comparison.current_partial;
-  const through = partial.through
-    ? new Date(`${partial.through}T00:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-    : "latest extract";
-  document.querySelector("#policy-partial-period").textContent =
-    `Current partial: ${number(partial.permit_records)} applications · ${number(partial.projects)} likely projects · ${number(partial.reported_units)} units through ${through}; not annualized`;
+  document.querySelector("#policy-geography").textContent = zoneLabel(state.zone);
+
+  const prePeriods = comparison.annual_periods.filter(period => period.period_type === "pre_policy");
+  const yearOnePeriod = comparison.annual_periods.find(period => period.period_type === "year_one");
+  const periodRow = (period, className = "") => `<tr${className ? ` class="${className}"` : ""}>
+    <td class="period-cell">${className === "year-one-row" ? "Year One" : period.label}</td>
+    <td data-label="Applications">${number(period.permit_records)}</td>
+    <td data-label="Estimated projects">${number(period.projects)}</td>
+    <td data-label="Proposed units">${number(period.reported_units)}</td>
+  </tr>`;
+  document.querySelector("#annual-table-body").innerHTML = [
+    ...prePeriods.map(period => periodRow(period)),
+    `<tr class="average-row"><td class="period-cell">Pre-policy average</td><td data-label="Applications">${number(pre.permit_records, 1)}</td><td data-label="Estimated projects">${number(pre.projects, 1)}</td><td data-label="Proposed units">${number(pre.reported_units, 1)}</td></tr>`,
+    periodRow(yearOnePeriod, "year-one-row")
+  ].join("");
+
+  document.querySelector("#policy-finding").textContent = state.zone === "all"
+    ? "Year One applications represented far more proposed homes, while the estimated number of distinct projects remained within the prior five-year range."
+    : `In ${zoneLabel(state.zone)}, Year One recorded ${number(yearOne.permit_records)} applications representing ${number(yearOne.projects)} estimated projects and ${number(yearOne.reported_units)} proposed units.`;
   if (!state.selectedId) renderPolicyOverview();
 }
 
@@ -227,55 +262,27 @@ function renderPolicyOverview() {
       <td>${metricPair(values, "reported_units")}</td>
     </tr>`).join("");
 
-  const allComparison = state.summary.housing_policy_comparison.by_zone.all;
   const pre = comparison.pre_policy_annual_average;
   const yearOne = comparison.home_in_tacoma_year_one;
   const unitsPerProjectPre = pre.projects ? pre.reported_units / pre.projects : null;
   const unitsPerProjectYearOne = yearOne.projects ? yearOne.reported_units / yearOne.projects : null;
-  const duplex = comparison.by_type.houseplex_2;
-  const rowhouse = comparison.by_type.rowhouse;
-  const detached = comparison.by_type.detached_single_unit;
-  const zoneRows = ["UR1", "UR2", "UR3"].map(zone => {
-    const values = state.summary.housing_policy_comparison.by_zone[zone];
-    const selected = state.zone === zone ? " class=\"selected-row\"" : "";
-    return `<tr${selected}><th scope="row">${zone}</th><td>${signedPercent(values.change_pct.permit_records)}</td><td>${signedPercent(values.change_pct.projects)}</td><td>${signedPercent(values.change_pct.reported_units)}</td></tr>`;
-  }).join("");
 
-  const insightCards = [
-    `<div class="insight-card"><small>Units per likely project</small><strong>${number(unitsPerProjectPre, 2)} → ${number(unitsPerProjectYearOne, 2)}</strong><p>Unit intensity rose faster than project count.</p></div>`,
-    duplex ? `<div class="insight-card"><small>Duplex projects</small><strong>${metricPair(duplex, "projects")}</strong><p>${metricPair(duplex, "reported_units")} proposed units.</p></div>` : "",
-    rowhouse ? `<div class="insight-card"><small>Rowhouse projects / units</small><strong>${metricPair(rowhouse, "projects")} / ${metricPair(rowhouse, "reported_units")}</strong><p>More units without more likely projects.</p></div>` : "",
-    detached ? `<div class="insight-card"><small>Detached applications</small><strong>${metricPair(detached, "permit_records")}</strong><p>The single-unit application count declined.</p></div>` : ""
-  ].join("");
-
-  document.querySelector("#panel-eyebrow").textContent = "Policy evidence";
-  document.querySelector("#parcel-title").textContent = "What changed";
-  document.querySelector("#parcel-address").textContent = `${state.zone === "all" ? "All current UR zones" : state.zone} · pre-policy annual average → Year One`;
+  document.querySelector("#parcel-title").textContent = "How housing types changed";
+  document.querySelector("#parcel-address").textContent = `${zoneLabel(state.zone)} · pre-policy average compared with Year One`;
   document.querySelector("#parcel-details").className = "parcel-details";
   document.querySelector("#parcel-details").innerHTML = `
-    <section class="detail-section"><h3>Immediate takeaways</h3><div class="insight-stack">${insightCards}</div></section>
-    <section class="detail-section"><h3>Housing type shift</h3>
+    <div class="insight-card">
+      <strong>${number(unitsPerProjectPre, 2)} → ${number(unitsPerProjectYearOne, 2)} units per estimated project</strong>
+      <p>The clearest change is more proposed homes per project, not an unprecedented number of projects.</p>
+    </div>
+    <section class="detail-section"><h3>Housing type comparison</h3>
       <div class="comparison-scroll"><table class="evidence-table policy-type-table">
-        <caption>Pre-policy annual average → Home in Tacoma Year One</caption>
-        <thead><tr><th>Housing type</th><th>Applications</th><th>Projects</th><th>Units</th></tr></thead>
+        <caption>Pre-policy annual average → first year after reform</caption>
+        <thead><tr><th>Housing type</th><th>Applications</th><th>Est. projects</th><th>Proposed units</th></tr></thead>
         <tbody>${typeRows}</tbody>
       </table></div>
     </section>
-    <section class="detail-section"><h3>Different change by current zone</h3>
-      <div class="comparison-scroll"><table class="evidence-table">
-        <caption>Year One change versus pre-policy annual average</caption>
-        <thead><tr><th>Zone</th><th>Applications</th><th>Projects</th><th>Units</th></tr></thead>
-        <tbody>${zoneRows}</tbody>
-      </table></div>
-      <p class="note">UR1 shows the largest application increase; UR2 and UR3 show larger increases in proposed units. Current zoning is applied retrospectively.</p>
-    </section>
-    <section class="detail-section"><h3>How to read the map</h3>
-      <p class="empty-state">Darker parcels have more likely housing projects filed during Home in Tacoma Year One. Select a parcel to inspect its classified application history and site context.</p>
-      <p class="note">The map contains existing-use candidate parcels. The headline comparison uses active applications across current UR geography, so map totals need not equal the headline. City benchmark: ${number(state.summary.housing_policy_comparison.official_year_one_benchmark.permit_records)} applications / ${number(state.summary.housing_policy_comparison.official_year_one_benchmark.reported_units)} units.</p>
-    </section>`;
-
-  // Keep the all-zone object referenced so unexpected export omissions surface during QA.
-  if (!allComparison) throw new Error("All-zone policy comparison is missing.");
+    <p class="note">Each cell shows pre-policy annual average → Year One. Select a parcel on the map to see its application history and site context.</p>`;
 }
 
 function setContextMetric(index, labelText, value, note) {
@@ -288,39 +295,36 @@ function updateContextSummary() {
   if (!state.summary || state.mode === "permits") return;
   if (state.mode === "capacity") {
     const capacity = state.summary.capacity_context;
-    document.querySelector("#context-eyebrow").textContent = "Legal context";
-    document.querySelector("#context-title").textContent = "Broad permission is not production";
-    document.querySelector("#context-subtitle").textContent = "Current UR zoning · gross modeled allowance";
-    setContextMetric(1, "UR-zoned inventory", number(state.summary.ur_zoning_count), "Current legal-policy starting point");
-    setContextMetric(2, "Existing-use candidates", number(state.summary.parcel_count), `${number(state.summary.parcel_count / state.summary.ur_zoning_count * 100, 1)}% of UR inventory`);
-    setContextMetric(3, "Gross modeled units", number(capacity.gross_modeled_units), "Existing units are not subtracted");
-    setContextMetric(4, "Median per candidate", number(capacity.median_modeled_units_per_candidate, 1), "Modeled units, not a delivery forecast");
-    document.querySelector("#context-disclaimer").textContent = "Gross zoning allowance omits net existing units, bonuses, site design, infrastructure, ownership, financing, and market timing.";
+    document.querySelector("#context-title").textContent = "Housing allowed by the new zoning";
+    document.querySelector("#context-subtitle").textContent = "A gross estimate of legal permission, not expected construction";
+    setContextMetric(1, "Parcels in the three reform districts", number(state.summary.ur_zoning_count), "Urban Residential 1, 2, and 3");
+    setContextMetric(2, "Parcels included in this map", number(state.summary.parcel_count), "Clear non-housing uses are excluded");
+    setContextMetric(3, "Total homes allowed by standard rules", number(capacity.gross_modeled_units), "Existing homes are not subtracted");
+    setContextMetric(4, "Typical allowance per mapped parcel", number(capacity.median_modeled_units_per_candidate, 1), "Median, not a construction forecast");
+    document.querySelector("#context-disclaimer").textContent = "This estimate does not account for existing homes, bonus programs, detailed site design, infrastructure, ownership, financing, or market timing.";
   } else {
     const status = state.summary.critical_area_status;
-    document.querySelector("#context-eyebrow").textContent = "Site context";
-    document.querySelector("#context-title").textContent = "Mapped constraints remove false positives";
-    document.querySelector("#context-subtitle").textContent = "Generalized critical-area screening";
-    setContextMetric(1, "Mapped intersections", number(state.summary.mapped_constraint_intersection_count), `${number(state.summary.mapped_constraint_intersection_count / state.summary.parcel_count * 100, 1)}% of candidates`);
-    setContextMetric(2, "Constrained out", number(status.constrained_out), "Less than 5,000 sq ft residual");
-    setContextMetric(3, "Site review", number(status.mapped_constraint_review), "Residual area remains");
-    setContextMetric(4, "25–40% slope review", number(status.moderate_slope_review), "Flagged, not deducted");
-    document.querySelector("#context-disclaimer").textContent = "Mapped constraints are screening evidence, not field delineation, entitlement review, or a complete buildable-lands inventory.";
+    document.querySelector("#context-title").textContent = "Environmental constraints change what land may be usable";
+    document.querySelector("#context-subtitle").textContent = "A first screen using public maps";
+    setContextMetric(1, "Parcels touching a mapped environmental area or hazard", number(state.summary.mapped_constraint_intersection_count), `${number(state.summary.mapped_constraint_intersection_count / state.summary.parcel_count * 100, 1)}% of mapped parcels`);
+    setContextMetric(2, "Too little land remains outside mapped areas", number(status.constrained_out), "Less than 5,000 sq. ft.");
+    setContextMetric(3, "Mapped area or hazard; site review needed", number(status.mapped_constraint_review), "At least 5,000 sq. ft. remains outside it");
+    setContextMetric(4, "Parcels with 25–40% slopes", number(status.moderate_slope_review), "Flagged for review, not removed");
+    document.querySelector("#context-disclaimer").textContent = "These public maps are a first screen, not a field survey, site approval, or complete inventory of buildable land.";
   }
 }
 
 function renderContextOverview() {
   if (state.selectedId) return;
-  document.querySelector("#panel-eyebrow").textContent = state.mode === "capacity" ? "Legal context" : "Site context";
-  document.querySelector("#parcel-title").textContent = state.mode === "capacity" ? "How much is allowed?" : "Where do mapped constraints matter?";
+  document.querySelector("#parcel-title").textContent = state.mode === "capacity" ? "How much housing is allowed?" : "Where might site review be needed?";
   document.querySelector("#parcel-address").textContent = state.mode === "capacity"
-    ? "Gross zoning allowance across current UR parcels"
-    : "Critical-area screening before interpreting vacant land";
+    ? "Gross allowance across the three Urban Residential districts"
+    : "Public environmental maps applied to each parcel";
   const content = state.mode === "capacity"
-    ? `<section class="detail-section"><h3>Interpretation</h3><p class="empty-state">The map shows gross units allowed under current UR zoning. It establishes the scale of legal permission, but does not measure net added capacity or forecast development.</p></section>
-       <section class="detail-section"><h3>Why it matters</h3><p class="empty-state">The application evidence should not be read as a direct conversion of theoretical capacity. Ownership, site constraints, project economics, and timing intervene between permission and delivery.</p></section>`
-    : `<section class="detail-section"><h3>Interpretation</h3><p class="empty-state">The map identifies parcels where generalized critical-area geometry removes or complicates apparently available land.</p></section>
-       <section class="detail-section"><h3>Why it matters</h3><p class="empty-state">Vacant does not mean developable. The screen is most useful for removing obvious false positives while retaining review flags where residual land remains.</p></section>`;
+    ? `<section class="detail-section"><p class="empty-state">The map shows how many homes the base zoning rules allow on each parcel. It does not subtract homes already there or predict whether construction will occur.</p></section>
+       <section class="detail-section"><h3>Why this is supporting context</h3><p class="empty-state">Legal permission is only one condition for development. Ownership, environmental constraints, design, financing, and timing still matter.</p></section>`
+    : `<section class="detail-section"><p class="empty-state">The map shows where wetlands, steep slopes, flood hazards, biodiversity areas, or protected-water buffers overlap parcels.</p></section>
+       <section class="detail-section"><h3>Why this matters</h3><p class="empty-state">Vacant land is not automatically usable for housing. This screen removes obvious false positives and flags other parcels for closer review.</p></section>`;
   document.querySelector("#parcel-details").className = "parcel-details";
   document.querySelector("#parcel-details").innerHTML = content;
 }
@@ -328,52 +332,51 @@ function renderContextOverview() {
 function renderParcel(properties) {
   if (!properties) return;
   state.selectedId = properties.parcel_id;
-  document.querySelector("#panel-eyebrow").textContent = "Selected parcel";
   document.querySelector("#parcel-title").textContent = properties.parcel_id;
   document.querySelector("#parcel-address").textContent = properties.Site_Address || "Address not published";
   const constraintTypes = [
-    properties.constraint_steep_slope_40pct ? ">40% steep slope" : null,
-    properties.constraint_wetland ? "wetland" : null,
-    properties.constraint_biodiversity ? "biodiversity area" : null,
-    properties.constraint_sfha_flood ? "special flood hazard area" : null,
-    properties.constraint_protected_water_buffer ? "protected-water buffer" : null
+    properties.constraint_steep_slope_40pct ? "Slopes over 40%" : null,
+    properties.constraint_wetland ? "Wetland" : null,
+    properties.constraint_biodiversity ? "Biodiversity area" : null,
+    properties.constraint_sfha_flood ? "Special flood hazard area" : null,
+    properties.constraint_protected_water_buffer ? "Protected-water buffer" : null
   ].filter(Boolean);
   const flags = [
-    properties.meaningful_split_zoned ? "Meaningful split zoning" : null,
-    properties.capacity_overlay_review ? "Overlay review" : null,
-    properties.zoning_overlap_review ? "Zoning overlap QA" : null,
-    properties.constraint_moderate_slope_review ? "25–40% slope review" : null
+    properties.meaningful_split_zoned ? "Parcel has more than one zoning district" : null,
+    properties.capacity_overlay_review ? "Additional zoning rule needs review" : null,
+    properties.zoning_overlap_review ? "Zoning boundary needs review" : null,
+    properties.constraint_moderate_slope_review ? "Part of parcel has 25–40% slopes" : null
   ].filter(Boolean);
 
-  const applicationSection = `<section class="detail-section"><h3>Classified housing applications</h3><div class="detail-grid">
-    <span>Home in Tacoma Year One projects</span><strong>${number(properties.housing_cohort__home_in_tacoma_year_1_project_count)}</strong>
-    <span>Current partial-period projects</span><strong>${number(properties.housing_cohort__home_in_tacoma_current_partial_project_count)}</strong>
-    <span>Pre-policy projects (5-year total)</span><strong>${number(properties.housing_cohort__pre_home_in_tacoma_5yr_project_count)}</strong>
-    <span>Projects since Feb. 2020</span><strong>${number(properties.housing_application_project_count)}</strong>
-    <span>Canonical building permits</span><strong>${number(properties.housing_application_permit_count)}</strong>
-    <span>Reported proposed units</span><strong>${number(properties.housing_application_reported_units)}</strong>
-    <span>Housing types</span><strong>${housingTypeLabels(properties.housing_application_types)}</strong>
-    <span>Latest application</span><strong>${properties.housing_application_latest_application ? new Date(properties.housing_application_latest_application).toLocaleDateString() : "None"}</strong>
-  </div><p class="note">Text-classified Residential and Commercial records. Applications indicate development interest, not completed production.</p></section>`;
+  const applicationSection = `<section class="detail-section"><h3>Housing application history</h3><div class="detail-grid">
+    <span>Year One estimated projects</span><strong>${number(properties.housing_cohort__home_in_tacoma_year_1_project_count)}</strong>
+    <span>Projects after Year One</span><strong>${number(properties.housing_cohort__home_in_tacoma_current_partial_project_count)}</strong>
+    <span>Pre-policy projects, five-year total</span><strong>${number(properties.housing_cohort__pre_home_in_tacoma_5yr_project_count)}</strong>
+    <span>Estimated projects since Feb. 2020</span><strong>${number(properties.housing_application_project_count)}</strong>
+    <span>Building permit applications</span><strong>${number(properties.housing_application_permit_count)}</strong>
+    <span>Proposed units in these applications</span><strong>${number(properties.housing_application_reported_units)}</strong>
+    <span>Types of housing</span><strong>${housingTypeLabels(properties.housing_application_types)}</strong>
+    <span>Most recent application</span><strong>${properties.housing_application_latest_application ? new Date(properties.housing_application_latest_application).toLocaleDateString() : "None"}</strong>
+  </div><p class="note">Applications show development interest, not completed housing. Related applications are grouped into estimated projects.</p></section>`;
 
-  const capacitySection = `<section class="detail-section"><h3>Current legal capacity</h3><div class="detail-grid">
-    <span>Dominant base zone</span><strong>${properties.BaseZone}</strong>
-    <span>Zone composition</span><strong>${properties.base_zone_composition}</strong>
-    <span>Gross modeled units</span><strong>${number(properties.modeled_base_capacity_units)}</strong>
-    <span>Modeled max floor area</span><strong>${number(properties.modeled_max_floor_area_sqft)} sq ft</strong>
-  </div><p class="note">Gross current zoning allowance; existing units are not subtracted.</p></section>`;
+  const capacitySection = `<section class="detail-section"><h3>Housing allowed by zoning</h3><div class="detail-grid">
+    <span>Primary zoning district</span><strong>${zoneLabel(properties.BaseZone)}</strong>
+    <span>Share of parcel in each district</span><strong>${zoneCompositionLabel(properties.base_zone_composition)}</strong>
+    <span>Homes allowed by standard density rules</span><strong>${number(properties.modeled_base_capacity_units)}</strong>
+    <span>Maximum floor area under standard rules</span><strong>${number(properties.modeled_max_floor_area_sqft)} sq. ft.</strong>
+  </div><p class="note">This is a gross zoning allowance. Existing homes are not subtracted.</p></section>`;
 
-  const siteSection = `<section class="detail-section"><h3>Existing use and mapped constraints</h3><div class="detail-grid">
-    <span>Lot area</span><strong>${number(properties.parcel_area_sqft)} sq ft</strong>
+  const siteSection = `<section class="detail-section"><h3>Existing use and environmental constraints</h3><div class="detail-grid">
+    <span>Lot area</span><strong>${number(properties.parcel_area_sqft)} sq. ft.</strong>
     <span>Existing land use</span><strong>${properties.Landuse_Description || "Not available"}</strong>
-    <span>Site-condition class</span><strong>${label(properties.site_condition_class)}</strong>
+    <span>Existing development status</span><strong>${siteConditionLabel(properties.site_condition_class)}</strong>
     <span>Building coverage</span><strong>${number((properties.building_coverage_ratio || 0) * 100, 1)}%</strong>
-    <span>Critical-area screen</span><strong>${label(properties.critical_area_screen_status)}</strong>
-    <span>Mapped overlap</span><strong>${number(properties.mapped_constraint_share * 100, 1)}%</strong>
-    <span>Largest residual area</span><strong>${number(properties.largest_unconstrained_area_sqft)} sq ft</strong>
-    <span>Mapped types</span><strong>${constraintTypes.length ? constraintTypes.join(" · ") : "None mapped"}</strong>
-    <span>Utility easements</span><strong>${properties.utility_easement_geometry_available ? "Screened" : "Public geometry unavailable"}</strong>
-  </div><p class="note">Generalized City GIS screen only; mapped boundaries do not replace delineation or title review.</p></section>`;
+    <span>Environmental constraint result</span><strong>${constraintStatusLabel(properties.critical_area_screen_status)}</strong>
+    <span>Parcel covered by mapped environmental areas or hazards</span><strong>${number(properties.mapped_constraint_share * 100, 1)}%</strong>
+    <span>Largest area outside those mapped areas</span><strong>${number(properties.largest_unconstrained_area_sqft)} sq. ft.</strong>
+    <span>Environmental areas or hazards shown</span><strong>${constraintTypes.length ? constraintTypes.join(" · ") : "None listed on the map"}</strong>
+    <span>Utility easement boundaries</span><strong>${properties.utility_easement_geometry_available ? "Included" : "Not publicly available"}</strong>
+  </div><p class="note">This public-map screen does not replace a field survey, site review, or title report.</p></section>`;
 
   const orderedSections = state.mode === "permits"
     ? [applicationSection, capacitySection, siteSection]
@@ -384,7 +387,7 @@ function renderParcel(properties) {
   document.querySelector("#parcel-details").innerHTML =
     orderedSections.join("") +
     (flags.length ? `<p class="warning"><strong>Review flags:</strong> ${flags.join(" · ")}</p>` : "") +
-    `<p class="note">Independent planning-level evidence; not an entitlement determination or redevelopment prediction.</p>`;
+    `<p class="note">Planning-level information only; not a site approval or prediction of development.</p>`;
   writeUrl();
 }
 
@@ -454,11 +457,10 @@ function addParcelChunk(chunk) {
     map.setFeatureState(state.selectedFeature, { selected: true });
     const parcelId = feature.properties.parcel_id;
     state.selectedId = parcelId;
-    document.querySelector("#panel-eyebrow").textContent = "Selected parcel";
     document.querySelector("#parcel-title").textContent = parcelId;
-    document.querySelector("#parcel-address").textContent = "Loading parcel evidence…";
+    document.querySelector("#parcel-address").textContent = "Loading parcel details…";
     document.querySelector("#parcel-details").className = "parcel-details empty-state";
-    document.querySelector("#parcel-details").textContent = "Loading the detailed parcel record on demand…";
+    document.querySelector("#parcel-details").textContent = "Loading parcel details…";
     writeUrl();
     try {
       const details = await ensureParcelDetails(chunk.id);
@@ -488,7 +490,7 @@ function reportParcelRendering() {
   status.classList.add("error");
   status.textContent = available
     ? `${available.toLocaleString()} parcels loaded, but current filters show none`
-    : "Parcel geometry did not reach the renderer";
+    : "Parcel boundaries could not be drawn";
 }
 
 map.on("load", async () => {
@@ -500,14 +502,14 @@ map.on("load", async () => {
     updatePolicyComparison();
     updateContextSummary();
     updateModeUI();
-    document.querySelector("#loading-status").textContent = `Registering ${state.summary.map_chunk_count} map sections…`;
+    document.querySelector("#loading-status").textContent = `Preparing ${state.summary.map_chunk_count} parts of the map…`;
     state.summary.map_chunks.forEach(addParcelChunk);
     state.mapReady = true;
     updateMapStyle();
     document.querySelector("#loading").hidden = true;
     map.once("idle", reportParcelRendering);
     if (state.selectedId) {
-      document.querySelector("#parcel-details").textContent = "Loading selected parcel evidence…";
+      document.querySelector("#parcel-details").textContent = "Loading selected parcel details…";
       ensureSearchIndex()
         .then(index => index.find(item => item.parcel_id === state.selectedId))
         .then(item => item ? ensureParcelDetails(item.chunk) : null)
@@ -529,9 +531,9 @@ map.on("sourcedata", event => {
   if (!event.sourceId?.startsWith("parcels-") || !event.isSourceLoaded) return;
   state.loadedSources.add(event.sourceId);
   const status = document.querySelector("#map-status");
-  status.textContent = `Parcel sections ${state.loadedSources.size} / ${state.expectedSources}`;
+  status.textContent = `Loading map ${state.loadedSources.size} / ${state.expectedSources}`;
   if (state.loadedSources.size === state.expectedSources) {
-    status.textContent = "Parcel geometry loaded; drawing map…";
+    status.textContent = "Map data loaded; drawing parcels…";
     map.once("idle", reportParcelRendering);
   }
 });
@@ -541,7 +543,7 @@ map.on("error", event => {
   const status = document.querySelector("#map-status");
   status.hidden = false;
   status.classList.add("error");
-  status.textContent = `Parcel layer error: ${event.error?.message || "unknown error"}`;
+  status.textContent = `Map data error: ${event.error?.message || "unknown error"}`;
 });
 
 document.querySelectorAll(".mode-button").forEach(button => button.addEventListener("click", () => {
@@ -568,15 +570,6 @@ document.querySelector(".mode-list").addEventListener("keydown", event => {
 
 document.querySelector("#zone-filter").addEventListener("change", event => {
   state.zone = event.target.value;
-  updateMapStyle();
-  updatePolicyComparison();
-  updateContextSummary();
-  if (!state.selectedId) updateModeUI();
-});
-
-document.querySelector("#reset-filters").addEventListener("click", () => {
-  state.zone = "all";
-  document.querySelector("#zone-filter").value = "all";
   updateMapStyle();
   updatePolicyComparison();
   updateContextSummary();

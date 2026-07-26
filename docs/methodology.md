@@ -34,29 +34,29 @@ Structured fields and description text classify:
 - larger multifamily;
 - other or uncertain housing.
 
-Related `SDEV`, `LU`, `PRE`, and `WO` identifiers group likely projects. Parcel, application date, and housing type provide a fallback project key. This is reproducible linkage, not authoritative City project identification. See [permit ETL](permit_etl.md) and the [classification gold set](permit_sample_audit.md).
+Related `SDEV`, `LU`, `PRE`, and `WO` identifiers group applications into estimated distinct projects. Parcel, application date, and housing type provide a fallback project key. This is reproducible linkage, not authoritative City project identification. See [permit ETL](permit_etl.md) and the [classification gold set](permit_sample_audit.md).
 
 ## Policy comparison metrics
 
 The app distinguishes:
 
 - **applications:** canonical building permit records;
-- **likely projects:** reproducibly grouped related applications;
+- **estimated projects:** reproducibly grouped related applications;
 - **proposed units:** units reported or defensibly extracted from source descriptions.
 
 Keeping all three visible prevents additional permits within one project from being mistaken for additional independent projects. Housing-type tables show the pre-policy annual average and Year One for each metric.
 
-The comparison can be filtered by the parcel's current dominant UR1, UR2, or UR3 zone. Historical parcel-level zoning geometry is unavailable, so current UR geography is applied retrospectively. Results are descriptive, not causal.
+The comparison can be filtered by the parcel's primary district today: UR-1, UR-2, or UR-3. Historical parcel-level zoning boundaries are unavailable, so today's Urban Residential geography is applied to the earlier applications. Results are descriptive, not causal.
 
 ## Policy map
 
-The default map colors existing-use candidate parcels by the number of likely housing projects filed during Home in Tacoma Year One. It does not map cumulative 2020–current activity and does not encode before/after change.
+The default map colors existing-use candidate parcels by the number of estimated housing projects filed during Home in Tacoma Year One. It does not map cumulative 2020–current activity and does not encode before/after change.
 
 The map universe is narrower than the headline comparison because protected, institutional, and other noncandidate existing uses are not published as candidate parcels. Headline and map totals therefore need not match.
 
 ## Parcel and zoning base
 
-Pierce County parcel parts are dissolved to normalized parcel IDs. Every parcel–zoning intersection is measured. The dominant current UR zone is displayed, while material split-zone area remains in the gross capacity calculation.
+Pierce County parcel parts are combined into normalized parcel IDs. Every overlap between a parcel and a zoning district is measured. The district covering the largest share is displayed, while meaningful split-zone areas remain in the gross allowance calculation.
 
 Existing residential and clearly developable vacant uses enter the candidate scope. Parks, open space, schools, cemeteries, rights-of-way, utilities, drainage facilities, and golf courses are excluded. Ambiguous nonresidential uses remain manual-review records outside public candidate totals.
 

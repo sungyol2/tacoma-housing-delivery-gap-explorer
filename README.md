@@ -8,35 +8,35 @@ The project asks how the volume and mix of housing applications changed after Ta
 
 ## 60-second review path
 
-1. Open **Housing change** and compare applications, likely projects, and proposed units.
-2. Read the housing-type table: duplex projects rose sharply, while rowhouse units increased without an increase in likely projects.
-3. Compare UR1, UR2, and UR3. UR1 shows the largest application increase; UR2 and UR3 show larger increases in proposed units.
-4. Switch to **Legal capacity** and **Site constraints** to see why broad permission does not equal production and why vacant land can still be a false positive.
+1. Start with the six-year table showing applications, estimated projects, and proposed units.
+2. Read the short reform introduction explaining why the explorer focuses on Urban Residential 1, 2, and 3.
+3. Use the housing-type table and district filter to see which housing forms account for the change.
+4. Switch to **Housing allowed by zoning** and **Environmental constraints** for supporting parcel context.
 5. Search parcel `6245000035` to inspect the wooded N Mildred St example screened by steep-slope and biodiversity mapping.
 
 ## Key result
 
-Within current UR geography, active housing applications increased from a pre-policy annual average of **177.0** to **231** in Home in Tacoma Year One (**+30.5%**). Likely projects increased from **170.2** to **193** (**+13.4%**), while reported proposed units increased from **226.8** to **416** (**+83.4%**).
+Within the three Urban Residential districts, non-cancelled housing applications increased from a pre-policy annual average of **177.0** to **231** in Home in Tacoma Year One (**+30.5%**). Estimated distinct projects increased from **170.2** to **193** (**+13.4%**), while proposed units in those applications increased from **226.8** to **416** (**+83.4%**).
 
-The divergence matters: units per likely project rose from **1.33** to **2.16**. The early evidence points to a shift toward more unit-producing forms, not simply more independent projects. The comparison is descriptive and does not isolate causation.
+The divergence matters: units per estimated project rose from **1.33** to **2.16**. Year One proposed more homes than every preceding 12-month period, while its estimated project count remained within the prior five-year range. The comparison is descriptive and does not isolate causation.
 
 ## Current status
 
 The reproducible parcel, zoning-capacity, critical-area, housing-application ETL, web-export, and QA pipelines are implemented. The public app:
 
-- starts with the policy comparison rather than a financial screen;
-- maps likely projects filed during Home in Tacoma Year One;
-- distinguishes applications, likely projects, and proposed units;
-- shows housing-type and current-zone comparisons;
+- starts with a short policy explanation and six-year comparison table;
+- maps estimated projects filed during Home in Tacoma Year One;
+- distinguishes applications, estimated projects, and proposed units;
+- explains why the analysis covers the three Urban Residential districts;
 - retains gross legal capacity and mapped constraints only as explanatory context;
 - removes prototype-feasibility and residual-land-value results from the public interface.
 
 Current processed outputs (kept out of Git by default):
 
-- `data_processed/parcels_base.parquet`: 73,326 unique Tacoma parcels; 58,319 in the current UR inventory and 56,484 existing-use candidates
-- `data_processed/parcels_capacity.parquet`: current gross UR capacity plus parcel application and mapped-constraint fields used by the public app
+- `data_processed/parcels_base.parquet`: 73,326 unique Tacoma parcels; 58,319 in today's three Urban Residential districts and 56,484 parcels included in the public map
+- `data_processed/parcels_capacity.parquet`: gross housing allowance plus parcel application and environmental-map fields used by the public app
 - `data_processed/permits.parquet`: 109,415 canonical permit numbers from 109,614 raw Accela rows
-- `data_processed/housing_applications.parquet`: text-classified housing applications with policy cohorts, housing type, units, and likely-project keys
+- `data_processed/housing_applications.parquet`: text-classified housing applications with policy cohorts, housing type, units, and estimated-project grouping keys
 - `outputs/qa/parcels_base_qa.json`: geometry, join, and missingness checks
 - `outputs/qa/release_check.json`: static app/data contract
 

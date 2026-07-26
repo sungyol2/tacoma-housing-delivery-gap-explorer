@@ -65,15 +65,19 @@ def main() -> None:
             "feasibility" in field or "prototype" in field
             for field in summary.get("published_fields", [])
         ),
-        "latest_javascript_asset": "app.js?v=20260724-1" in html,
-        "latest_stylesheet_asset": "app.css?v=20260724-1" in html,
-        "policy_comparison_visible": "More units—not just more filings" in html,
+        "latest_javascript_asset": "app.js?v=20260725-1" in html,
+        "latest_stylesheet_asset": "app.css?v=20260725-1" in html,
+        "policy_comparison_visible": (
+            "Tacoma opened former single-family neighborhoods to more housing types"
+            in html
+        ),
         "applications_projects_units_visible": all(
             marker in html
             for marker in [
-                "metric-year-one-applications",
-                "metric-year-one-projects",
-                "metric-year-one-units",
+                "Applications",
+                "Estimated projects",
+                "Proposed units",
+                "annual-table-body",
             ]
         ),
         "policy_map_uses_year_one_projects": (
@@ -81,15 +85,18 @@ def main() -> None:
             and "housing_cohort__home_in_tacoma_year_1_project_count"
             in summary.get("map_fields", [])
         ),
-        "policy_map_period_labeled": "Home in Tacoma Year One" in js
-        and "February 2025–January 2026" in js,
-        "map_headline_universe_caveat": "map totals need not equal the headline"
-        in html.lower()
-        and "map totals need not equal the headline" in js.lower(),
-        "policy_mobile_reading_order": 'classList.toggle("policy-mode", policyMode)'
-        in js
-        and "body.policy-mode #policy-comparison { order: 2; }" in css
-        and ".map-region { min-height: 62vh; }" in css,
+        "policy_map_period_labeled": (
+            "Estimated housing projects filed from February 2025 through January 2026"
+            in js
+        ),
+        "map_headline_universe_caveat": (
+            "map totals can differ from the headline totals" in html.lower()
+        ),
+        "policy_mobile_reading_order": (
+            'classList.toggle("policy-mode", policyMode)' in js
+            and ".policy-comparison { order: 1;" in css
+            and ".map-region { order: 3; min-height: 68vh; }" in css
+        ),
         "policy_cohort_contract": policy.get("effective_date") == "2025-02-01"
         and set(policy.get("by_zone", {})) == {"all", "UR1", "UR2", "UR3"},
         "policy_annualization_correct": all(
@@ -100,35 +107,72 @@ def main() -> None:
             < 0.11
             for metric in ["permit_records", "projects", "reported_units"]
         ),
+        "policy_annual_periods_visible_and_aligned": (
+            len(policy_all.get("annual_periods", [])) == 6
+            and sum(
+                period.get("permit_records", 0)
+                for period in policy_all.get("annual_periods", [])[:5]
+            )
+            == policy_pre_total.get("permit_records")
+            and policy_all.get("annual_periods", [])[-1].get("permit_records")
+            == policy_all.get("home_in_tacoma_year_one", {}).get("permit_records")
+            and "comparison.annual_periods" in js
+        ),
         "policy_official_benchmark_separate": policy.get(
             "official_year_one_benchmark", {}
         ).get("permit_records")
         == 213
         and policy_all.get("home_in_tacoma_year_one", {}).get("permit_records")
         != 213,
-        "details_loaded_on_demand": "ensureParcelDetails(chunkId)" in js
-        and "Loading the detailed parcel record on demand" in js,
+        "details_loaded_on_demand": (
+            "ensureParcelDetails(chunkId)" in js
+            and "Loading parcel details" in js
+        ),
         "details_chunked": "parcel_details_${chunk}.json.gz" in js
         and all("detail_gzip_file" in chunk for chunk in summary["map_chunks"]),
         "search_index_used": "ensureSearchIndex" in js,
         "keyboard_map_modes": '.mode-list").addEventListener("keydown"' in js,
         "live_status_regions": 'aria-live="polite"' in html,
-        "comparison_tables_captioned": "Pre-policy annual average → Home in Tacoma Year One"
-        in js
-        and "Year One change versus pre-policy annual average" in js,
-        "housing_type_projects_visible": "<th>Projects</th>" in js,
-        "zone_change_visible": "Different change by current zone" in js,
-        "project_intensity_visible": "Units per likely project" in js,
+        "comparison_tables_captioned": (
+            "Pre-policy annual average → first year after reform" in js
+            and "Housing applications, estimated distinct projects, and proposed units"
+            in html
+        ),
+        "housing_type_projects_visible": "<th>Est. projects</th>" in js,
+        "urban_residential_scope_explained": all(
+            phrase in html
+            for phrase in [
+                "Urban Residential",
+                "UR-1",
+                "UR-2",
+                "UR-3",
+                "Downtown and mixed-use centers follow different zoning rules",
+            ]
+        ),
+        "project_intensity_visible": "units per estimated project" in js,
         "capacity_context_published": summary.get("capacity_context", {}).get(
             "gross_modeled_units", 0
         )
         > 0,
         "critical_area_mode_published": "critical_area_screen_status" in js,
-        "utility_easement_limitation_visible": "utility-easement geometry was unavailable"
-        in html,
-        "critical_area_context_visible": "Mapped constraints remove false positives"
-        in js
-        and summary.get("mapped_constraint_intersection_count") == 11070,
+        "utility_easement_limitation_visible": (
+            "utility-easement boundaries were unavailable" in html.lower()
+        ),
+        "critical_area_context_visible": (
+            "Environmental constraints change what land may be usable" in js
+            and summary.get("mapped_constraint_intersection_count") == 11070
+        ),
+        "requested_jargon_removed": not any(
+            phrase in html + js
+            for phrase in [
+                "Start here",
+                ">Geography<",
+                "Current UR zone",
+                "Mapped intersections",
+                "Constrained out",
+                "likely projects",
+            ]
+        ),
         "mit_license_present": (project_root / "LICENSE").exists()
         and "MIT License"
         in (project_root / "LICENSE").read_text(encoding="utf-8"),

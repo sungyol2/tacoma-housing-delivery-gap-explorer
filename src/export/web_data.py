@@ -18,6 +18,15 @@ POLICY_COHORTS = [
     "home_in_tacoma_current_partial",
 ]
 
+ANNUAL_POLICY_PERIODS = [
+    ("Feb. 2020–Jan. 2021", "2020-02-01", "2021-02-01", "pre_policy"),
+    ("Feb. 2021–Jan. 2022", "2021-02-01", "2022-02-01", "pre_policy"),
+    ("Feb. 2022–Jan. 2023", "2022-02-01", "2023-02-01", "pre_policy"),
+    ("Feb. 2023–Jan. 2024", "2023-02-01", "2024-02-01", "pre_policy"),
+    ("Feb. 2024–Jan. 2025", "2024-02-01", "2025-02-01", "pre_policy"),
+    ("Feb. 2025–Jan. 2026", "2025-02-01", "2026-02-01", "year_one"),
+]
+
 
 def _application_metrics(applications: pd.DataFrame) -> dict[str, int]:
     return {
@@ -54,10 +63,28 @@ def _policy_comparison(applications: pd.DataFrame) -> dict[str, object]:
         return round((year_one_totals[metric] / baseline - 1) * 100, 1)
 
     type_keys = sorted(set(applications["housing_type"].dropna()))
+    application_dates = pd.to_datetime(applications["application_date"], utc=True)
     return {
         "pre_policy_five_year_total": pre_totals,
         "pre_policy_annual_average": pre_average,
         "home_in_tacoma_year_one": year_one_totals,
+        "annual_periods": [
+            {
+                "label": label,
+                "start": start,
+                "end": (
+                    pd.Timestamp(end, tz="UTC") - pd.Timedelta(days=1)
+                ).date().isoformat(),
+                "period_type": period_type,
+                **_application_metrics(
+                    applications.loc[
+                        application_dates.ge(pd.Timestamp(start, tz="UTC"))
+                        & application_dates.lt(pd.Timestamp(end, tz="UTC"))
+                    ]
+                ),
+            }
+            for label, start, end, period_type in ANNUAL_POLICY_PERIODS
+        ],
         "change_pct": {
             metric: change(metric)
             for metric in ["permit_records", "projects", "reported_units"]

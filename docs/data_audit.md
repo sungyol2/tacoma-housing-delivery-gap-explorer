@@ -111,7 +111,7 @@ QA results:
 - Canonical permit numbers exactly matched to a Tacoma parcel: 101,537 (92.8%)
 - Canonical permit numbers with invalid or nonstandard parcel-number formats: 2,055
 - Permit records missing `housing_units`: 73,339 (66.91%)
-- Classified policy-period housing applications matched to Tacoma parcels: 1,835 canonical permits representing 1,552 likely projects; see `docs/permit_etl.md`
+- Classified policy-period housing applications matched to Tacoma parcels: 1,835 deduplicated permits representing 1,552 estimated projects; see `docs/permit_etl.md`
 - Split-zoned parcels: 3,200; meaningful split-zoned parcels at the 5% threshold: 836
 - Partial zoning coverage retained for QA: 49; zoning-overlap review flags: 71
 
