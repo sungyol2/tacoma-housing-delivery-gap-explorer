@@ -81,8 +81,8 @@ def main() -> None:
             "feasibility" in field or "prototype" in field
             for field in summary.get("published_fields", [])
         ),
-        "latest_javascript_asset": "app.js?v=20260725-4" in html,
-        "latest_stylesheet_asset": "app.css?v=20260725-4" in html,
+        "latest_javascript_asset": "app.js?v=20260725-7" in html,
+        "latest_stylesheet_asset": "app.css?v=20260725-7" in html,
         "policy_comparison_visible": (
             "Tacoma opened former single-family neighborhoods to more housing types"
             in html
@@ -231,7 +231,20 @@ def main() -> None:
         ),
         "quiet_basemap_and_thin_boundaries": (
             "basemaps.cartocdn.com/light_all" in js
-            and '"zoom"], 9, 0.26, 13, 0.45, 17, 0.72' in js
+            and '"zoom"], 9, "rgba(72,84,91,0)", 10, "rgba(72,84,91,0.12)"' in js
+            and '"zoom"], 9, 0.04, 10, 0.08, 11, 0.32, 13, 0.55, 17, 0.85' in js
+            and "lineOpacity: 0.72" in js
+        ),
+        "clean_map_cursor": (
+            "cursor: default !important" in css
+            and "cursor: crosshair !important" in css
+            and 'style.cursor = "pointer"' not in js
+        ),
+        "methods_placed_with_annual_table": (
+            "intro-heading" not in html + css
+            and html.index('class="evidence-heading"')
+            < html.index('id="methodology-button"')
+            < html.index('class="comparison-scroll"')
         ),
         "parcel_sidebar_reduced_and_activity_popup_added": (
             "showApplicationPopup" in js

@@ -16,21 +16,24 @@ const state = {
   loadedSources: new Set(),
   dataVersion: "",
   popup: null,
-  handledMapClicks: new WeakSet()
+  handledMapClicks: new WeakSet(),
+  hoveredLayers: new Set()
 };
 
 const modeStyles = {
   permits: {
     paint: "#f7f5ef",
     fillOpacity: 0.12,
-    lineWidth: ["interpolate", ["linear"], ["zoom"], 9, 0.26, 13, 0.45, 17, 0.72],
-    lineOpacity: 0.5,
+    outlineColor: ["interpolate", ["linear"], ["zoom"], 9, "rgba(72,84,91,0)", 10, "rgba(72,84,91,0.12)", 11, "rgba(72,84,91,0.55)", 13, "rgba(72,84,91,0.72)", 17, "rgba(72,84,91,0.82)"],
+    lineWidth: ["interpolate", ["linear"], ["zoom"], 9, 0.04, 10, 0.08, 11, 0.32, 13, 0.55, 17, 0.85],
+    lineOpacity: 0.72,
     legend: [["1 proposed home", "#247b83", 6], ["2–4 proposed homes", "#247b83", 9], ["5–9 proposed homes", "#247b83", 13], ["10+ proposed homes", "#247b83", 17]],
     note: "Each circle marks an application parcel; circle size represents proposed homes."
   },
   capacity: {
     paint: ["interpolate", ["linear"], ["get", "modeled_base_capacity_units"], 4, "#eee8f2", 6, "#c7acd3", 8, "#8a5ca2", 16, "#4e2d66"],
     fillOpacity: 0.64,
+    outlineColor: "rgba(72,84,91,0)",
     lineWidth: ["interpolate", ["linear"], ["zoom"], 9, 0.04, 13, 0.1, 17, 0.24],
     lineOpacity: 0.38,
     legend: [["4 homes allowed", "#eee8f2"], ["6 homes allowed", "#c7acd3"], ["8 homes allowed", "#8a5ca2"], ["16 or more homes allowed", "#4e2d66"]],
@@ -39,6 +42,7 @@ const modeStyles = {
   readiness: {
     paint: ["match", ["get", "critical_area_screen_status"], "no_mapped_constraint", "#dce8c8", "moderate_slope_review", "#d3a12f", "mapped_constraint_review", "#c8794f", "constrained_out", "#815a68", "#a8a9a4"],
     fillOpacity: 0.64,
+    outlineColor: "rgba(72,84,91,0)",
     lineWidth: ["interpolate", ["linear"], ["zoom"], 9, 0.04, 13, 0.1, 17, 0.24],
     lineOpacity: 0.38,
     legend: [["No listed environmental area or hazard", "#dce8c8"], ["Part of parcel has 25–40% slopes", "#d3a12f"], ["Mapped area or hazard; review needed", "#c8794f"], ["Less than 5,000 sq. ft. remains outside mapped areas", "#815a68"]],
@@ -236,6 +240,7 @@ function updateMapStyle() {
     if (!map.getLayer(layerId)) continue;
     map.setPaintProperty(layerId, "fill-color", modeStyles[state.mode].paint);
     map.setPaintProperty(layerId, "fill-opacity", modeStyles[state.mode].fillOpacity);
+    map.setPaintProperty(layerId, "fill-outline-color", modeStyles[state.mode].outlineColor);
     map.setFilter(layerId, filter);
   }
   for (const layerId of state.lineLayers) {
@@ -483,7 +488,11 @@ function addParcelChunk(chunk) {
     id: fillId,
     type: "fill",
     source: sourceId,
-    paint: { "fill-color": modeStyles[state.mode].paint, "fill-opacity": modeStyles[state.mode].fillOpacity }
+    paint: {
+      "fill-color": modeStyles[state.mode].paint,
+      "fill-opacity": modeStyles[state.mode].fillOpacity,
+      "fill-outline-color": modeStyles[state.mode].outlineColor
+    }
   };
   const lineLayer = {
     id: lineId,
@@ -548,10 +557,13 @@ function addParcelChunk(chunk) {
   };
   map.on("click", fillId, selectParcel);
   map.on("click", pointId, selectParcel);
-  map.on("mouseenter", fillId, () => { map.getCanvas().style.cursor = "pointer"; });
-  map.on("mouseleave", fillId, () => { map.getCanvas().style.cursor = ""; });
-  map.on("mouseenter", pointId, () => { map.getCanvas().style.cursor = "pointer"; });
-  map.on("mouseleave", pointId, () => { map.getCanvas().style.cursor = ""; });
+  const setFeatureHover = hovering => {
+    if (hovering) state.hoveredLayers.add(fillId);
+    else state.hoveredLayers.delete(fillId);
+    document.querySelector(".map-region").classList.toggle("feature-hover", state.hoveredLayers.size > 0);
+  };
+  map.on("mouseenter", fillId, () => setFeatureHover(true));
+  map.on("mouseleave", fillId, () => setFeatureHover(false));
 }
 
 function reportParcelRendering() {

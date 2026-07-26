@@ -49,12 +49,6 @@ button:disabled { cursor: wait; opacity: .72; }
 }
 .policy-comparison[hidden], .context-summary[hidden] { display: none !important; }
 .reform-intro { align-self: center; max-width: 610px; }
-.intro-heading {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-bottom: 8px;
-}
 .text-button {
   border: 0;
   border-bottom: 1px solid currentColor;
@@ -161,6 +155,8 @@ select, input[type="search"] { border: 1px solid #abb6bc; background: white; pad
 
 .map-region { position: relative; min-width: 0; min-height: 680px; background: #d8dbd6; }
 #map { position: absolute; inset: 0; }
+#map .maplibregl-canvas { cursor: default !important; }
+.map-region.feature-hover #map .maplibregl-canvas { cursor: crosshair !important; }
 .loading { position: absolute; inset: 0; z-index: 4; display: grid; place-content: center; text-align: center; gap: 7px; background: rgba(244,242,237,.94); }
 .loading[hidden] { display: none !important; }
 .loading strong { font-size: 17px; }
