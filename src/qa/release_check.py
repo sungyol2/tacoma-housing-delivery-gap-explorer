@@ -65,8 +65,8 @@ def main() -> None:
             "feasibility" in field or "prototype" in field
             for field in summary.get("published_fields", [])
         ),
-        "latest_javascript_asset": "app.js?v=20260725-1" in html,
-        "latest_stylesheet_asset": "app.css?v=20260725-1" in html,
+        "latest_javascript_asset": "app.js?v=20260725-3" in html,
+        "latest_stylesheet_asset": "app.css?v=20260725-3" in html,
         "policy_comparison_visible": (
             "Tacoma opened former single-family neighborhoods to more housing types"
             in html
@@ -74,7 +74,7 @@ def main() -> None:
         "applications_projects_units_visible": all(
             marker in html
             for marker in [
-                "Applications",
+                "Permit applications",
                 "Estimated projects",
                 "Proposed units",
                 "annual-table-body",
@@ -90,7 +90,7 @@ def main() -> None:
             in js
         ),
         "map_headline_universe_caveat": (
-            "map totals can differ from the headline totals" in html.lower()
+            "map totals can differ from the headline application totals" in html.lower()
         ),
         "policy_mobile_reading_order": (
             'classList.toggle("policy-mode", policyMode)' in js
@@ -138,6 +138,23 @@ def main() -> None:
             and "Housing applications, estimated distinct projects, and proposed units"
             in html
         ),
+        "short_year_labels_with_period_definition": (
+            'period.start.slice(0, 4)' in js
+            and "2020–2024</strong> each mean February" in html
+        ),
+        "applications_and_projects_explained": (
+            "One development may require several permit applications" in html
+            and "grouped into estimated projects" in html
+        ),
+        "pre_and_post_rows_contrasted": all(
+            marker in css
+            for marker in [
+                "--rose-soft:",
+                ".annual-table .average-row",
+                "--teal-soft:",
+                ".annual-table .year-one-row",
+            ]
+        ),
         "housing_type_projects_visible": "<th>Est. projects</th>" in js,
         "urban_residential_scope_explained": all(
             phrase in html
@@ -154,6 +171,25 @@ def main() -> None:
             "gross_modeled_units", 0
         )
         > 0,
+        "capacity_language_and_palette_updated": (
+            "Maximum housing number allowed by zoning" in html
+            and "#4e2d66" in js
+        ),
+        "quiet_basemap_and_thin_boundaries": (
+            "basemaps.cartocdn.com/light_all" in js
+            and '"zoom"], 9, 0.04, 13, 0.1, 17, 0.24' in js
+        ),
+        "parcel_sidebar_reduced_and_activity_popup_added": (
+            "showApplicationPopup" in js
+            and "Housing application activity" in js
+            and "applicationSection" not in js
+            and "Building coverage" not in js
+        ),
+        "header_and_extra_tabs_removed": (
+            "app-header" not in html
+            and "limitations-button" not in html
+            and "about-button" not in html
+        ),
         "critical_area_mode_published": "critical_area_screen_status" in js,
         "utility_easement_limitation_visible": (
             "utility-easement boundaries were unavailable" in html.lower()
@@ -177,7 +213,7 @@ def main() -> None:
         and "MIT License"
         in (project_root / "LICENSE").read_text(encoding="utf-8"),
         "data_terms_present": (project_root / "DATA_SOURCES_AND_TERMS.md").exists(),
-        "independent_scope_visible": "independent portfolio project" in html.lower(),
+        "independent_scope_visible": "independent portfolio analysis" in html.lower(),
         "exhibit_handoff_present": (
             project_root / "docs/portfolio_exhibits.md"
         ).exists(),

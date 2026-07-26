@@ -1,6 +1,6 @@
 # Portfolio Exhibit Handoff
 
-Capture at 1920 × 1080 when possible. Keep the header, evidence panel, bottom comparison, and interpretation caveat visible.
+Capture at 1920 × 1080 when possible. Keep the reform introduction, evidence table, housing-type comparison, and interpretation caveat visible.
 
 ## 1. Core policy result
 

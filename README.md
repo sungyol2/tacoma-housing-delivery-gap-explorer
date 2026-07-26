@@ -11,8 +11,9 @@ The project asks how the volume and mix of housing applications changed after Ta
 1. Start with the six-year table showing applications, estimated projects, and proposed units.
 2. Read the short reform introduction explaining why the explorer focuses on Urban Residential 1, 2, and 3.
 3. Use the housing-type table and district filter to see which housing forms account for the change.
-4. Switch to **Housing allowed by zoning** and **Environmental constraints** for supporting parcel context.
-5. Search parcel `6245000035` to inspect the wooded N Mildred St example screened by steep-slope and biodiversity mapping.
+4. Switch to **Maximum housing number allowed by zoning** and **Environmental constraints** for supporting parcel context.
+5. Select a parcel to see its zoning allowance and a short existing-use/environmental screen. Housing application activity appears in a map popup only when records are present.
+6. Search parcel `6245000035` to inspect the wooded N Mildred St example screened by steep-slope and biodiversity mapping.
 
 ## Key result
 

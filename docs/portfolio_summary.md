@@ -7,7 +7,7 @@ Home in Tacoma Housing Application Explorer combines public Accela, parcel, zoni
 ## What the project demonstrates
 
 - Canonical permit-number ETL across Residential and Commercial workflows
-- Text classification of ADUs, detached houses, duplexes, houseplexes, rowhouses, cottages, and multiplexes
+- Text classification of ADUs, detached single-family houses, duplexes, houseplexes, rowhouses, cottages, and multiplexes
 - Reproducible likely-project grouping and reported-unit correction
 - A policy-aligned five-year annual average versus complete Year One comparison
 - Separate application, likely-project, and proposed-unit measures

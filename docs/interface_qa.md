@@ -12,13 +12,15 @@ The primary reading path is reform introduction, six-year application table, and
 - Urban Residential is written out, and the interface explains why UR-1, UR-2, and UR-3 define the study area.
 - Housing-type evidence includes applications, estimated projects, and proposed units.
 - The map colors Home in Tacoma Year One estimated projects, not cumulative 2020–current activity.
-- Housing allowed by zoning is labeled gross and does not imply net added capacity.
+- Maximum housing allowed by zoning uses a separate purple scale and is labeled gross rather than net added capacity.
 - Environmental constraints are labeled as public-map screening evidence.
+- The quiet CARTO Positron basemap keeps parcel colors legible, and parcel outlines remain subordinate at citywide zoom levels.
+- Parcel details are limited to zoning allowance and a short existing-use/environmental screen. Application activity appears in a map popup only when the parcel has matched records.
 - Prototype, financial scenario, feasibility, residual-land-value, and development-funnel UI are absent.
 - URL state records mode, selected district, and selected parcel.
 - Mobile reading order is reform explanation, annual evidence, controls, map, then parcel details.
 - The mobile annual table becomes readable row cards so all three metrics remain visible without horizontal scrolling.
-- Parcel details load on demand and retain application, zoning-allowance, and environmental evidence.
+- Parcel details load on demand; the sidebar retains zoning-allowance and environmental evidence without empty application-history fields.
 
 ## Automated coverage
 
