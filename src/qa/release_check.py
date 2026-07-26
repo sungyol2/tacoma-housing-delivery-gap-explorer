@@ -82,7 +82,7 @@ def main() -> None:
             for field in summary.get("published_fields", [])
         ),
         "latest_javascript_asset": "app.js?v=20260725-11" in html,
-        "latest_stylesheet_asset": "app.css?v=20260725-12" in html,
+        "latest_stylesheet_asset": "app.css?v=20260725-13" in html,
         "policy_comparison_visible": (
             "Tacoma opened former single-family neighborhoods to more housing types"
             in html
@@ -265,6 +265,12 @@ def main() -> None:
         "policy_title_top_aligned": (
             ".reform-intro { align-self: start;" in css
             and ".reform-intro { align-self: center;" not in css
+        ),
+        "public_sector_display_type_system": (
+            "--display-font:" in css
+            and "Aptos Display" in css
+            and css.count("font-family: var(--display-font)") >= 6
+            and "Georgia" not in css
         ),
         "parcel_sidebar_reduced_and_activity_popup_added": (
             "showApplicationPopup" in js
