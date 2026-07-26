@@ -48,7 +48,7 @@ button:disabled { cursor: wait; opacity: .72; }
   border-bottom: 1px solid var(--line);
 }
 .policy-comparison[hidden], .context-summary[hidden] { display: none !important; }
-.reform-intro { align-self: center; max-width: 610px; }
+.reform-intro { align-self: start; max-width: 610px; }
 .text-button {
   border: 0;
   border-bottom: 1px solid currentColor;

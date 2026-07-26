@@ -82,7 +82,7 @@ def main() -> None:
             for field in summary.get("published_fields", [])
         ),
         "latest_javascript_asset": "app.js?v=20260725-11" in html,
-        "latest_stylesheet_asset": "app.css?v=20260725-11" in html,
+        "latest_stylesheet_asset": "app.css?v=20260725-12" in html,
         "policy_comparison_visible": (
             "Tacoma opened former single-family neighborhoods to more housing types"
             in html
@@ -261,6 +261,10 @@ def main() -> None:
             and html.index('class="evidence-heading"')
             < html.index('id="methodology-button"')
             < html.index('class="comparison-scroll"')
+        ),
+        "policy_title_top_aligned": (
+            ".reform-intro { align-self: start;" in css
+            and ".reform-intro { align-self: center;" not in css
         ),
         "parcel_sidebar_reduced_and_activity_popup_added": (
             "showApplicationPopup" in js
