@@ -26,7 +26,7 @@ The divergence matters: units per estimated project rose from **1.33** to **2.16
 The reproducible parcel, zoning-capacity, critical-area, housing-application ETL, web-export, and QA pipelines are implemented. The public app:
 
 - starts with a short policy explanation and six-year comparison table;
-- maps estimated projects filed during Home in Tacoma Year One;
+- maps Year One application parcels as circles sized by proposed homes;
 - distinguishes applications, estimated projects, and proposed units;
 - explains why the analysis covers the three Urban Residential districts;
 - retains gross legal capacity and mapped constraints only as explanatory context;

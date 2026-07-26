@@ -20,6 +20,8 @@ def main() -> None:
     feature_ids: set[str] = set()
     detail_chunk_ids: set[str] = set()
     feature_total = 0
+    application_point_total = 0
+    application_point_units = 0
     for chunk in summary["map_chunks"]:
         data = json.loads((args.app / "public/data" / chunk["file"]).read_text(encoding="utf-8"))
         feature_total += len(data["features"])
@@ -28,6 +30,20 @@ def main() -> None:
             (args.app / "public/data" / chunk["detail_file"]).read_text(encoding="utf-8")
         )
         detail_chunk_ids.update(detail_chunk)
+        application_points = json.loads(
+            (args.app / "public/data" / chunk["application_point_file"]).read_text(
+                encoding="utf-8"
+            )
+        )
+        application_point_total += len(application_points["features"])
+        application_point_units += sum(
+            int(
+                feature["properties"][
+                    "housing_cohort__home_in_tacoma_year_1_reported_units"
+                ]
+            )
+            for feature in application_points["features"]
+        )
 
     search_index = json.loads(
         (args.app / "public/data/parcel_search_index.json").read_text(encoding="utf-8")
@@ -65,8 +81,8 @@ def main() -> None:
             "feasibility" in field or "prototype" in field
             for field in summary.get("published_fields", [])
         ),
-        "latest_javascript_asset": "app.js?v=20260725-3" in html,
-        "latest_stylesheet_asset": "app.css?v=20260725-3" in html,
+        "latest_javascript_asset": "app.js?v=20260725-4" in html,
+        "latest_stylesheet_asset": "app.css?v=20260725-4" in html,
         "policy_comparison_visible": (
             "Tacoma opened former single-family neighborhoods to more housing types"
             in html
@@ -80,14 +96,18 @@ def main() -> None:
                 "annual-table-body",
             ]
         ),
-        "policy_map_uses_year_one_projects": (
-            "housing_cohort__home_in_tacoma_year_1_project_count" in js
-            and "housing_cohort__home_in_tacoma_year_1_project_count"
-            in summary.get("map_fields", [])
+        "policy_map_uses_proposed_unit_circles": (
+            "application-points-circle" in js
+            and "circle-radius" in js
+            and "housing_cohort__home_in_tacoma_year_1_reported_units" in js
+            and application_point_total
+            == sum(chunk["application_points"] for chunk in summary["map_chunks"])
+            and application_point_total
+            == summary["year_one_application_point_count"]
+            and application_point_units == summary["year_one_application_point_units"]
         ),
         "policy_map_period_labeled": (
-            "Estimated housing projects filed from February 2025 through January 2026"
-            in js
+            "Each circle marks an application parcel" in js
         ),
         "map_headline_universe_caveat": (
             "map totals can differ from the headline application totals" in html.lower()
@@ -166,18 +186,52 @@ def main() -> None:
                 "Downtown and mixed-use centers follow different zoning rules",
             ]
         ),
+        "urban_residential_buttons_visible": (
+            html.count('data-zone="') == 4
+            and "All UR zoning districts" in html
+            and "zone-filter" not in html + js
+        ),
+        "official_home_in_tacoma_link_visible": (
+            'href="https://tacoma.gov/government/departments/'
+            'planning-and-development-services/home-in-tacoma/"' in html
+            and "Home in Tacoma Explorer" not in html
+        ),
+        "housing_type_labels_clean_and_unit_sorted": (
+            all(
+                label in js
+                for label in [
+                    'backyard_unit: "Accessory dwelling unit"',
+                    'houseplex_2: "Duplex"',
+                    'rowhouse: "Townhouse"',
+                    "ordered by Year One proposed units",
+                ]
+            )
+            and "Backyard / accessory" not in js
+            and "Rowhouse / townhouse" not in js
+            and "Duplex (2 units)" not in js
+        ),
         "project_intensity_visible": "units per estimated project" in js,
         "capacity_context_published": summary.get("capacity_context", {}).get(
             "gross_modeled_units", 0
         )
         > 0,
+        "capacity_excludes_mapped_environmental_constraints": (
+            summary.get("capacity_context", {}).get("unconstrained_parcel_count")
+            == summary.get("critical_area_status", {}).get("no_mapped_constraint")
+            and summary.get("capacity_context", {}).get(
+                "excluded_environmental_constraint_count"
+            )
+            == summary["parcel_count"]
+            - summary.get("critical_area_status", {}).get("no_mapped_constraint", 0)
+            and '["get", "critical_area_screen_status"], "no_mapped_constraint"' in js
+        ),
         "capacity_language_and_palette_updated": (
             "Maximum housing number allowed by zoning" in html
             and "#4e2d66" in js
         ),
         "quiet_basemap_and_thin_boundaries": (
             "basemaps.cartocdn.com/light_all" in js
-            and '"zoom"], 9, 0.04, 13, 0.1, 17, 0.24' in js
+            and '"zoom"], 9, 0.26, 13, 0.45, 17, 0.72' in js
         ),
         "parcel_sidebar_reduced_and_activity_popup_added": (
             "showApplicationPopup" in js

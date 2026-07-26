@@ -7,19 +7,18 @@
     <title>Home in Tacoma Housing Application Explorer</title>
     <link rel="preconnect" href="https://unpkg.com" />
     <link href="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.css" rel="stylesheet" />
-    <link href="./css/app.css?v=20260725-3" rel="stylesheet" />
+    <link href="./css/app.css?v=20260725-4" rel="stylesheet" />
   </head>
   <body class="policy-mode">
     <main class="workspace">
       <section id="policy-comparison" class="policy-comparison" aria-label="Housing applications before and after Home in Tacoma" aria-live="polite">
         <div class="reform-intro">
           <div class="intro-heading">
-            <p class="app-name">Home in Tacoma Explorer</p>
             <button id="methodology-button" class="text-button" type="button">Methods</button>
           </div>
-          <p class="policy-date">Zoning reform effective February 1, 2025</p>
           <h2>Tacoma opened former single-family neighborhoods to more housing types.</h2>
-          <p>Home in Tacoma replaced the former single-family zones with three <strong>Urban Residential</strong> districts: UR-1, UR-2, and UR-3. This explorer focuses on those three reform districts; Downtown and mixed-use centers follow different zoning rules.</p>
+          <p class="policy-date">Zoning reform effective February 1, 2025</p>
+          <p><a href="https://tacoma.gov/government/departments/planning-and-development-services/home-in-tacoma/" target="_blank" rel="noopener">Home in Tacoma</a> replaced the former single-family zones with three <strong>Urban Residential</strong> districts: UR-1, UR-2, and UR-3. This explorer focuses on those three reform districts; Downtown and mixed-use centers follow different zoning rules.</p>
           <p class="primary-finding" id="policy-finding">Year One applications represented far more proposed homes, while the estimated number of distinct projects remained within the prior five-year range.</p>
         </div>
 
@@ -66,7 +65,7 @@
           <div class="mode-list" role="radiogroup" aria-label="Map view">
             <button class="mode-button active" data-mode="permits" role="radio" aria-checked="true">
               <strong>Year One housing applications</strong>
-              <small>Estimated projects by parcel, Feb. 2025–Jan. 2026</small>
+              <small>Circles sized by proposed homes, Feb. 2025–Jan. 2026</small>
             </button>
             <button class="mode-button" data-mode="capacity" role="radio" aria-checked="false">
               <strong>Maximum housing number allowed by zoning</strong>
@@ -80,13 +79,12 @@
 
         <section class="filters">
           <h2>Urban Residential district</h2>
-          <label class="visually-hidden" for="zone-filter">Show one Urban Residential district</label>
-          <select id="zone-filter">
-            <option value="all">All three districts</option>
-            <option value="UR1">UR-1 · lower-scale residential</option>
-            <option value="UR2">UR-2 · lower-scale residential</option>
-            <option value="UR3">UR-3 · mid-scale residential</option>
-          </select>
+          <div class="zone-buttons" role="radiogroup" aria-label="Urban Residential district">
+            <button class="zone-button active" type="button" data-zone="all" role="radio" aria-checked="true">All UR zoning districts</button>
+            <button class="zone-button" type="button" data-zone="UR1" role="radio" aria-checked="false">UR-1</button>
+            <button class="zone-button" type="button" data-zone="UR2" role="radio" aria-checked="false">UR-2</button>
+            <button class="zone-button" type="button" data-zone="UR3" role="radio" aria-checked="false">UR-3</button>
+          </div>
         </section>
 
         <section>
@@ -130,6 +128,6 @@
     </dialog>
 
     <script src="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.js"></script>
-    <script type="module" src="./js/app.js?v=20260725-3"></script>
+    <script type="module" src="./js/app.js?v=20260725-4"></script>
   </body>
 </html>

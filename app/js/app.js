@@ -9,27 +9,38 @@ const state = {
   summary: null,
   fillLayers: [],
   lineLayers: [],
+  pointLayers: [],
   selectedFeature: null,
   mapReady: false,
   expectedSources: 0,
   loadedSources: new Set(),
   dataVersion: "",
-  popup: null
+  popup: null,
+  handledMapClicks: new WeakSet()
 };
 
 const modeStyles = {
   permits: {
-    paint: ["interpolate", ["linear"], ["get", "housing_cohort__home_in_tacoma_year_1_project_count"], 0, "#e3e2dd", 1, "#91b7c9", 2, "#397ca7", 3, "#173b5d"],
-    legend: [["No Year One project", "#e3e2dd"], ["1 estimated project", "#91b7c9"], ["2 estimated projects", "#397ca7"], ["3 or more estimated projects", "#173b5d"]],
-    note: "Estimated housing projects filed from February 2025 through January 2026."
+    paint: "#f7f5ef",
+    fillOpacity: 0.12,
+    lineWidth: ["interpolate", ["linear"], ["zoom"], 9, 0.26, 13, 0.45, 17, 0.72],
+    lineOpacity: 0.5,
+    legend: [["1 proposed home", "#247b83", 6], ["2–4 proposed homes", "#247b83", 9], ["5–9 proposed homes", "#247b83", 13], ["10+ proposed homes", "#247b83", 17]],
+    note: "Each circle marks an application parcel; circle size represents proposed homes."
   },
   capacity: {
     paint: ["interpolate", ["linear"], ["get", "modeled_base_capacity_units"], 4, "#eee8f2", 6, "#c7acd3", 8, "#8a5ca2", 16, "#4e2d66"],
+    fillOpacity: 0.64,
+    lineWidth: ["interpolate", ["linear"], ["zoom"], 9, 0.04, 13, 0.1, 17, 0.24],
+    lineOpacity: 0.38,
     legend: [["4 homes allowed", "#eee8f2"], ["6 homes allowed", "#c7acd3"], ["8 homes allowed", "#8a5ca2"], ["16 or more homes allowed", "#4e2d66"]],
-    note: "Gross allowance under the new zoning rules. Existing homes are not subtracted."
+    note: "Parcels with mapped environmental constraints are omitted. Existing homes are not subtracted."
   },
   readiness: {
     paint: ["match", ["get", "critical_area_screen_status"], "no_mapped_constraint", "#dce8c8", "moderate_slope_review", "#d3a12f", "mapped_constraint_review", "#c8794f", "constrained_out", "#815a68", "#a8a9a4"],
+    fillOpacity: 0.64,
+    lineWidth: ["interpolate", ["linear"], ["zoom"], 9, 0.04, 13, 0.1, 17, 0.24],
+    lineOpacity: 0.38,
     legend: [["No listed environmental area or hazard", "#dce8c8"], ["Part of parcel has 25–40% slopes", "#d3a12f"], ["Mapped area or hazard; review needed", "#c8794f"], ["Less than 5,000 sq. ft. remains outside mapped areas", "#815a68"]],
     note: "A first screen using public environmental maps, not a site-specific determination."
   }
@@ -136,15 +147,15 @@ function label(value) {
 
 function housingTypeLabel(value) {
   const names = {
-    backyard_unit: "Backyard / accessory dwelling unit (ADU)",
-    houseplex_2: "Duplex (2 units)",
-    houseplex_3_6: "Small multi-unit building (3–6 units)",
-    rowhouse: "Rowhouse / townhouse",
+    backyard_unit: "Accessory dwelling unit",
+    houseplex_2: "Duplex",
+    houseplex_3_6: "3–6 unit building",
+    rowhouse: "Townhouse",
     courtyard_cottage: "Courtyard or cottage cluster",
-    multiplex_7_20: "Multi-unit building (7–20 units)",
+    multiplex_7_20: "7–20 unit building",
     larger_multifamily_21_plus: "Apartment building (21+ units)",
     detached_single_unit: "Detached single-family house",
-    other_uncertain_housing: "Housing type unclear"
+    other_uncertain_housing: "Other or unclear"
   };
   return names[value] || label(value);
 }
@@ -187,13 +198,23 @@ function constraintStatusLabel(value) {
 }
 
 function currentFilter() {
+  const conditions = [];
+  if (state.zone !== "all") conditions.push(["==", ["get", "BaseZone"], state.zone]);
+  if (state.mode === "capacity") {
+    conditions.push(["==", ["get", "critical_area_screen_status"], "no_mapped_constraint"]);
+  }
+  if (!conditions.length) return null;
+  return conditions.length === 1 ? conditions[0] : ["all", ...conditions];
+}
+
+function currentPointFilter() {
   return state.zone === "all" ? null : ["==", ["get", "BaseZone"], state.zone];
 }
 
 function renderLegend() {
   const style = modeStyles[state.mode];
   document.querySelector("#legend").innerHTML = style.legend
-    .map(([text, color]) => `<div class="legend-row"><span class="swatch" style="background:${color}"></span><span>${text}</span></div>`)
+    .map(([text, color, size]) => `<div class="legend-row"><span class="swatch${size ? " legend-circle" : ""}" style="background:${color};${size ? `width:${size}px;height:${size}px` : ""}"></span><span>${text}</span></div>`)
     .join("");
   document.querySelector("#legend-note").textContent = style.note;
 }
@@ -214,10 +235,19 @@ function updateMapStyle() {
   for (const layerId of state.fillLayers) {
     if (!map.getLayer(layerId)) continue;
     map.setPaintProperty(layerId, "fill-color", modeStyles[state.mode].paint);
+    map.setPaintProperty(layerId, "fill-opacity", modeStyles[state.mode].fillOpacity);
     map.setFilter(layerId, filter);
   }
   for (const layerId of state.lineLayers) {
-    if (map.getLayer(layerId)) map.setFilter(layerId, filter);
+    if (!map.getLayer(layerId)) continue;
+    map.setPaintProperty(layerId, "line-width", ["case", ["boolean", ["feature-state", "selected"], false], 1.7, modeStyles[state.mode].lineWidth]);
+    map.setPaintProperty(layerId, "line-opacity", ["case", ["boolean", ["feature-state", "selected"], false], 0.95, modeStyles[state.mode].lineOpacity]);
+    map.setFilter(layerId, filter);
+  }
+  for (const layerId of state.pointLayers) {
+    if (!map.getLayer(layerId)) continue;
+    map.setLayoutProperty(layerId, "visibility", state.mode === "permits" ? "visible" : "none");
+    map.setFilter(layerId, currentPointFilter());
   }
   renderLegend();
   writeUrl();
@@ -288,7 +318,7 @@ function renderPolicyOverview() {
     </div>
     <section class="detail-section"><h3>Housing type comparison</h3>
       <div class="comparison-scroll"><table class="evidence-table policy-type-table">
-        <caption>Pre-policy annual average → first year after reform</caption>
+        <caption>Pre-policy annual average → first year after reform · ordered by Year One proposed units</caption>
         <thead><tr><th>Housing type</th><th>Permit applications</th><th>Est. projects</th><th>Proposed units</th></tr></thead>
         <tbody>${typeRows}</tbody>
       </table></div>
@@ -307,9 +337,9 @@ function updateContextSummary() {
   if (state.mode === "capacity") {
     const capacity = state.summary.capacity_context;
     document.querySelector("#context-title").textContent = "Maximum housing number allowed by zoning";
-    document.querySelector("#context-subtitle").textContent = "A gross estimate of legal permission, not expected construction";
-    setContextMetric(1, "Parcels in the three reform districts", number(state.summary.ur_zoning_count), "Urban Residential 1, 2, and 3");
-    setContextMetric(2, "Parcels included in this map", number(state.summary.parcel_count), "Clear non-housing uses are excluded");
+    document.querySelector("#context-subtitle").textContent = "Parcels with mapped environmental constraints are excluded";
+    setContextMetric(1, "Parcels shown", number(capacity.unconstrained_parcel_count), "No mapped environmental constraint");
+    setContextMetric(2, "Parcels omitted", number(capacity.excluded_environmental_constraint_count), "Shown in the environmental constraints map");
     setContextMetric(3, "Total homes allowed by standard rules", number(capacity.gross_modeled_units), "Existing homes are not subtracted");
     setContextMetric(4, "Typical allowance per mapped parcel", number(capacity.median_modeled_units_per_candidate, 1), "Median, not a construction forecast");
     document.querySelector("#context-disclaimer").textContent = "This estimate does not account for existing homes, bonus programs, detailed site design, infrastructure, ownership, financing, or market timing.";
@@ -332,7 +362,7 @@ function renderContextOverview() {
     ? "Gross allowance across the three Urban Residential districts"
     : "Public environmental maps applied to each parcel";
   const content = state.mode === "capacity"
-    ? `<section class="detail-section"><p class="empty-state">The map shows how many homes the base zoning rules allow on each parcel. It does not subtract homes already there or predict whether construction will occur.</p></section>
+    ? `<section class="detail-section"><p class="empty-state">The map shows how many homes the base zoning rules allow on parcels without a mapped environmental constraint. It does not subtract homes already there or predict whether construction will occur.</p></section>
        <section class="detail-section"><h3>Why this is supporting context</h3><p class="empty-state">Legal permission is only one condition for development. Ownership, environmental constraints, design, financing, and timing still matter.</p></section>`
     : `<section class="detail-section"><p class="empty-state">The map shows where wetlands, steep slopes, flood hazards, biodiversity areas, or protected-water buffers overlap parcels.</p></section>
        <section class="detail-section"><h3>Why this matters</h3><p class="empty-state">Vacant land is not automatically usable for housing. This screen removes obvious false positives and flags other parcels for closer review.</p></section>`;
@@ -420,9 +450,13 @@ function initializeFromUrl() {
   if (modeStyles[params.get("mode")]) state.mode = params.get("mode");
   if (["UR1", "UR2", "UR3"].includes(params.get("zone"))) state.zone = params.get("zone");
   state.selectedId = params.get("parcel");
-  document.querySelector("#zone-filter").value = state.zone;
   document.querySelectorAll(".mode-button").forEach(button => {
     const active = button.dataset.mode === state.mode;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-checked", String(active));
+  });
+  document.querySelectorAll(".zone-button").forEach(button => {
+    const active = button.dataset.zone === state.zone;
     button.classList.toggle("active", active);
     button.setAttribute("aria-checked", String(active));
   });
@@ -430,11 +464,18 @@ function initializeFromUrl() {
 
 function addParcelChunk(chunk) {
   const sourceId = `parcels-${chunk.id}`;
+  const pointSourceId = `application-points-${chunk.id}`;
   const fillId = `parcels-fill-${chunk.id}`;
   const lineId = `parcels-line-${chunk.id}`;
+  const pointId = `application-points-circle-${chunk.id}`;
   map.addSource(sourceId, {
     type: "geojson",
     data: `./public/data/${chunk.file}?v=${encodeURIComponent(state.dataVersion)}`,
+    promoteId: "parcel_id"
+  });
+  map.addSource(pointSourceId, {
+    type: "geojson",
+    data: `./public/data/${chunk.application_point_file}?v=${encodeURIComponent(state.dataVersion)}`,
     promoteId: "parcel_id"
   });
   const filter = currentFilter();
@@ -442,7 +483,7 @@ function addParcelChunk(chunk) {
     id: fillId,
     type: "fill",
     source: sourceId,
-    paint: { "fill-color": modeStyles[state.mode].paint, "fill-opacity": 0.64 }
+    paint: { "fill-color": modeStyles[state.mode].paint, "fill-opacity": modeStyles[state.mode].fillOpacity }
   };
   const lineLayer = {
     id: lineId,
@@ -450,19 +491,38 @@ function addParcelChunk(chunk) {
     source: sourceId,
     paint: {
       "line-color": ["case", ["boolean", ["feature-state", "selected"], false], "#ffffff", "#48545b"],
-      "line-width": ["case", ["boolean", ["feature-state", "selected"], false], 1.7, ["interpolate", ["linear"], ["zoom"], 9, 0.04, 13, 0.1, 17, 0.24]],
-      "line-opacity": ["case", ["boolean", ["feature-state", "selected"], false], 0.95, 0.38]
+      "line-width": ["case", ["boolean", ["feature-state", "selected"], false], 1.7, modeStyles[state.mode].lineWidth],
+      "line-opacity": ["case", ["boolean", ["feature-state", "selected"], false], 0.95, modeStyles[state.mode].lineOpacity]
     }
   };
+  const pointLayer = {
+    id: pointId,
+    type: "circle",
+    source: pointSourceId,
+    layout: { visibility: state.mode === "permits" ? "visible" : "none" },
+    paint: {
+      "circle-radius": ["step", ["get", "housing_cohort__home_in_tacoma_year_1_reported_units"], 5, 2, 7, 5, 10, 10, 14, 20, 19],
+      "circle-color": "#247b83",
+      "circle-opacity": 0.85,
+      "circle-stroke-color": "#ffffff",
+      "circle-stroke-width": 1.4
+    }
+  };
+  const pointFilter = currentPointFilter();
+  if (pointFilter) pointLayer.filter = pointFilter;
   if (filter) {
     fillLayer.filter = filter;
     lineLayer.filter = filter;
   }
   map.addLayer(fillLayer);
   map.addLayer(lineLayer);
+  map.addLayer(pointLayer);
   state.fillLayers.push(fillId);
   state.lineLayers.push(lineId);
-  map.on("click", fillId, async event => {
+  state.pointLayers.push(pointId);
+  const selectParcel = async event => {
+    if (event.originalEvent && state.handledMapClicks.has(event.originalEvent)) return;
+    if (event.originalEvent) state.handledMapClicks.add(event.originalEvent);
     const feature = event.features?.[0];
     if (!feature) return;
     if (state.selectedFeature) map.setFeatureState(state.selectedFeature, { selected: false });
@@ -485,9 +545,13 @@ function addParcelChunk(chunk) {
     } catch (error) {
       document.querySelector("#parcel-details").textContent = `Parcel details unavailable: ${error.message}`;
     }
-  });
+  };
+  map.on("click", fillId, selectParcel);
+  map.on("click", pointId, selectParcel);
   map.on("mouseenter", fillId, () => { map.getCanvas().style.cursor = "pointer"; });
   map.on("mouseleave", fillId, () => { map.getCanvas().style.cursor = ""; });
+  map.on("mouseenter", pointId, () => { map.getCanvas().style.cursor = "pointer"; });
+  map.on("mouseleave", pointId, () => { map.getCanvas().style.cursor = ""; });
 }
 
 function reportParcelRendering() {
@@ -589,12 +653,28 @@ document.querySelector(".mode-list").addEventListener("keydown", event => {
   next.click();
 });
 
-document.querySelector("#zone-filter").addEventListener("change", event => {
-  state.zone = event.target.value;
+document.querySelectorAll(".zone-button").forEach(button => button.addEventListener("click", () => {
+  state.zone = button.dataset.zone;
+  document.querySelectorAll(".zone-button").forEach(item => {
+    const active = item === button;
+    item.classList.toggle("active", active);
+    item.setAttribute("aria-checked", String(active));
+  });
   updateMapStyle();
   updatePolicyComparison();
   updateContextSummary();
   if (!state.selectedId) updateModeUI();
+}));
+
+document.querySelector(".zone-buttons").addEventListener("keydown", event => {
+  if (!["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft"].includes(event.key)) return;
+  event.preventDefault();
+  const buttons = [...document.querySelectorAll(".zone-button")];
+  const current = buttons.indexOf(document.activeElement);
+  const direction = ["ArrowDown", "ArrowRight"].includes(event.key) ? 1 : -1;
+  const next = buttons[(current + direction + buttons.length) % buttons.length];
+  next.focus();
+  next.click();
 });
 
 async function runSearch() {

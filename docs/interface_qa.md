@@ -10,8 +10,10 @@ The primary reading path is reform introduction, six-year application table, and
 - The first table shows all five pre-policy 12-month periods, their average, and Year One.
 - The all-district view displays 177.0 → 231 applications, 170.2 → 193 estimated projects, and 226.8 → 416 proposed units.
 - Urban Residential is written out, and the interface explains why UR-1, UR-2, and UR-3 define the study area.
+- The district filter uses four directly visible buttons: all districts, UR-1, UR-2, and UR-3.
 - Housing-type evidence includes applications, estimated projects, and proposed units.
-- The map colors Home in Tacoma Year One estimated projects, not cumulative 2020–current activity.
+- The Year One map keeps parcel boundaries visible and uses application-parcel circles sized by proposed homes.
+- The zoning-capacity map omits every parcel flagged by the mapped environmental screen; its parcel count and capacity totals use the same filtered universe.
 - Maximum housing allowed by zoning uses a separate purple scale and is labeled gross rather than net added capacity.
 - Environmental constraints are labeled as public-map screening evidence.
 - The quiet CARTO Positron basemap keeps parcel colors legible, and parcel outlines remain subordinate at citywide zoom levels.

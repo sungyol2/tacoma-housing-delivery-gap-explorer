@@ -52,15 +52,8 @@ button:disabled { cursor: wait; opacity: .72; }
 .intro-heading {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 16px;
-}
-.app-name {
-  margin: 0;
-  font-family: Georgia, serif;
-  font-size: 22px;
-  font-weight: 600;
+  justify-content: flex-end;
+  margin-bottom: 8px;
 }
 .text-button {
   border: 0;
@@ -72,7 +65,7 @@ button:disabled { cursor: wait; opacity: .72; }
   font-weight: 700;
 }
 .policy-date {
-  margin: 0 0 9px;
+  margin: -3px 0 12px;
   color: var(--blue);
   font-size: 14px;
   font-weight: 750;
@@ -94,6 +87,7 @@ button:disabled { cursor: wait; opacity: .72; }
   font-size: 15px;
   line-height: 1.55;
 }
+.reform-intro a { color: var(--blue); font-weight: 700; text-underline-offset: 2px; }
 .primary-finding {
   margin: 16px 0 0;
   border-left: 4px solid var(--teal);
@@ -147,10 +141,22 @@ body.readiness-mode .mode-button.active { border-color: #a46139; box-shadow: ins
 .filters { display: grid; gap: 10px; }
 .filters h2 { margin-bottom: 0; }
 select, input[type="search"] { border: 1px solid #abb6bc; background: white; padding: 10px; color: var(--ink); }
-#zone-filter { width: 100%; font-size: 13px; }
+.zone-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.zone-button {
+  min-height: 42px;
+  border: 1px solid #abb6bc;
+  padding: 8px 5px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.zone-button:first-child { grid-column: 1 / -1; }
+.zone-button.active { border-color: var(--blue); box-shadow: inset 3px 0 var(--blue); background: #edf3f7; color: var(--blue-dark); }
 .legend { display: grid; gap: 9px; font-size: 13px; }
-.legend-row { display: grid; grid-template-columns: 15px 1fr; align-items: center; gap: 8px; line-height: 1.3; }
+.legend-row { display: grid; grid-template-columns: 20px 1fr; align-items: center; gap: 8px; line-height: 1.3; }
 .swatch { width: 15px; height: 11px; border: 1px solid rgba(23, 37, 54, .12); }
+.swatch.legend-circle { place-self: center; border-radius: 50%; border: 1.5px solid white; box-shadow: 0 0 0 1px rgba(23, 37, 54, .2); }
 .note { color: var(--muted); font-size: 12.5px; line-height: 1.5; }
 
 .map-region { position: relative; min-width: 0; min-height: 680px; background: #d8dbd6; }

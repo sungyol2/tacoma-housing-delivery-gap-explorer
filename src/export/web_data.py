@@ -26,6 +26,7 @@ ANNUAL_POLICY_PERIODS = [
     ("Feb. 2024–Jan. 2025", "2024-02-01", "2025-02-01", "pre_policy"),
     ("Feb. 2025–Jan. 2026", "2025-02-01", "2026-02-01", "year_one"),
 ]
+YEAR_ONE_UNITS_FIELD = "housing_cohort__home_in_tacoma_year_1_reported_units"
 
 
 def _application_metrics(applications: pd.DataFrame) -> dict[str, int]:
@@ -229,6 +230,18 @@ def main() -> None:
             for zone in ["UR1", "UR2", "UR3"]
         },
     }
+    year_one_units_by_parcel = (
+        policy_applications.loc[
+            policy_applications["housing_policy_cohort"].eq(
+                "home_in_tacoma_year_1"
+            )
+        ]
+        .groupby("parcel_id")["housing_application_reported_units"]
+        .sum()
+    )
+    parcels[YEAR_ONE_UNITS_FIELD] = (
+        parcels["parcel_id"].map(year_one_units_by_parcel).fillna(0).astype(int)
+    )
 
     assessed_total = parcels["Land_Value"] + parcels["Improvement_Value"]
     parcels["improvement_value_ratio"] = np.where(
@@ -260,7 +273,9 @@ def main() -> None:
     parcels["map_chunk"] = np.digitize(centroids.x, x_breaks) * 4 + np.digitize(
         centroids.y, y_breaks
     )
-    parcels = parcels[PUBLISH_FIELDS + ["map_chunk", "geometry"]].copy()
+    parcels = parcels[
+        PUBLISH_FIELDS + [YEAR_ONE_UNITS_FIELD, "map_chunk", "geometry"]
+    ].copy()
     for column in [
         "housing_application_first_application",
         "housing_application_latest_application",
@@ -283,6 +298,43 @@ def main() -> None:
         map_gzip_path = args.output_dir / f"{filename}.gz"
         with gzip.open(map_gzip_path, "wb", compresslevel=9) as output:
             output.write(map_geojson_path.read_bytes())
+        application_points = chunk.loc[
+            chunk["housing_cohort__home_in_tacoma_year_1_reported_units"].gt(0)
+        ]
+        application_point_filename = f"application_points_{int(chunk_id):02d}.json"
+        application_point_path = args.output_dir / application_point_filename
+        application_point_path.write_text(
+            json.dumps(
+                {
+                    "type": "FeatureCollection",
+                    "features": [
+                        {
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": [
+                                    float(row.map_center_lon),
+                                    float(row.map_center_lat),
+                                ],
+                            },
+                            "properties": {
+                                "parcel_id": str(row.parcel_id),
+                                "BaseZone": str(row.BaseZone),
+                                "housing_cohort__home_in_tacoma_year_1_project_count": int(
+                                    row.housing_cohort__home_in_tacoma_year_1_project_count
+                                ),
+                                "housing_cohort__home_in_tacoma_year_1_reported_units": int(
+                                    row.housing_cohort__home_in_tacoma_year_1_reported_units
+                                ),
+                            },
+                        }
+                        for row in application_points.itertuples()
+                    ],
+                },
+                separators=(",", ":"),
+            ),
+            encoding="utf-8",
+        )
         detail_filename = f"parcel_details_{int(chunk_id):02d}.json"
         detail_path = args.output_dir / detail_filename
         chunk_details = chunk[PUBLISH_FIELDS].set_index("parcel_id").to_dict(orient="index")
@@ -298,6 +350,8 @@ def main() -> None:
                 "gzip_file": f"{filename}.gz",
                 "detail_file": detail_filename,
                 "detail_gzip_file": f"{detail_filename}.gz",
+                "application_point_file": application_point_filename,
+                "application_points": int(len(application_points)),
                 "features": int(len(chunk)),
                 "bytes": map_geojson_path.stat().st_size,
                 "gzip_bytes": map_gzip_path.stat().st_size,
@@ -323,7 +377,10 @@ def main() -> None:
     with gzip.open(search_gzip_path, "wb", compresslevel=9) as output:
         output.write(search_path.read_bytes())
 
-    capacity_units = parcels["modeled_base_capacity_units"].dropna()
+    unconstrained_capacity = parcels.loc[
+        parcels["critical_area_screen_status"].eq("no_mapped_constraint")
+    ]
+    capacity_units = unconstrained_capacity["modeled_base_capacity_units"].dropna()
     critical_status = {
         key: int(value)
         for key, value in parcels["critical_area_screen_status"].value_counts().items()
@@ -335,8 +392,12 @@ def main() -> None:
         "ur_zoning_count": ur_zoning_count,
         "ur_existing_use_status": ur_existing_use_status,
         "capacity_context": {
+            "unconstrained_parcel_count": int(len(unconstrained_capacity)),
             "gross_modeled_units": int(capacity_units.sum()),
             "median_modeled_units_per_candidate": float(capacity_units.median()),
+            "excluded_environmental_constraint_count": int(
+                len(parcels) - len(unconstrained_capacity)
+            ),
         },
         "site_condition_classes": {
             key: int(value)
@@ -354,6 +415,12 @@ def main() -> None:
         "meaningful_split_zoned_count": int(parcels["meaningful_split_zoned"].sum()),
         "housing_application_project_parcel_links": int(
             parcels["housing_application_project_count"].sum()
+        ),
+        "year_one_application_point_count": int(
+            parcels["housing_cohort__home_in_tacoma_year_1_reported_units"].gt(0).sum()
+        ),
+        "year_one_application_point_units": int(
+            parcels["housing_cohort__home_in_tacoma_year_1_reported_units"].sum()
         ),
         "housing_policy_comparison": {
             "effective_date": "2025-02-01",
