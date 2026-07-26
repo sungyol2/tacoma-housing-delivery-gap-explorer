@@ -282,7 +282,7 @@ function updatePolicyComparison() {
   </tr>`;
   document.querySelector("#annual-table-body").innerHTML = [
     ...prePeriods.map(period => periodRow(period)),
-    `<tr class="average-row"><td class="period-cell">Pre-policy average</td><td data-label="Permit applications">${number(pre.permit_records, 1)}</td><td data-label="Estimated projects">${number(pre.projects, 1)}</td><td data-label="Proposed units">${number(pre.reported_units, 1)}</td></tr>`,
+    `<tr class="average-row"><td class="period-cell">Pre-policy average</td><td data-label="Permit applications">${number(pre.permit_records)}</td><td data-label="Estimated projects">${number(pre.projects)}</td><td data-label="Proposed units">${number(pre.reported_units)}</td></tr>`,
     periodRow(yearOnePeriod, "year-one-row")
   ].join("");
 
@@ -293,7 +293,7 @@ function updatePolicyComparison() {
 }
 
 function metricPair(values, metric) {
-  return `${number(values.pre_policy_annual_average[metric], 1)} → ${number(values.home_in_tacoma_year_one[metric])}`;
+  return `${number(values.pre_policy_annual_average[metric])} → ${number(values.home_in_tacoma_year_one[metric])}`;
 }
 
 function renderPolicyOverview() {
