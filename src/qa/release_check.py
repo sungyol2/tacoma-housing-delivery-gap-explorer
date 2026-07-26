@@ -81,8 +81,8 @@ def main() -> None:
             "feasibility" in field or "prototype" in field
             for field in summary.get("published_fields", [])
         ),
-        "latest_javascript_asset": "app.js?v=20260725-8" in html,
-        "latest_stylesheet_asset": "app.css?v=20260725-8" in html,
+        "latest_javascript_asset": "app.js?v=20260725-9" in html,
+        "latest_stylesheet_asset": "app.css?v=20260725-9" in html,
         "policy_comparison_visible": (
             "Tacoma opened former single-family neighborhoods to more housing types"
             in html
@@ -238,6 +238,7 @@ def main() -> None:
         "clean_map_cursor": (
             "parcelHoverCursor" in js
             and "data:image/svg+xml" in js
+            and 'stroke="#173b5d"' in js
             and '") 14 14, pointer`' in js
             and 'map.getCanvas().style.cursor = "default"' in js
             and "crosshair" not in css + js

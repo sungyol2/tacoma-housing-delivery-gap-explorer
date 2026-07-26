@@ -20,7 +20,7 @@ const state = {
   hoveredLayers: new Set()
 };
 
-const parcelHoverCursor = `url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="8" fill="rgba(241,231,208,0.16)" stroke="#f1e7d0" stroke-width="2"/><circle cx="14" cy="14" r="2.3" fill="#f1e7d0"/></svg>')}") 14 14, pointer`;
+const parcelHoverCursor = `url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="8" fill="rgba(23,59,93,0.14)" stroke="#173b5d" stroke-width="2"/><circle cx="14" cy="14" r="2.3" fill="#173b5d"/></svg>')}") 14 14, pointer`;
 
 const modeStyles = {
   permits: {
